@@ -1,0 +1,10 @@
+create index artisans_added_by_admin_idx on public.artisans (added_by_admin);
+create index properties_client_id_idx on public.properties (client_id);
+create index work_orders_property_id_idx on public.work_orders (property_id);
+create index work_orders_assigned_artisan_id_idx on public.work_orders (assigned_artisan_id);
+create index work_order_photos_work_order_id_idx on public.work_order_photos (work_order_id);
+create index payments_client_id_idx on public.payments (client_id);
+create index payments_property_id_idx on public.payments (property_id);
+create index cohost_applications_cohost_request_id_idx on public.cohost_applications (cohost_request_id);
+create index cohost_agreements_cohost_request_id_idx on public.cohost_agreements (cohost_request_id);
+create index cohost_agreements_selected_applicant_id_idx on public.cohost_agreements (selected_applicant_id);
