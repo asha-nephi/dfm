@@ -1,0 +1,28 @@
+@import "tailwindcss";
+
+:root {
+  /* DFM brand palette — see business_documents/Claude_Code_Build_Brief.md Section 2 */
+  --background: #FAF7F1; /* off-white */
+  --foreground: #12151F; /* navy-black text */
+  --color-charcoal: #1C2233;
+  --color-amber: #D9A441;
+  --color-off-white: #FAF7F1;
+  --color-navy-black: #12151F;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-charcoal: var(--color-charcoal);
+  --color-amber: var(--color-amber);
+  --color-off-white: var(--color-off-white);
+  --color-navy-black: var(--color-navy-black);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
