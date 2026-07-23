@@ -1,6 +1,7 @@
 import { SiteHeader } from "@/components/marketing/site-header";
 import { SiteFooter } from "@/components/marketing/site-footer";
 import { Hero } from "@/components/marketing/hero";
+import { WhoItsFor } from "@/components/marketing/who-its-for";
 import { ProblemSolution } from "@/components/marketing/problem-solution";
 import { ServiceArea } from "@/components/marketing/service-area";
 import { Pricing } from "@/components/marketing/pricing";
@@ -23,6 +24,7 @@ export default async function HomePage({
       <SiteHeader />
       <main className="flex-1">
         <Hero />
+        <WhoItsFor />
         <ProblemSolution />
         <ServiceArea />
         <Pricing />
