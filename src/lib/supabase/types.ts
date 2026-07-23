@@ -40,30 +40,45 @@ export type Database = {
       }
       artisans: {
         Row: {
+          account_name: string | null
+          account_number: string | null
           added_by_admin: string | null
           auth_user_id: string | null
+          bank_code: string | null
+          bank_name: string | null
           created_at: string
           email: string
           id: string
           name: string
+          paystack_recipient_code: string | null
           phone: string | null
         }
         Insert: {
+          account_name?: string | null
+          account_number?: string | null
           added_by_admin?: string | null
           auth_user_id?: string | null
+          bank_code?: string | null
+          bank_name?: string | null
           created_at?: string
           email: string
           id?: string
           name: string
+          paystack_recipient_code?: string | null
           phone?: string | null
         }
         Update: {
+          account_name?: string | null
+          account_number?: string | null
           added_by_admin?: string | null
           auth_user_id?: string | null
+          bank_code?: string | null
+          bank_name?: string | null
           created_at?: string
           email?: string
           id?: string
           name?: string
+          paystack_recipient_code?: string | null
           phone?: string | null
         }
         Relationships: [
@@ -78,27 +93,42 @@ export type Database = {
       }
       clients: {
         Row: {
+          account_name: string | null
+          account_number: string | null
           auth_user_id: string | null
+          bank_code: string | null
+          bank_name: string | null
           created_at: string
           email: string
           id: string
           name: string
+          paystack_recipient_code: string | null
           phone: string | null
         }
         Insert: {
+          account_name?: string | null
+          account_number?: string | null
           auth_user_id?: string | null
+          bank_code?: string | null
+          bank_name?: string | null
           created_at?: string
           email: string
           id?: string
           name: string
+          paystack_recipient_code?: string | null
           phone?: string | null
         }
         Update: {
+          account_name?: string | null
+          account_number?: string | null
           auth_user_id?: string | null
+          bank_code?: string | null
+          bank_name?: string | null
           created_at?: string
           email?: string
           id?: string
           name?: string
+          paystack_recipient_code?: string | null
           phone?: string | null
         }
         Relationships: []
@@ -356,6 +386,73 @@ export type Database = {
           },
           {
             foreignKeyName: "payments_work_order_id_fkey"
+            columns: ["work_order_id"]
+            isOneToOne: false
+            referencedRelation: "work_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payouts: {
+        Row: {
+          amount: number
+          artisan_id: string
+          created_at: string
+          failure_reason: string | null
+          id: string
+          initiated_by: string | null
+          paystack_reference: string | null
+          paystack_transfer_code: string | null
+          reason: string | null
+          status: string
+          updated_at: string
+          work_order_id: string | null
+        }
+        Insert: {
+          amount: number
+          artisan_id: string
+          created_at?: string
+          failure_reason?: string | null
+          id?: string
+          initiated_by?: string | null
+          paystack_reference?: string | null
+          paystack_transfer_code?: string | null
+          reason?: string | null
+          status?: string
+          updated_at?: string
+          work_order_id?: string | null
+        }
+        Update: {
+          amount?: number
+          artisan_id?: string
+          created_at?: string
+          failure_reason?: string | null
+          id?: string
+          initiated_by?: string | null
+          paystack_reference?: string | null
+          paystack_transfer_code?: string | null
+          reason?: string | null
+          status?: string
+          updated_at?: string
+          work_order_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payouts_artisan_id_fkey"
+            columns: ["artisan_id"]
+            isOneToOne: false
+            referencedRelation: "artisans"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payouts_initiated_by_fkey"
+            columns: ["initiated_by"]
+            isOneToOne: false
+            referencedRelation: "admins"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payouts_work_order_id_fkey"
             columns: ["work_order_id"]
             isOneToOne: false
             referencedRelation: "work_orders"
@@ -718,26 +815,81 @@ export type Database = {
           id: string
         }[]
       }
-      update_own_artisan_profile: {
-        Args: { p_name: string; p_phone: string }
+      update_own_artisan_bank_details: {
+        Args: {
+          p_account_name: string
+          p_account_number: string
+          p_bank_code: string
+          p_bank_name: string
+          p_paystack_recipient_code: string
+        }
         Returns: {
+          account_name: string | null
+          account_number: string | null
           added_by_admin: string | null
           auth_user_id: string | null
+          bank_code: string | null
+          bank_name: string | null
           created_at: string
           email: string
           id: string
           name: string
+          paystack_recipient_code: string | null
+          phone: string | null
+        }
+      }
+      update_own_artisan_profile: {
+        Args: { p_name: string; p_phone: string }
+        Returns: {
+          account_name: string | null
+          account_number: string | null
+          added_by_admin: string | null
+          auth_user_id: string | null
+          bank_code: string | null
+          bank_name: string | null
+          created_at: string
+          email: string
+          id: string
+          name: string
+          paystack_recipient_code: string | null
+          phone: string | null
+        }
+      }
+      update_own_client_bank_details: {
+        Args: {
+          p_account_name: string
+          p_account_number: string
+          p_bank_code: string
+          p_bank_name: string
+          p_paystack_recipient_code: string
+        }
+        Returns: {
+          account_name: string | null
+          account_number: string | null
+          auth_user_id: string | null
+          bank_code: string | null
+          bank_name: string | null
+          created_at: string
+          email: string
+          id: string
+          name: string
+          paystack_recipient_code: string | null
           phone: string | null
         }
       }
       update_own_client_profile: {
         Args: { p_name: string; p_phone: string }
         Returns: {
+          account_name: string | null
+          account_number: string | null
           auth_user_id: string | null
+          bank_code: string | null
+          bank_name: string | null
           created_at: string
           email: string
           id: string
           name: string
+          paystack_recipient_code: string | null
           phone: string | null
         }
       }

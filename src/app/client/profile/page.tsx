@@ -1,16 +1,19 @@
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { updateOwnProfile } from "./actions";
+import { saveClientBankDetails } from "./bank-actions";
 import { SubmitButton } from "@/components/submit-button";
+import { BankDetailsForm } from "@/components/bank-details-form";
+import { listNigerianBanks } from "@/lib/paystack";
 
 export const metadata: Metadata = { title: "My Profile" };
 
 export default async function ClientProfilePage({
   searchParams,
 }: {
-  searchParams: Promise<{ updated?: string; error?: string }>;
+  searchParams: Promise<{ updated?: string; error?: string; bank_updated?: string; bank_error?: string }>;
 }) {
-  const { updated, error } = await searchParams;
+  const { updated, error, bank_updated, bank_error } = await searchParams;
   const supabase = await createClient();
 
   const {
@@ -22,6 +25,8 @@ export default async function ClientProfilePage({
     .select("*")
     .eq("auth_user_id", user?.id ?? "")
     .maybeSingle();
+
+  const banks = await listNigerianBanks().catch(() => []);
 
   return (
     <div>
@@ -74,6 +79,33 @@ export default async function ClientProfilePage({
   Save changes
 </SubmitButton>
         </form>
+      </section>
+
+      <section className="mt-6 max-w-md rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-6">
+        <h2 className="font-semibold text-navy-black">Bank details</h2>
+        <p className="mt-1 text-sm text-navy-black/60">
+          On file for any future refund — not used for your regular payments to DFM.
+        </p>
+        {bank_updated && (
+          <p className="mt-4 rounded-md bg-green-50 px-3 py-2 text-sm text-green-700">
+            Bank details saved.
+          </p>
+        )}
+        {bank_error && (
+          <p className="mt-4 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
+            Couldn&apos;t verify that account — double check the bank and account number and try
+            again.
+          </p>
+        )}
+        <div className="mt-4">
+          <BankDetailsForm
+            action={saveClientBankDetails}
+            banks={banks}
+            currentBankName={client?.bank_name ?? null}
+            currentAccountNumber={client?.account_number ?? null}
+            currentAccountName={client?.account_name ?? null}
+          />
+        </div>
       </section>
     </div>
   );

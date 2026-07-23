@@ -172,3 +172,18 @@ export async function notifyArtisanJobAssigned(params: {
     `),
   });
 }
+
+export async function notifyArtisanPayoutSent(params: {
+  artisanEmail: string;
+  artisanName: string;
+  amount: string;
+}): Promise<void> {
+  await sendEmail({
+    to: params.artisanEmail,
+    subject: `Payment sent — ${params.amount}`,
+    html: wrapper(`
+      <h2>Payment sent</h2>
+      <p>Hi ${params.artisanName}, we've sent <strong>${params.amount}</strong> to your bank account on file. It should reflect shortly, depending on your bank.</p>
+    `),
+  });
+}
