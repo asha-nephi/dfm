@@ -5,12 +5,25 @@ import { SubmitButton } from "@/components/submit-button";
 
 export const metadata: Metadata = { title: "Log in" };
 
+// Some error values are internal codes (set by routes like /auth/callback),
+// not messages meant for display — map those to accurate, reassuring text
+// instead of dumping the raw code. `confirmation_failed` in particular
+// doesn't mean confirmation failed outright: the email gets confirmed by
+// Supabase before our callback ever runs, so this fires when only the
+// one-time auto-login link was already used (often by an email client's
+// link-scanner) — the account is still confirmed, just not auto-signed-in.
+const ERROR_MESSAGES: Record<string, string> = {
+  confirmation_failed:
+    "That confirmation link was already used, but your email should still be confirmed — try logging in with your password below.",
+};
+
 export default async function LoginPage({
   searchParams,
 }: {
   searchParams: Promise<{ error?: string }>;
 }) {
   const { error } = await searchParams;
+  const errorMessage = error ? (ERROR_MESSAGES[error] ?? error) : null;
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-off-white px-4">
@@ -27,9 +40,9 @@ export default async function LoginPage({
             For clients, artisans, and DFM admin.
           </p>
 
-          {error && (
+          {errorMessage && (
             <p className="mt-4 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
-              {error}
+              {errorMessage}
             </p>
           )}
 
