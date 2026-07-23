@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { getCurrentRole } from "@/lib/auth";
-import { AppHeader } from "@/components/app-header";
+import { DashboardShell } from "@/components/dashboard-shell";
 
 export const metadata: Metadata = {
   title: "My Properties",
@@ -19,16 +19,15 @@ export default async function ClientLayout({
   if (role !== "client") redirect("/dashboard");
 
   return (
-    <div className="min-h-screen bg-off-white">
-      <AppHeader
-        roleLabel="Client"
-        homeHref="/client"
-        nav={[
-          { href: "/client", label: "My properties" },
-          { href: "/client/payments", label: "Payments" },
-        ]}
-      />
-      <main className="mx-auto max-w-5xl px-4 py-8">{children}</main>
-    </div>
+    <DashboardShell
+      roleLabel="Client"
+      homeHref="/client"
+      nav={[
+        { href: "/client", label: "My properties" },
+        { href: "/client/payments", label: "Payments" },
+      ]}
+    >
+      {children}
+    </DashboardShell>
   );
 }

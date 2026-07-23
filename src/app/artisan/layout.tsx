@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { getCurrentRole } from "@/lib/auth";
-import { AppHeader } from "@/components/app-header";
+import { DashboardShell } from "@/components/dashboard-shell";
 
 export const metadata: Metadata = {
   title: "My Jobs",
@@ -19,9 +19,12 @@ export default async function ArtisanLayout({
   if (role !== "artisan") redirect("/dashboard");
 
   return (
-    <div className="min-h-screen bg-off-white">
-      <AppHeader roleLabel="Artisan" homeHref="/artisan" />
-      <main className="mx-auto max-w-5xl px-4 py-8">{children}</main>
-    </div>
+    <DashboardShell
+      roleLabel="Artisan"
+      homeHref="/artisan"
+      nav={[{ href: "/artisan", label: "My jobs" }]}
+    >
+      {children}
+    </DashboardShell>
   );
 }
