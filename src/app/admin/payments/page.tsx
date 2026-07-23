@@ -27,7 +27,7 @@ export default async function AdminPaymentsPage({
     <div>
       <h1 className="text-2xl font-semibold text-navy-black">Payments</h1>
 
-      <section className="mt-6 rounded-lg border border-charcoal/10 bg-white p-6">
+      <section className="mt-6 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-6">
         <h2 className="font-semibold text-navy-black">Create a payment request</h2>
         {added && (
           <p className="mt-3 rounded-md bg-green-50 px-3 py-2 text-sm text-green-700">
@@ -51,7 +51,7 @@ export default async function AdminPaymentsPage({
           <select
             name="propertyId"
             required
-            className="rounded-md border border-charcoal/20 px-3 py-2 text-sm focus:border-amber focus:outline-none focus:ring-1 focus:ring-amber"
+            className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
           >
             <option value="">Select property...</option>
             {properties?.map((p) => (
@@ -67,17 +67,17 @@ export default async function AdminPaymentsPage({
             min={1}
             step="1"
             required
-            className="rounded-md border border-charcoal/20 px-3 py-2 text-sm focus:border-amber focus:outline-none focus:ring-1 focus:ring-amber"
+            className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
           />
           <input
             name="description"
             placeholder="e.g. July 2026 management fee"
             required
-            className="rounded-md border border-charcoal/20 px-3 py-2 text-sm focus:border-amber focus:outline-none focus:ring-1 focus:ring-amber"
+            className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
           />
           <button
             type="submit"
-            className="rounded-md bg-charcoal px-4 py-2 text-sm font-medium text-off-white hover:bg-navy-black"
+            className="rounded-lg bg-charcoal shadow-sm px-4 py-2 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90"
           >
             Create
           </button>
@@ -92,7 +92,7 @@ export default async function AdminPaymentsPage({
             {payments.map((p) => (
               <li
                 key={p.id}
-                className="flex items-center justify-between rounded-lg border border-charcoal/10 bg-white p-4"
+                className="flex flex-col gap-2 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-4 sm:flex-row sm:items-center sm:justify-between"
               >
                 <div>
                   <p className="text-sm text-navy-black/60">

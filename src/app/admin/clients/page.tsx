@@ -18,7 +18,7 @@ export default async function AdminClientsPage({
     <div>
       <h1 className="text-2xl font-semibold text-navy-black">Clients</h1>
 
-      <section className="mt-6 rounded-lg border border-charcoal/10 bg-white p-6">
+      <section className="mt-6 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-6">
         <h2 className="font-semibold text-navy-black">Add a client</h2>
         {added && (
           <p className="mt-3 rounded-md bg-green-50 px-3 py-2 text-sm text-green-700">
@@ -33,23 +33,23 @@ export default async function AdminClientsPage({
             name="name"
             placeholder="Full name"
             required
-            className="rounded-md border border-charcoal/20 px-3 py-2 text-sm focus:border-amber focus:outline-none focus:ring-1 focus:ring-amber"
+            className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
           />
           <input
             name="email"
             type="email"
             placeholder="Email"
             required
-            className="rounded-md border border-charcoal/20 px-3 py-2 text-sm focus:border-amber focus:outline-none focus:ring-1 focus:ring-amber"
+            className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
           />
           <input
             name="phone"
             placeholder="Phone / WhatsApp"
-            className="rounded-md border border-charcoal/20 px-3 py-2 text-sm focus:border-amber focus:outline-none focus:ring-1 focus:ring-amber"
+            className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
           />
           <button
             type="submit"
-            className="sm:col-span-3 w-fit rounded-md bg-charcoal px-4 py-2 text-sm font-medium text-off-white hover:bg-navy-black"
+            className="sm:col-span-3 w-fit rounded-lg bg-charcoal shadow-sm px-4 py-2 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90"
           >
             Add client
           </button>
@@ -64,12 +64,12 @@ export default async function AdminClientsPage({
         {!clients || clients.length === 0 ? (
           <p className="text-sm text-navy-black/60">No clients yet.</p>
         ) : (
-          <ul className="divide-y divide-charcoal/10 rounded-lg border border-charcoal/10 bg-white">
+          <ul className="divide-y divide-charcoal/10 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5">
             {clients.map((c) => (
               <li key={c.id}>
                 <Link
                   href={`/admin/clients/${c.id}`}
-                  className="flex items-center justify-between px-5 py-4 hover:bg-off-white"
+                  className="flex flex-col gap-1 px-5 py-4 hover:bg-off-white sm:flex-row sm:items-center sm:justify-between sm:gap-4"
                 >
                   <div>
                     <p className="font-medium text-navy-black">{c.name}</p>

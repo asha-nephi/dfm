@@ -40,7 +40,7 @@ export function TurnoverChecklistEditor({ initial }: { initial: ChecklistItem[] 
               value={row.item}
               onChange={(e) => updateRow(i, { item: e.target.value })}
               placeholder="e.g. Linens changed"
-              className="flex-1 rounded-md border border-charcoal/20 px-3 py-2 text-sm focus:border-amber focus:outline-none focus:ring-1 focus:ring-amber"
+              className="flex-1 rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
             />
             <button
               type="button"

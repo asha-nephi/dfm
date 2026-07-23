@@ -24,7 +24,7 @@ export default async function ClientHomePage() {
             <Link
               key={property.id}
               href={`/client/properties/${property.id}`}
-              className="rounded-lg border border-charcoal/10 bg-white p-5 transition hover:border-amber/60"
+              className="rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-5 transition hover:border-amber/60"
             >
               <span className="inline-block rounded-full bg-off-white px-2.5 py-0.5 text-xs font-medium text-navy-black/70">
                 {propertyTypeLabel(property.property_type)}

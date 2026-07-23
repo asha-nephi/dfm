@@ -48,7 +48,7 @@ export default async function AdminClientDetailPage({
         </span>
       </div>
 
-      <section className="mt-8 rounded-lg border border-charcoal/10 bg-white p-6">
+      <section className="mt-8 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-6">
         <h2 className="font-semibold text-navy-black">Add a property</h2>
         {property_added && (
           <p className="mt-3 rounded-md bg-green-50 px-3 py-2 text-sm text-green-700">
@@ -66,12 +66,12 @@ export default async function AdminClientDetailPage({
             name="address"
             placeholder="Property address"
             required
-            className="sm:col-span-2 rounded-md border border-charcoal/20 px-3 py-2 text-sm focus:border-amber focus:outline-none focus:ring-1 focus:ring-amber"
+            className="sm:col-span-2 rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
           />
           <select
             name="propertyType"
             defaultValue="long_term_let"
-            className="rounded-md border border-charcoal/20 px-3 py-2 text-sm focus:border-amber focus:outline-none focus:ring-1 focus:ring-amber"
+            className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
           >
             <option value="long_term_let">Long-term let</option>
             <option value="short_term_rental">Short-term rental</option>
@@ -79,11 +79,11 @@ export default async function AdminClientDetailPage({
           <input
             name="notes"
             placeholder="Notes (gate code, access instructions, etc.)"
-            className="rounded-md border border-charcoal/20 px-3 py-2 text-sm focus:border-amber focus:outline-none focus:ring-1 focus:ring-amber"
+            className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
           />
           <button
             type="submit"
-            className="sm:col-span-2 w-fit rounded-md bg-charcoal px-4 py-2 text-sm font-medium text-off-white hover:bg-navy-black"
+            className="sm:col-span-2 w-fit rounded-lg bg-charcoal shadow-sm px-4 py-2 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90"
           >
             Add property
           </button>
@@ -100,7 +100,7 @@ export default async function AdminClientDetailPage({
               <Link
                 key={p.id}
                 href={`/admin/properties/${p.id}`}
-                className="rounded-lg border border-charcoal/10 bg-white p-5 hover:border-amber/60"
+                className="rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-5 hover:border-amber/60"
               >
                 <span className="inline-block rounded-full bg-off-white px-2.5 py-0.5 text-xs font-medium text-navy-black/70">
                   {propertyTypeLabel(p.property_type)}

@@ -1,16 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { signup } from "./actions";
+import { requestPasswordReset } from "./actions";
 
-export const metadata: Metadata = { title: "Set your password" };
+export const metadata: Metadata = { title: "Reset password" };
 
-export default async function SignupPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ error?: string }>;
-}) {
-  const { error } = await searchParams;
-
+export default function ForgotPasswordPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-off-white px-4">
       <div className="w-full max-w-sm">
@@ -21,20 +15,13 @@ export default async function SignupPage({
           <span aria-hidden="true">&larr;</span> Deseret Facility Management
         </Link>
         <div className="rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-8">
-          <h1 className="text-xl font-semibold text-navy-black">Set your password</h1>
+          <h1 className="text-xl font-semibold text-navy-black">Reset your password</h1>
           <p className="mt-1 text-sm text-navy-black/60">
-            Use the same email address DFM has on file for you as a client or
-            artisan. If you haven&apos;t been added yet, reach out via the
-            contact form on the homepage first.
+            Enter the email on your account and we&apos;ll send a link to
+            reset your password.
           </p>
 
-          {error && (
-            <p className="mt-4 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
-              {error}
-            </p>
-          )}
-
-          <form action={signup} className="mt-6 space-y-4">
+          <form action={requestPasswordReset} className="mt-6 space-y-4">
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-navy-black">
                 Email
@@ -48,32 +35,17 @@ export default async function SignupPage({
                 className="mt-1 w-full rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
               />
             </div>
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-navy-black">
-                Choose a password
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                required
-                minLength={8}
-                autoComplete="new-password"
-                className="mt-1 w-full rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
-              />
-            </div>
             <button
               type="submit"
               className="w-full rounded-lg bg-charcoal shadow-sm px-4 py-2 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90"
             >
-              Create account
+              Send reset link
             </button>
           </form>
 
           <p className="mt-6 text-center text-sm text-navy-black/60">
-            Already set your password?{" "}
             <Link href="/login" className="font-medium text-charcoal underline underline-offset-2">
-              Log in
+              Back to log in
             </Link>
           </p>
         </div>

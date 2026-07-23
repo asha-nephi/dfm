@@ -21,7 +21,7 @@ export default async function AdminLeadsPage() {
         ) : (
           <ul className="space-y-3">
             {leads.map((lead) => (
-              <li key={lead.id} className="rounded-lg border border-charcoal/10 bg-white p-5">
+              <li key={lead.id} className="rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-5">
                 <div className="flex items-center justify-between">
                   <p className="font-medium text-navy-black">{lead.name}</p>
                   <p className="text-xs text-navy-black/50">{formatDate(lead.created_at)}</p>

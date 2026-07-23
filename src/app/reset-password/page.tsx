@@ -1,10 +1,7 @@
-import type { Metadata } from "next";
 import Link from "next/link";
-import { signup } from "./actions";
+import { updatePassword } from "./actions";
 
-export const metadata: Metadata = { title: "Set your password" };
-
-export default async function SignupPage({
+export default async function ResetPasswordPage({
   searchParams,
 }: {
   searchParams: Promise<{ error?: string }>;
@@ -21,12 +18,7 @@ export default async function SignupPage({
           <span aria-hidden="true">&larr;</span> Deseret Facility Management
         </Link>
         <div className="rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-8">
-          <h1 className="text-xl font-semibold text-navy-black">Set your password</h1>
-          <p className="mt-1 text-sm text-navy-black/60">
-            Use the same email address DFM has on file for you as a client or
-            artisan. If you haven&apos;t been added yet, reach out via the
-            contact form on the homepage first.
-          </p>
+          <h1 className="text-xl font-semibold text-navy-black">Choose a new password</h1>
 
           {error && (
             <p className="mt-4 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
@@ -34,23 +26,10 @@ export default async function SignupPage({
             </p>
           )}
 
-          <form action={signup} className="mt-6 space-y-4">
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-navy-black">
-                Email
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                required
-                autoComplete="email"
-                className="mt-1 w-full rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
-              />
-            </div>
+          <form action={updatePassword} className="mt-6 space-y-4">
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-navy-black">
-                Choose a password
+                New password
               </label>
               <input
                 id="password"
@@ -66,16 +45,9 @@ export default async function SignupPage({
               type="submit"
               className="w-full rounded-lg bg-charcoal shadow-sm px-4 py-2 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90"
             >
-              Create account
+              Update password
             </button>
           </form>
-
-          <p className="mt-6 text-center text-sm text-navy-black/60">
-            Already set your password?{" "}
-            <Link href="/login" className="font-medium text-charcoal underline underline-offset-2">
-              Log in
-            </Link>
-          </p>
         </div>
       </div>
     </div>

@@ -4,14 +4,19 @@ import { Hero } from "@/components/marketing/hero";
 import { ProblemSolution } from "@/components/marketing/problem-solution";
 import { ServiceArea } from "@/components/marketing/service-area";
 import { Pricing } from "@/components/marketing/pricing";
+import { CohostSection } from "@/components/marketing/cohost-section";
 import { ContactSection } from "@/components/marketing/contact-section";
 
 export default async function HomePage({
   searchParams,
 }: {
-  searchParams: Promise<{ contact_sent?: string; contact_error?: string }>;
+  searchParams: Promise<{
+    contact_sent?: string;
+    contact_error?: string;
+    cohost_error?: string;
+  }>;
 }) {
-  const { contact_sent, contact_error } = await searchParams;
+  const { contact_sent, contact_error, cohost_error } = await searchParams;
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -21,6 +26,7 @@ export default async function HomePage({
         <ProblemSolution />
         <ServiceArea />
         <Pricing />
+        <CohostSection error={cohost_error === "1"} />
         <ContactSection sent={contact_sent === "1"} error={contact_error === "1"} />
       </main>
       <SiteFooter />

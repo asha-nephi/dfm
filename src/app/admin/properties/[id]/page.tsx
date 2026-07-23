@@ -54,7 +54,7 @@ export default async function AdminPropertyDetailPage({
         </p>
       )}
 
-      <section className="mt-6 rounded-lg border border-charcoal/10 bg-white p-6">
+      <section className="mt-6 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-6">
         <h2 className="font-semibold text-navy-black">Property details</h2>
         <form action={updateProperty} className="mt-4 grid gap-3 sm:grid-cols-2">
           <input type="hidden" name="propertyId" value={property.id} />
@@ -62,12 +62,12 @@ export default async function AdminPropertyDetailPage({
             name="address"
             defaultValue={property.address}
             required
-            className="sm:col-span-2 rounded-md border border-charcoal/20 px-3 py-2 text-sm focus:border-amber focus:outline-none focus:ring-1 focus:ring-amber"
+            className="sm:col-span-2 rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
           />
           <select
             name="propertyType"
             defaultValue={property.property_type}
-            className="rounded-md border border-charcoal/20 px-3 py-2 text-sm focus:border-amber focus:outline-none focus:ring-1 focus:ring-amber"
+            className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
           >
             <option value="long_term_let">Long-term let</option>
             <option value="short_term_rental">Short-term rental</option>
@@ -76,18 +76,18 @@ export default async function AdminPropertyDetailPage({
             name="notes"
             defaultValue={property.notes ?? ""}
             placeholder="Notes"
-            className="rounded-md border border-charcoal/20 px-3 py-2 text-sm focus:border-amber focus:outline-none focus:ring-1 focus:ring-amber"
+            className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
           />
           <button
             type="submit"
-            className="sm:col-span-2 w-fit rounded-md bg-charcoal px-4 py-2 text-sm font-medium text-off-white hover:bg-navy-black"
+            className="sm:col-span-2 w-fit rounded-lg bg-charcoal shadow-sm px-4 py-2 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90"
           >
             Save changes
           </button>
         </form>
       </section>
 
-      <section className="mt-8 rounded-lg border border-charcoal/10 bg-white p-6">
+      <section className="mt-8 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-6">
         <h2 className="font-semibold text-navy-black">Log a work order</h2>
         <form action={createWorkOrder} className="mt-4 grid gap-3 sm:grid-cols-[160px_1fr_auto]">
           <input type="hidden" name="propertyId" value={property.id} />
@@ -96,17 +96,17 @@ export default async function AdminPropertyDetailPage({
             name="date"
             defaultValue={today}
             required
-            className="rounded-md border border-charcoal/20 px-3 py-2 text-sm focus:border-amber focus:outline-none focus:ring-1 focus:ring-amber"
+            className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
           />
           <input
             name="description"
             placeholder="What was done or needs doing"
             required
-            className="rounded-md border border-charcoal/20 px-3 py-2 text-sm focus:border-amber focus:outline-none focus:ring-1 focus:ring-amber"
+            className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
           />
           <button
             type="submit"
-            className="rounded-md bg-charcoal px-4 py-2 text-sm font-medium text-off-white hover:bg-navy-black"
+            className="rounded-lg bg-charcoal shadow-sm px-4 py-2 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90"
           >
             Create
           </button>
@@ -126,7 +126,7 @@ export default async function AdminPropertyDetailPage({
               <li key={wo.id}>
                 <Link
                   href={`/admin/work-orders/${wo.id}`}
-                  className="flex items-center justify-between rounded-lg border border-charcoal/10 bg-white p-4 hover:border-amber/60"
+                  className="flex flex-col gap-2 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-4 hover:border-amber/60 sm:flex-row sm:items-center sm:justify-between"
                 >
                   <div>
                     <p className="text-sm text-navy-black/60">{formatDate(wo.date)}</p>

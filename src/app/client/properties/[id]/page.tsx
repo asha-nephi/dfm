@@ -68,7 +68,7 @@ export default async function ClientPropertyPage({
         </div>
       </div>
 
-      <section className="mt-10 rounded-lg border border-charcoal/10 bg-white p-6">
+      <section className="mt-10 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-6">
         <h2 className="font-semibold text-navy-black">Submit a maintenance request</h2>
         {request_sent && (
           <p className="mt-3 rounded-md bg-green-50 px-3 py-2 text-sm text-green-700">
@@ -87,11 +87,11 @@ export default async function ClientPropertyPage({
             required
             rows={3}
             placeholder="Describe what needs attention..."
-            className="w-full rounded-md border border-charcoal/20 px-3 py-2 text-sm focus:border-amber focus:outline-none focus:ring-1 focus:ring-amber"
+            className="w-full rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
           />
           <button
             type="submit"
-            className="rounded-md bg-charcoal px-4 py-2 text-sm font-medium text-off-white hover:bg-navy-black"
+            className="rounded-lg bg-charcoal shadow-sm px-4 py-2 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90"
           >
             Submit request
           </button>
@@ -115,7 +115,7 @@ export default async function ClientPropertyPage({
                 ? (wo.turnover_checklist as ChecklistItem[])
                 : [];
               return (
-                <li key={wo.id} className="rounded-lg border border-charcoal/10 bg-white p-5">
+                <li key={wo.id} className="rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-5">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <span className="text-sm font-medium text-navy-black/60">
                       {formatDate(wo.date)}

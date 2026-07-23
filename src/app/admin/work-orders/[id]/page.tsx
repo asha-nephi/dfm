@@ -76,7 +76,7 @@ export default async function AdminWorkOrderDetailPage({
         </p>
       )}
 
-      <section className="mt-6 rounded-lg border border-charcoal/10 bg-white p-6">
+      <section className="mt-6 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-6">
         <form action={updateWorkOrder} className="space-y-5">
           <input type="hidden" name="workOrderId" value={workOrder.id} />
 
@@ -88,7 +88,7 @@ export default async function AdminWorkOrderDetailPage({
                 name="date"
                 defaultValue={workOrder.date}
                 required
-                className="mt-1 w-full rounded-md border border-charcoal/20 px-3 py-2 text-sm focus:border-amber focus:outline-none focus:ring-1 focus:ring-amber"
+                className="mt-1 w-full rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
               />
             </div>
             <div>
@@ -96,7 +96,7 @@ export default async function AdminWorkOrderDetailPage({
               <select
                 name="status"
                 defaultValue={workOrder.status}
-                className="mt-1 w-full rounded-md border border-charcoal/20 px-3 py-2 text-sm focus:border-amber focus:outline-none focus:ring-1 focus:ring-amber"
+                className="mt-1 w-full rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
               >
                 <option value="requested">Requested</option>
                 <option value="accepted">Accepted</option>
@@ -114,7 +114,7 @@ export default async function AdminWorkOrderDetailPage({
               defaultValue={workOrder.description}
               required
               rows={3}
-              className="mt-1 w-full rounded-md border border-charcoal/20 px-3 py-2 text-sm focus:border-amber focus:outline-none focus:ring-1 focus:ring-amber"
+              className="mt-1 w-full rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
             />
           </div>
 
@@ -123,7 +123,7 @@ export default async function AdminWorkOrderDetailPage({
             <select
               name="assignedArtisanId"
               defaultValue={workOrder.assigned_artisan_id ?? ""}
-              className="mt-1 w-full rounded-md border border-charcoal/20 px-3 py-2 text-sm focus:border-amber focus:outline-none focus:ring-1 focus:ring-amber"
+              className="mt-1 w-full rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
             >
               <option value="">Unassigned</option>
               {artisans?.map((a) => (
@@ -170,38 +170,38 @@ export default async function AdminWorkOrderDetailPage({
               defaultValue={workOrder.flag_reason ?? ""}
               placeholder="Reason (e.g. quote looks high for the scope of work)"
               rows={2}
-              className="mt-2 w-full rounded-md border border-charcoal/20 px-3 py-2 text-sm focus:border-amber focus:outline-none focus:ring-1 focus:ring-amber"
+              className="mt-2 w-full rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
             />
           </div>
 
           <button
             type="submit"
-            className="rounded-md bg-charcoal px-5 py-2.5 text-sm font-medium text-off-white hover:bg-navy-black"
+            className="rounded-lg bg-charcoal shadow-sm px-5 py-2.5 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90"
           >
             Save
           </button>
         </form>
       </section>
 
-      <section className="mt-8 rounded-lg border border-charcoal/10 bg-white p-6">
+      <section className="mt-8 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-6">
         <h2 className="font-semibold text-navy-black">Photos</h2>
         {photo_error && (
           <p className="mt-3 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
             Photo upload failed — please try again.
           </p>
         )}
-        <form action={uploadWorkOrderPhoto} className="mt-4 flex items-center gap-3">
+        <form action={uploadWorkOrderPhoto} className="mt-4 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
           <input type="hidden" name="workOrderId" value={workOrder.id} />
           <input
             type="file"
             name="file"
             accept="image/*"
             required
-            className="text-sm"
+            className="w-full text-sm sm:w-auto"
           />
           <button
             type="submit"
-            className="rounded-md bg-charcoal px-4 py-2 text-sm font-medium text-off-white hover:bg-navy-black"
+            className="rounded-lg bg-charcoal shadow-sm px-4 py-2 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90"
           >
             Upload
           </button>

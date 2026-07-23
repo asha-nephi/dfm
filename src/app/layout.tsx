@@ -12,10 +12,31 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+const title = "Deseret Facility Management";
+const description =
+  "Verified, transparent facility management for landlords who can't be there in person. Dated photos, itemized costs, one flat fee.";
+
 export const metadata: Metadata = {
-  title: "Deseret Facility Management",
-  description:
-    "Verified, transparent facility management for landlords who can't be there in person. Dated photos, itemized costs, one flat fee.",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: title,
+    template: `%s | ${title}`,
+  },
+  description,
+  openGraph: {
+    title,
+    description,
+    url: siteUrl,
+    siteName: title,
+    locale: "en_NG",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title,
+    description,
+  },
 };
 
 export default function RootLayout({

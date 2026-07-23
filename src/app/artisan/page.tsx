@@ -24,7 +24,7 @@ export default async function ArtisanHomePage() {
             <li key={job.id}>
               <Link
                 href={`/artisan/jobs/${job.id}`}
-                className="flex items-center justify-between rounded-lg border border-charcoal/10 bg-white p-4 hover:border-amber/60"
+                className="flex flex-col gap-2 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-4 hover:border-amber/60 sm:flex-row sm:items-center sm:justify-between"
               >
                 <div>
                   <p className="text-sm text-navy-black/60">
