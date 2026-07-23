@@ -22,11 +22,12 @@ export default async function AdminLayout({
           { href: "/admin/clients", label: "Clients" },
           { href: "/admin/work-orders", label: "Work orders" },
           { href: "/admin/artisans", label: "Artisans" },
+          { href: "/admin/leads", label: "Leads" },
           { href: "/admin/payments", label: "Payments" },
           { href: "/admin/cohost", label: "Co-host (beta)" },
         ]}
       />
-      <main className="mx-auto max-w-5xl px-4 py-8">{children}</main>
+      <main className="mx-auto max-w-6xl px-4 py-8">{children}</main>
     </div>
   );
 }

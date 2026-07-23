@@ -1,0 +1,120 @@
+"use server";
+
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+import { z } from "zod";
+import { createClient } from "@/lib/supabase/server";
+
+const lineItemSchema = z.object({
+  label: z.string().trim().min(1),
+  amount: z.coerce.number().min(0),
+});
+
+const updateSchema = z.object({
+  workOrderId: z.string().uuid(),
+  date: z.string().min(1),
+  description: z.string().trim().min(1).max(2000),
+  status: z.enum(["requested", "accepted", "in_progress", "complete", "cancelled"]),
+  assignedArtisanId: z.string().uuid().optional().or(z.literal("")),
+  flagged: z.string().optional(),
+  flagReason: z.string().trim().max(1000).optional().or(z.literal("")),
+  costBreakdown: z.string(),
+});
+
+export async function updateWorkOrder(formData: FormData) {
+  const parsed = updateSchema.safeParse({
+    workOrderId: formData.get("workOrderId"),
+    date: formData.get("date"),
+    description: formData.get("description"),
+    status: formData.get("status"),
+    assignedArtisanId: formData.get("assignedArtisanId"),
+    flagged: formData.get("flagged"),
+    flagReason: formData.get("flagReason"),
+    costBreakdown: formData.get("costBreakdown"),
+  });
+
+  if (!parsed.success) {
+    redirect(`/admin/work-orders/${formData.get("workOrderId")}?error=1`);
+  }
+
+  let breakdown: { label: string; amount: number }[] = [];
+  try {
+    const rawItems = JSON.parse(parsed.data.costBreakdown);
+    breakdown = z.array(lineItemSchema).parse(rawItems);
+  } catch {
+    redirect(`/admin/work-orders/${parsed.data.workOrderId}?error=1`);
+  }
+
+  const costAmount = breakdown.reduce((sum, item) => sum + item.amount, 0);
+  const flagged = parsed.data.flagged === "on";
+
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("work_orders")
+    .update({
+      date: parsed.data.date,
+      description: parsed.data.description,
+      status: parsed.data.status,
+      assigned_artisan_id: parsed.data.assignedArtisanId || null,
+      flagged_for_review: flagged,
+      flag_reason: flagged ? parsed.data.flagReason || null : null,
+      cost_breakdown: breakdown,
+      cost_amount: costAmount,
+    })
+    .eq("id", parsed.data.workOrderId);
+
+  if (error) {
+    redirect(`/admin/work-orders/${parsed.data.workOrderId}?error=1`);
+  }
+
+  revalidatePath(`/admin/work-orders/${parsed.data.workOrderId}`);
+  redirect(`/admin/work-orders/${parsed.data.workOrderId}?updated=1`);
+}
+
+export async function uploadWorkOrderPhoto(formData: FormData) {
+  const workOrderId = String(formData.get("workOrderId") ?? "");
+  const file = formData.get("file") as File | null;
+
+  if (!workOrderId || !file || file.size === 0) {
+    redirect(`/admin/work-orders/${workOrderId}?photo_error=1`);
+  }
+
+  const supabase = await createClient();
+  const ext = file.name.split(".").pop() || "jpg";
+  const path = `${workOrderId}/${crypto.randomUUID()}.${ext}`;
+  const buffer = Buffer.from(await file.arrayBuffer());
+
+  const { error: uploadError } = await supabase.storage
+    .from("work-order-photos")
+    .upload(path, buffer, { contentType: file.type || "image/jpeg" });
+
+  if (uploadError) {
+    redirect(`/admin/work-orders/${workOrderId}?photo_error=1`);
+  }
+
+  const { error: insertError } = await supabase.from("work_order_photos").insert({
+    work_order_id: workOrderId,
+    uploaded_by: "admin",
+    photo_url: path,
+  });
+
+  if (insertError) {
+    redirect(`/admin/work-orders/${workOrderId}?photo_error=1`);
+  }
+
+  revalidatePath(`/admin/work-orders/${workOrderId}`);
+  redirect(`/admin/work-orders/${workOrderId}`);
+}
+
+export async function deleteWorkOrderPhoto(formData: FormData) {
+  const workOrderId = String(formData.get("workOrderId") ?? "");
+  const photoId = String(formData.get("photoId") ?? "");
+  const photoPath = String(formData.get("photoPath") ?? "");
+
+  const supabase = await createClient();
+  await supabase.storage.from("work-order-photos").remove([photoPath]);
+  await supabase.from("work_order_photos").delete().eq("id", photoId);
+
+  revalidatePath(`/admin/work-orders/${workOrderId}`);
+  redirect(`/admin/work-orders/${workOrderId}`);
+}
