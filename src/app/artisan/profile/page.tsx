@@ -11,9 +11,15 @@ export const metadata: Metadata = { title: "My Profile" };
 export default async function ArtisanProfilePage({
   searchParams,
 }: {
-  searchParams: Promise<{ updated?: string; error?: string; bank_updated?: string; bank_error?: string }>;
+  searchParams: Promise<{
+    updated?: string;
+    error?: string;
+    bank_updated?: string;
+    bank_error?: string;
+    reason?: string;
+  }>;
 }) {
-  const { updated, error, bank_updated, bank_error } = await searchParams;
+  const { updated, error, bank_updated, bank_error, reason } = await searchParams;
   const supabase = await createClient();
 
   const {
@@ -124,8 +130,9 @@ export default async function ArtisanProfilePage({
         )}
         {bank_error && (
           <p className="mt-4 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
-            Couldn&apos;t verify that account — double check the bank and account number and try
-            again.
+            {reason
+              ? reason
+              : "Couldn't verify that account — double check the bank and account number and try again."}
           </p>
         )}
         <div className="mt-4">

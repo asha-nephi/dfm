@@ -33,8 +33,10 @@ export async function saveArtisanBankDetails(formData: FormData) {
       bankName: parsed.data.bankName,
       accountNumber: parsed.data.accountNumber,
     });
-  } catch {
-    redirect("/artisan/profile?bank_error=1");
+  } catch (err) {
+    console.error("saveArtisanBankDetails: verifyAndTokenizeBankAccount failed", err);
+    const reason = err instanceof Error ? err.message : "";
+    redirect(`/artisan/profile?bank_error=1&reason=${encodeURIComponent(reason)}`);
   }
 
   const supabase = await createClient();

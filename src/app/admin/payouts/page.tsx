@@ -22,9 +22,15 @@ const STATUS_STYLE: Record<string, string> = {
 export default async function AdminPayoutsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ initiated?: string; finalized?: string; error?: string; otp_error?: string }>;
+  searchParams: Promise<{
+    initiated?: string;
+    finalized?: string;
+    error?: string;
+    otp_error?: string;
+    reason?: string;
+  }>;
 }) {
-  const { initiated, finalized, error, otp_error } = await searchParams;
+  const { initiated, finalized, error, otp_error, reason } = await searchParams;
   const supabase = await createClient();
 
   const [{ data: artisans }, { data: workOrders }, { data: payouts }] = await Promise.all([
@@ -82,12 +88,14 @@ export default async function AdminPayoutsPage({
         )}
         {error && error !== "no_bank" && (
           <p className="mt-3 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
-            Something went wrong sending that transfer — please check the details and try again.
+            {reason
+              ? reason
+              : "Something went wrong sending that transfer — please check the details and try again."}
           </p>
         )}
         {otp_error && (
           <p className="mt-3 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
-            That code didn&apos;t work — check the payout below and try entering it again.
+            {reason ? reason : "That code didn't work — check the payout below and try entering it again."}
           </p>
         )}
 

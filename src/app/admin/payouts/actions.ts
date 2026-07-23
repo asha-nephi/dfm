@@ -59,8 +59,10 @@ export async function initiatePayout(formData: FormData) {
       reason: parsed.data.reason,
       reference,
     });
-  } catch {
-    redirect("/admin/payouts?error=1");
+  } catch (err) {
+    console.error("initiatePayout: initiateTransfer failed", err);
+    const errReason = err instanceof Error ? err.message : "";
+    redirect(`/admin/payouts?error=1&reason=${encodeURIComponent(errReason)}`);
   }
 
   const status =
@@ -119,8 +121,12 @@ export async function finalizePayoutOtp(formData: FormData) {
       transferCode: payout.paystack_transfer_code,
       otp: parsed.data.otp,
     });
-  } catch {
-    redirect(`/admin/payouts?otp_error=1&payout=${parsed.data.payoutId}`);
+  } catch (err) {
+    console.error("finalizePayoutOtp: finalizeTransfer failed", err);
+    const errReason = err instanceof Error ? err.message : "";
+    redirect(
+      `/admin/payouts?otp_error=1&payout=${parsed.data.payoutId}&reason=${encodeURIComponent(errReason)}`,
+    );
   }
 
   const newStatus = result.status === "success" ? "success" : result.status === "failed" ? "failed" : "pending";
