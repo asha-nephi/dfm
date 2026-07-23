@@ -1,4 +1,5 @@
 import { formatDate } from "@/lib/format";
+import { SubmitButton } from "@/components/submit-button";
 
 type Comment = {
   id: string;
@@ -61,12 +62,9 @@ export function WorkOrderComments({
           placeholder="Add a comment..."
           className="flex-1 rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
         />
-        <button
-          type="submit"
-          className="rounded-lg bg-charcoal shadow-sm px-4 py-2.5 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90"
-        >
-          Post
-        </button>
+        <SubmitButton className="rounded-lg bg-charcoal shadow-sm px-4 py-2.5 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90">
+  Post
+</SubmitButton>
       </form>
     </section>
   );

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { formatDate } from "@/lib/format";
 import { approveCohostRequest, closeCohostRequest } from "../actions";
+import { SubmitButton } from "@/components/submit-button";
 
 export default async function AdminCohostDetailPage({
   params,
@@ -58,23 +59,17 @@ export default async function AdminCohostDetailPage({
         {request.status === "pending_review" && (
           <form action={approveCohostRequest}>
             <input type="hidden" name="id" value={request.id} />
-            <button
-              type="submit"
-              className="rounded-lg bg-charcoal shadow-sm px-4 py-2 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90"
-            >
-              Approve — open for applications
-            </button>
+            <SubmitButton className="rounded-lg bg-charcoal shadow-sm px-4 py-2 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90">
+  Approve — open for applications
+</SubmitButton>
           </form>
         )}
         {(request.status === "open" || request.status === "pending_review") && (
           <form action={closeCohostRequest}>
             <input type="hidden" name="id" value={request.id} />
-            <button
-              type="submit"
-              className="rounded-md border border-charcoal/20 px-4 py-2 text-sm font-medium text-navy-black hover:border-charcoal/40"
-            >
-              Close request
-            </button>
+            <SubmitButton className="rounded-md border border-charcoal/20 px-4 py-2 text-sm font-medium text-navy-black hover:border-charcoal/40">
+  Close request
+</SubmitButton>
           </form>
         )}
       </section>

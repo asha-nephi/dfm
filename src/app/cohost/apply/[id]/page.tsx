@@ -4,6 +4,7 @@ import { LogoMark } from "@/components/logo";
 import { createClient } from "@/lib/supabase/server";
 import { HoneypotField } from "@/components/honeypot-field";
 import { submitApplication } from "./actions";
+import { SubmitButton } from "@/components/submit-button";
 
 export default async function CohostApplyPage({
   params,
@@ -95,12 +96,9 @@ export default async function CohostApplyPage({
                   for the co-host marketplace.
                 </span>
               </label>
-              <button
-                type="submit"
-                className="w-fit rounded-lg bg-charcoal shadow-sm px-6 py-2.5 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90"
-              >
-                Submit application
-              </button>
+              <SubmitButton className="w-fit rounded-lg bg-charcoal shadow-sm px-6 py-2.5 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90">
+  Submit application
+</SubmitButton>
             </form>
           </>
         )}

@@ -3,6 +3,7 @@ import { formatDate, formatNaira } from "@/lib/format";
 import { PaymentStatusBadge } from "@/components/payment-status-badge";
 import { createPaymentRequest } from "./actions";
 import { PaymentStatusSelect } from "./payment-status-select";
+import { SubmitButton } from "@/components/submit-button";
 
 export default async function AdminPaymentsPage({
   searchParams,
@@ -75,12 +76,9 @@ export default async function AdminPaymentsPage({
             required
             className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
           />
-          <button
-            type="submit"
-            className="rounded-lg bg-charcoal shadow-sm px-4 py-2 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90"
-          >
-            Create
-          </button>
+          <SubmitButton className="rounded-lg bg-charcoal shadow-sm px-4 py-2 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90">
+  Create
+</SubmitButton>
         </form>
       </section>
 

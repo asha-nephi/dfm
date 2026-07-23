@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { formatDate, formatNaira } from "@/lib/format";
 import { PaymentStatusBadge } from "@/components/payment-status-badge";
 import { payNow } from "./actions";
+import { SubmitButton } from "@/components/submit-button";
 
 export default async function ClientPaymentsPage({
   searchParams,
@@ -59,12 +60,9 @@ export default async function ClientPaymentsPage({
                 {p.status === "pending" && (
                   <form action={payNow}>
                     <input type="hidden" name="paymentId" value={p.id} />
-                    <button
-                      type="submit"
-                      className="rounded-md bg-amber px-3 py-1.5 text-sm font-semibold text-charcoal hover:bg-amber/90"
-                    >
-                      Pay now
-                    </button>
+                    <SubmitButton className="rounded-md bg-amber px-3 py-1.5 text-sm font-semibold text-charcoal hover:bg-amber/90">
+  Pay now
+</SubmitButton>
                   </form>
                 )}
               </div>

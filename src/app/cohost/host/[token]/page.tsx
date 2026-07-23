@@ -4,6 +4,7 @@ import { LogoMark } from "@/components/logo";
 import { formatDate } from "@/lib/format";
 import { createClient } from "@/lib/supabase/server";
 import { selectApplicant } from "./actions";
+import { SubmitButton } from "@/components/submit-button";
 
 const STATUS_COPY: Record<string, string> = {
   pending_review: "Under review by DFM — we'll be in touch soon.",
@@ -140,12 +141,9 @@ export default async function CohostHostStatusPage({
                           placeholder="Note for this arrangement (optional)"
                           className="min-w-[200px] flex-1 rounded-md border border-charcoal/20 px-2.5 py-1.5 text-sm focus:border-amber focus:outline-none focus:ring-1 focus:ring-amber"
                         />
-                        <button
-                          type="submit"
-                          className="rounded-lg bg-charcoal shadow-sm px-3 py-1.5 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90"
-                        >
-                          Select this co-host
-                        </button>
+                        <SubmitButton className="rounded-lg bg-charcoal shadow-sm px-3 py-1.5 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90">
+  Select this co-host
+</SubmitButton>
                       </form>
                     )}
                   </li>

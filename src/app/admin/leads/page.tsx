@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { formatDate } from "@/lib/format";
 import { convertLeadToClient, archiveLead } from "./actions";
+import { SubmitButton } from "@/components/submit-button";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -86,21 +87,15 @@ export default async function AdminLeadsPage({
                           required
                           className="rounded-lg border border-charcoal/15 bg-white px-3 py-2 text-sm text-navy-black focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
                         />
-                        <button
-                          type="submit"
-                          className="rounded-lg bg-charcoal px-4 py-2 text-sm font-medium text-off-white shadow-sm transition-colors hover:bg-navy-black active:bg-navy-black/90"
-                        >
-                          Convert to client
-                        </button>
+                        <SubmitButton className="rounded-lg bg-charcoal px-4 py-2 text-sm font-medium text-off-white shadow-sm transition-colors hover:bg-navy-black active:bg-navy-black/90">
+  Convert to client
+</SubmitButton>
                       </form>
                       <form action={archiveLead} className="mt-2">
                         <input type="hidden" name="leadId" value={lead.id} />
-                        <button
-                          type="submit"
-                          className="text-xs text-navy-black/50 hover:text-red-600"
-                        >
-                          Archive
-                        </button>
+                        <SubmitButton className="text-xs text-navy-black/50 hover:text-red-600">
+  Archive
+</SubmitButton>
                       </form>
                     </div>
                   )}

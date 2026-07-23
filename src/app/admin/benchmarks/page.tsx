@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { formatNaira } from "@/lib/format";
 import { createBenchmark, deleteBenchmark } from "./actions";
+import { SubmitButton } from "@/components/submit-button";
 
 export default async function AdminBenchmarksPage() {
   const supabase = await createClient();
@@ -42,12 +43,9 @@ export default async function AdminBenchmarksPage() {
             required
             className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
           />
-          <button
-            type="submit"
-            className="rounded-lg bg-charcoal px-4 py-2 text-sm font-medium text-off-white shadow-sm transition-colors hover:bg-navy-black active:bg-navy-black/90"
-          >
-            Add
-          </button>
+          <SubmitButton className="rounded-lg bg-charcoal px-4 py-2 text-sm font-medium text-off-white shadow-sm transition-colors hover:bg-navy-black active:bg-navy-black/90">
+  Add
+</SubmitButton>
         </form>
       </section>
 
@@ -71,9 +69,9 @@ export default async function AdminBenchmarksPage() {
                   <span className="text-sm text-navy-black/70">{formatNaira(b.typical_amount)}</span>
                   <form action={deleteBenchmark}>
                     <input type="hidden" name="id" value={b.id} />
-                    <button type="submit" className="text-xs text-navy-black/50 hover:text-red-600">
-                      Remove
-                    </button>
+                    <SubmitButton className="text-xs text-navy-black/50 hover:text-red-600">
+  Remove
+</SubmitButton>
                   </form>
                 </div>
               </li>

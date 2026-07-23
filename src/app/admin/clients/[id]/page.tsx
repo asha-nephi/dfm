@@ -3,6 +3,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { propertyTypeLabel } from "@/lib/format";
 import { createProperty } from "../actions";
+import { SubmitButton } from "@/components/submit-button";
 
 export default async function AdminClientDetailPage({
   params,
@@ -81,12 +82,9 @@ export default async function AdminClientDetailPage({
             placeholder="Notes (gate code, access instructions, etc.)"
             className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
           />
-          <button
-            type="submit"
-            className="sm:col-span-2 w-fit rounded-lg bg-charcoal shadow-sm px-4 py-2 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90"
-          >
-            Add property
-          </button>
+          <SubmitButton className="sm:col-span-2 w-fit rounded-lg bg-charcoal shadow-sm px-4 py-2 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90">
+  Add property
+</SubmitButton>
         </form>
       </section>
 

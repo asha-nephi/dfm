@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { updateOwnProfile } from "./actions";
+import { SubmitButton } from "@/components/submit-button";
 
 export const metadata: Metadata = { title: "My Profile" };
 
@@ -69,12 +70,9 @@ export default async function ClientProfilePage({
               To change your email, contact DFM directly.
             </p>
           </div>
-          <button
-            type="submit"
-            className="rounded-lg bg-charcoal shadow-sm px-5 py-2.5 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90"
-          >
-            Save changes
-          </button>
+          <SubmitButton className="rounded-lg bg-charcoal shadow-sm px-5 py-2.5 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90">
+  Save changes
+</SubmitButton>
         </form>
       </section>
     </div>

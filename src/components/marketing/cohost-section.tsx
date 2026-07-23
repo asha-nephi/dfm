@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { submitCohostRequest } from "@/app/cohost-actions";
 import { HoneypotField } from "@/components/honeypot-field";
+import { SubmitButton } from "@/components/submit-button";
 
 export function CohostSection({ error }: { error: boolean }) {
   return (
@@ -62,12 +63,9 @@ export function CohostSection({ error }: { error: boolean }) {
                 for the co-host marketplace.
               </span>
             </label>
-            <button
-              type="submit"
-              className="sm:col-span-2 w-fit rounded-lg bg-charcoal shadow-sm px-6 py-2.5 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90"
-            >
-              Request access
-            </button>
+            <SubmitButton className="sm:col-span-2 w-fit rounded-lg bg-charcoal shadow-sm px-6 py-2.5 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90">
+  Request access
+</SubmitButton>
           </form>
           <p className="mt-4 text-xs text-navy-black/50">
             After submitting, we&apos;ll show you a private link to check on

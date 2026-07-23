@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { logout } from "@/app/login/actions";
 import { LogoMark } from "@/components/logo";
+import { SubmitButton } from "@/components/submit-button";
 
 type NavItem = { href: string; label: string };
 
@@ -67,12 +68,9 @@ function RoleFooter({ roleLabel }: { roleLabel: string }) {
           {roleLabel}
         </span>
         <form action={logout}>
-          <button
-            type="submit"
-            className="text-sm font-medium text-charcoal underline underline-offset-2"
-          >
-            Log out
-          </button>
+          <SubmitButton className="text-sm font-medium text-charcoal underline underline-offset-2">
+  Log out
+</SubmitButton>
         </form>
       </div>
     </div>

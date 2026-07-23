@@ -9,6 +9,7 @@ import {
   createMaintenanceSchedule,
   deleteMaintenanceSchedule,
 } from "./actions";
+import { SubmitButton } from "@/components/submit-button";
 
 export default async function AdminPropertyDetailPage({
   params,
@@ -103,12 +104,9 @@ export default async function AdminPropertyDetailPage({
               className="mt-1 w-full rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
             />
           </div>
-          <button
-            type="submit"
-            className="sm:col-span-2 w-fit rounded-lg bg-charcoal shadow-sm px-4 py-2 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90"
-          >
-            Save changes
-          </button>
+          <SubmitButton className="sm:col-span-2 w-fit rounded-lg bg-charcoal shadow-sm px-4 py-2 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90">
+  Save changes
+</SubmitButton>
         </form>
       </section>
 
@@ -151,12 +149,9 @@ export default async function AdminPropertyDetailPage({
             required
             className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
           />
-          <button
-            type="submit"
-            className="rounded-lg bg-charcoal shadow-sm px-4 py-2 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90"
-          >
-            Add
-          </button>
+          <SubmitButton className="rounded-lg bg-charcoal shadow-sm px-4 py-2 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90">
+  Add
+</SubmitButton>
         </form>
 
         {schedules && schedules.length > 0 && (
@@ -173,9 +168,9 @@ export default async function AdminPropertyDetailPage({
                 <form action={deleteMaintenanceSchedule}>
                   <input type="hidden" name="propertyId" value={property.id} />
                   <input type="hidden" name="scheduleId" value={s.id} />
-                  <button type="submit" className="text-xs text-navy-black/50 hover:text-red-600">
-                    Remove
-                  </button>
+                  <SubmitButton className="text-xs text-navy-black/50 hover:text-red-600">
+  Remove
+</SubmitButton>
                 </form>
               </li>
             ))}
@@ -200,12 +195,9 @@ export default async function AdminPropertyDetailPage({
             required
             className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
           />
-          <button
-            type="submit"
-            className="rounded-lg bg-charcoal shadow-sm px-4 py-2 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90"
-          >
-            Create
-          </button>
+          <SubmitButton className="rounded-lg bg-charcoal shadow-sm px-4 py-2 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90">
+  Create
+</SubmitButton>
         </form>
         <p className="mt-2 text-xs text-navy-black/50">
           Creates the record — add costs, photos, and assign an artisan on the next screen.

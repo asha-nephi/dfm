@@ -7,6 +7,7 @@ import { CompressedFileInput } from "@/components/compressed-file-input";
 import { CostBreakdownEditor } from "./cost-breakdown-editor";
 import { TurnoverChecklistEditor } from "./turnover-checklist-editor";
 import { updateWorkOrder, uploadWorkOrderPhoto, deleteWorkOrderPhoto, addComment } from "./actions";
+import { SubmitButton } from "@/components/submit-button";
 
 type CostLineItem = { label: string; amount: number };
 type ChecklistItem = { item: string; done: boolean };
@@ -215,12 +216,9 @@ export default async function AdminWorkOrderDetailPage({
             />
           </div>
 
-          <button
-            type="submit"
-            className="rounded-lg bg-charcoal shadow-sm px-5 py-2.5 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90"
-          >
-            Save
-          </button>
+          <SubmitButton className="rounded-lg bg-charcoal shadow-sm px-5 py-2.5 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90">
+  Save
+</SubmitButton>
         </form>
       </section>
 
@@ -234,12 +232,9 @@ export default async function AdminWorkOrderDetailPage({
         <form action={uploadWorkOrderPhoto} className="mt-4 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
           <input type="hidden" name="workOrderId" value={workOrder.id} />
           <CompressedFileInput name="file" className="w-full text-sm sm:w-auto" />
-          <button
-            type="submit"
-            className="rounded-lg bg-charcoal shadow-sm px-4 py-2 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90"
-          >
-            Upload
-          </button>
+          <SubmitButton className="rounded-lg bg-charcoal shadow-sm px-4 py-2 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90">
+  Upload
+</SubmitButton>
         </form>
 
         {photos.length > 0 && (
@@ -260,12 +255,9 @@ export default async function AdminWorkOrderDetailPage({
                     <input type="hidden" name="workOrderId" value={workOrder.id} />
                     <input type="hidden" name="photoId" value={photo.id} />
                     <input type="hidden" name="photoPath" value={photo.photo_url} />
-                    <button
-                      type="submit"
-                      className="text-xs text-navy-black/50 hover:text-red-600"
-                    >
-                      Remove
-                    </button>
+                    <SubmitButton className="text-xs text-navy-black/50 hover:text-red-600">
+  Remove
+</SubmitButton>
                   </form>
                 </div>
               );

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { rateWorkOrder } from "./actions";
+import { SubmitButton } from "@/components/submit-button";
 
 export function RatingForm({
   workOrderId,
@@ -42,13 +43,12 @@ export function RatingForm({
         placeholder="Optional note (e.g. tidy, on time)"
         className="min-w-[180px] flex-1 rounded-md border border-charcoal/20 px-2.5 py-1.5 text-sm focus:border-amber focus:outline-none focus:ring-1 focus:ring-amber"
       />
-      <button
-        type="submit"
+      <SubmitButton
         disabled={rating === 0}
-        className="rounded-lg bg-charcoal px-3 py-1.5 text-sm font-medium text-off-white shadow-sm transition-colors hover:bg-navy-black disabled:cursor-not-allowed disabled:opacity-40"
+        className="rounded-lg bg-charcoal px-3 py-1.5 text-sm font-medium text-off-white shadow-sm transition-colors hover:bg-navy-black"
       >
         Rate job
-      </button>
+      </SubmitButton>
     </form>
   );
 }

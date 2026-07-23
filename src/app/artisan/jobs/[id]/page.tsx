@@ -7,6 +7,7 @@ import { TurnoverChecklist } from "./turnover-checklist";
 import { WorkOrderComments } from "@/components/work-order-comments";
 import { CompressedFileInput } from "@/components/compressed-file-input";
 import { updateJobStatus, uploadJobPhoto, addComment } from "./actions";
+import { SubmitButton } from "@/components/submit-button";
 
 type ChecklistItem = { item: string; done: boolean };
 
@@ -111,12 +112,9 @@ export default async function ArtisanJobDetailPage({
               <option value="in_progress">In progress</option>
               <option value="complete">Complete</option>
             </select>
-            <button
-              type="submit"
-              className="rounded-lg bg-charcoal shadow-sm px-4 py-2 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90"
-            >
-              Save status
-            </button>
+            <SubmitButton className="rounded-lg bg-charcoal shadow-sm px-4 py-2 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90">
+  Save status
+</SubmitButton>
           </div>
         </form>
       </section>
@@ -131,12 +129,9 @@ export default async function ArtisanJobDetailPage({
         <form action={uploadJobPhoto} className="mt-4 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
           <input type="hidden" name="jobId" value={job.id} />
           <CompressedFileInput name="file" className="w-full text-sm sm:w-auto" />
-          <button
-            type="submit"
-            className="rounded-lg bg-charcoal shadow-sm px-4 py-2 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90"
-          >
-            Upload
-          </button>
+          <SubmitButton className="rounded-lg bg-charcoal shadow-sm px-4 py-2 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90">
+  Upload
+</SubmitButton>
         </form>
 
         {photos.length > 0 && (
