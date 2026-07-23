@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { verifyPaystackTransaction } from "@/lib/paystack";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { formatNaira } from "@/lib/format";
+import { notifyClientPaymentReceived } from "@/lib/email";
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
@@ -16,7 +18,7 @@ export async function GET(request: Request) {
 
   const { data: payment } = await admin
     .from("payments")
-    .select("*")
+    .select("*, clients(email)")
     .eq("id", paymentId)
     .maybeSingle();
 
@@ -47,6 +49,15 @@ export async function GET(request: Request) {
     .update({ status: newStatus, paystack_reference: reference })
     .eq("id", paymentId)
     .eq("status", "pending");
+
+  const clientEmail = payment.clients?.email;
+  if (newStatus === "success" && clientEmail) {
+    await notifyClientPaymentReceived({
+      clientEmail,
+      amount: formatNaira(Number(payment.amount)),
+      description: payment.description ?? "your payment",
+    });
+  }
 
   return NextResponse.redirect(
     `${siteUrl}/client/payments?${newStatus === "success" ? "paid=1" : "failed=1"}`,

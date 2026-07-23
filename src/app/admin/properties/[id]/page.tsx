@@ -3,17 +3,22 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { formatDate, formatNaira } from "@/lib/format";
 import { StatusBadge } from "@/components/status-badge";
-import { createWorkOrder, updateProperty } from "./actions";
+import {
+  createWorkOrder,
+  updateProperty,
+  createMaintenanceSchedule,
+  deleteMaintenanceSchedule,
+} from "./actions";
 
 export default async function AdminPropertyDetailPage({
   params,
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ error?: string; updated?: string }>;
+  searchParams: Promise<{ error?: string; updated?: string; schedule_added?: string }>;
 }) {
   const { id } = await params;
-  const { error, updated } = await searchParams;
+  const { error, updated, schedule_added } = await searchParams;
   const supabase = await createClient();
 
   const { data: property } = await supabase
@@ -24,11 +29,18 @@ export default async function AdminPropertyDetailPage({
 
   if (!property) notFound();
 
-  const { data: workOrders } = await supabase
-    .from("work_orders")
-    .select("*")
-    .eq("property_id", id)
-    .order("date", { ascending: false });
+  const [{ data: workOrders }, { data: schedules }] = await Promise.all([
+    supabase
+      .from("work_orders")
+      .select("*")
+      .eq("property_id", id)
+      .order("date", { ascending: false }),
+    supabase
+      .from("maintenance_schedules")
+      .select("*")
+      .eq("property_id", id)
+      .order("next_due_date", { ascending: true }),
+  ]);
 
   const today = new Date().toISOString().slice(0, 10);
 
@@ -78,6 +90,19 @@ export default async function AdminPropertyDetailPage({
             placeholder="Notes"
             className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
           />
+          <div>
+            <label className="block text-xs text-navy-black/50">
+              Monthly management fee (₦, 0 = none — no recurring payment request will be generated)
+            </label>
+            <input
+              type="number"
+              name="monthlyFee"
+              defaultValue={property.monthly_fee}
+              min={0}
+              step="1"
+              className="mt-1 w-full rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+            />
+          </div>
           <button
             type="submit"
             className="sm:col-span-2 w-fit rounded-lg bg-charcoal shadow-sm px-4 py-2 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90"
@@ -85,6 +110,77 @@ export default async function AdminPropertyDetailPage({
             Save changes
           </button>
         </form>
+      </section>
+
+      <section className="mt-8 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-6">
+        <h2 className="font-semibold text-navy-black">Preventive maintenance</h2>
+        <p className="mt-1 text-sm text-navy-black/60">
+          Recurring reminders — a work order is auto-created (and the due
+          date advanced) when each one comes due.
+        </p>
+        {schedule_added && (
+          <p className="mt-3 rounded-md bg-green-50 px-3 py-2 text-sm text-green-700">
+            Schedule added.
+          </p>
+        )}
+        <form
+          action={createMaintenanceSchedule}
+          className="mt-4 grid gap-3 sm:grid-cols-[1fr_140px_160px_auto]"
+        >
+          <input type="hidden" name="propertyId" value={property.id} />
+          <input
+            name="title"
+            placeholder="e.g. AC servicing"
+            required
+            className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+          />
+          <input
+            type="number"
+            name="intervalMonths"
+            placeholder="Every N months"
+            min={1}
+            max={60}
+            defaultValue={3}
+            required
+            className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+          />
+          <input
+            type="date"
+            name="nextDueDate"
+            defaultValue={today}
+            required
+            className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+          />
+          <button
+            type="submit"
+            className="rounded-lg bg-charcoal shadow-sm px-4 py-2 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90"
+          >
+            Add
+          </button>
+        </form>
+
+        {schedules && schedules.length > 0 && (
+          <ul className="mt-4 divide-y divide-charcoal/10 border-t border-charcoal/10">
+            {schedules.map((s) => (
+              <li key={s.id} className="flex items-center justify-between py-3 text-sm">
+                <div>
+                  <p className="text-navy-black">{s.title}</p>
+                  <p className="text-xs text-navy-black/50">
+                    Every {s.interval_months} month{s.interval_months === 1 ? "" : "s"} &middot; next
+                    due {formatDate(s.next_due_date)}
+                  </p>
+                </div>
+                <form action={deleteMaintenanceSchedule}>
+                  <input type="hidden" name="propertyId" value={property.id} />
+                  <input type="hidden" name="scheduleId" value={s.id} />
+                  <button type="submit" className="text-xs text-navy-black/50 hover:text-red-600">
+                    Remove
+                  </button>
+                </form>
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
 
       <section className="mt-8 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-6">

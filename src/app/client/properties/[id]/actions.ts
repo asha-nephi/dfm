@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { notifyAdminNewMaintenanceRequest } from "@/lib/email";
 
 const requestSchema = z.object({
   propertyId: z.string().uuid(),
@@ -35,6 +36,20 @@ export async function submitMaintenanceRequest(formData: FormData) {
 
   if (error) {
     redirect(`/client/properties/${parsed.data.propertyId}?request_error=1`);
+  }
+
+  const { data: property } = await supabase
+    .from("properties")
+    .select("address, clients(name)")
+    .eq("id", parsed.data.propertyId)
+    .maybeSingle();
+
+  if (property) {
+    await notifyAdminNewMaintenanceRequest({
+      clientName: property.clients?.name ?? "A client",
+      propertyAddress: property.address,
+      description: parsed.data.description,
+    });
   }
 
   revalidatePath(`/client/properties/${parsed.data.propertyId}`);

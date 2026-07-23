@@ -30,6 +30,8 @@ export default async function AdminLayout({
           { href: "/admin/artisans", label: "Artisans" },
           { href: "/admin/leads", label: "Leads" },
           { href: "/admin/payments", label: "Payments" },
+          { href: "/admin/benchmarks", label: "Benchmarks" },
+          { href: "/admin/analytics", label: "Analytics" },
           { href: "/admin/cohost", label: "Co-host (beta)" },
         ]}
       />

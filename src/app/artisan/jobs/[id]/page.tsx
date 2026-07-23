@@ -122,7 +122,7 @@ export default async function ArtisanJobDetailPage({
         )}
         <form action={uploadJobPhoto} className="mt-4 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
           <input type="hidden" name="jobId" value={job.id} />
-          <input type="file" name="file" accept="image/*" required className="w-full text-sm sm:w-auto" />
+          <input type="file" name="file" accept="image/*" multiple required className="w-full text-sm sm:w-auto" />
           <button
             type="submit"
             className="rounded-lg bg-charcoal shadow-sm px-4 py-2 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90"

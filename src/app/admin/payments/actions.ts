@@ -4,6 +4,8 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { formatNaira } from "@/lib/format";
+import { notifyClientPaymentDue, notifyClientPaymentReceived } from "@/lib/email";
 
 const createPaymentSchema = z.object({
   propertyId: z.string().uuid(),
@@ -26,7 +28,7 @@ export async function createPaymentRequest(formData: FormData) {
 
   const { data: property } = await supabase
     .from("properties")
-    .select("client_id")
+    .select("client_id, clients(email)")
     .eq("id", parsed.data.propertyId)
     .maybeSingle();
 
@@ -44,6 +46,17 @@ export async function createPaymentRequest(formData: FormData) {
 
   if (error) {
     redirect("/admin/payments?error=1");
+  }
+
+  const clientEmail = property.clients?.email;
+  if (clientEmail) {
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+    await notifyClientPaymentDue({
+      clientEmail,
+      amount: formatNaira(parsed.data.amount),
+      description: parsed.data.description,
+      siteUrl,
+    });
   }
 
   revalidatePath("/admin/payments");
@@ -66,6 +79,13 @@ export async function setPaymentStatus(formData: FormData) {
   }
 
   const supabase = await createClient();
+
+  const { data: before } = await supabase
+    .from("payments")
+    .select("status, amount, description, clients(email)")
+    .eq("id", parsed.data.paymentId)
+    .maybeSingle();
+
   const { error } = await supabase
     .from("payments")
     .update({ status: parsed.data.status })
@@ -73,6 +93,15 @@ export async function setPaymentStatus(formData: FormData) {
 
   if (error) {
     redirect("/admin/payments?error=1");
+  }
+
+  const clientEmail = before?.clients?.email;
+  if (before && before.status !== "success" && parsed.data.status === "success" && clientEmail) {
+    await notifyClientPaymentReceived({
+      clientEmail,
+      amount: formatNaira(before.amount),
+      description: before.description ?? "your payment",
+    });
   }
 
   revalidatePath("/admin/payments");

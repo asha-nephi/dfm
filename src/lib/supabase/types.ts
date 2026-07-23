@@ -218,6 +218,7 @@ export type Database = {
           message: string | null
           name: string
           property_location: string | null
+          status: string
         }
         Insert: {
           contact: string
@@ -226,6 +227,7 @@ export type Database = {
           message?: string | null
           name: string
           property_location?: string | null
+          status?: string
         }
         Update: {
           contact?: string
@@ -234,8 +236,71 @@ export type Database = {
           message?: string | null
           name?: string
           property_location?: string | null
+          status?: string
         }
         Relationships: []
+      }
+      cost_benchmarks: {
+        Row: {
+          category: string | null
+          created_at: string
+          id: string
+          label: string
+          typical_amount: number
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          id?: string
+          label: string
+          typical_amount: number
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          id?: string
+          label?: string
+          typical_amount?: number
+        }
+        Relationships: []
+      }
+      maintenance_schedules: {
+        Row: {
+          active: boolean
+          created_at: string
+          id: string
+          interval_months: number
+          next_due_date: string
+          property_id: string
+          title: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          interval_months: number
+          next_due_date: string
+          property_id: string
+          title: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          interval_months?: number
+          next_due_date?: string
+          property_id?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "maintenance_schedules_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       payments: {
         Row: {
@@ -246,6 +311,7 @@ export type Database = {
           id: string
           paystack_reference: string | null
           property_id: string | null
+          recurring_period: string | null
           status: string
         }
         Insert: {
@@ -256,6 +322,7 @@ export type Database = {
           id?: string
           paystack_reference?: string | null
           property_id?: string | null
+          recurring_period?: string | null
           status?: string
         }
         Update: {
@@ -266,6 +333,7 @@ export type Database = {
           id?: string
           paystack_reference?: string | null
           property_id?: string | null
+          recurring_period?: string | null
           status?: string
         }
         Relationships: [
@@ -291,6 +359,7 @@ export type Database = {
           client_id: string
           created_at: string
           id: string
+          monthly_fee: number
           notes: string | null
           property_type: string
         }
@@ -299,6 +368,7 @@ export type Database = {
           client_id: string
           created_at?: string
           id?: string
+          monthly_fee?: number
           notes?: string | null
           property_type?: string
         }
@@ -307,6 +377,7 @@ export type Database = {
           client_id?: string
           created_at?: string
           id?: string
+          monthly_fee?: number
           notes?: string | null
           property_type?: string
         }

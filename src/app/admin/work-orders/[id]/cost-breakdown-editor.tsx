@@ -3,9 +3,17 @@
 import { useState } from "react";
 
 type Row = { label: string; amount: number };
+type Benchmark = { id: string; label: string; category: string | null; typical_amount: number };
 
-export function CostBreakdownEditor({ initial }: { initial: Row[] }) {
+export function CostBreakdownEditor({
+  initial,
+  benchmarks = [],
+}: {
+  initial: Row[];
+  benchmarks?: Benchmark[];
+}) {
   const [rows, setRows] = useState<Row[]>(initial.length > 0 ? initial : [{ label: "", amount: 0 }]);
+  const [selectedBenchmark, setSelectedBenchmark] = useState("");
 
   const total = rows.reduce((sum, r) => sum + (Number(r.amount) || 0), 0);
 
@@ -21,8 +29,43 @@ export function CostBreakdownEditor({ initial }: { initial: Row[] }) {
     setRows((prev) => prev.filter((_, idx) => idx !== i));
   }
 
+  function addFromBenchmark() {
+    const b = benchmarks.find((x) => x.id === selectedBenchmark);
+    if (!b) return;
+    setRows((prev) => {
+      const withoutBlank = prev.filter((r) => r.label.trim() !== "");
+      return [...withoutBlank, { label: b.label, amount: b.typical_amount }];
+    });
+    setSelectedBenchmark("");
+  }
+
   return (
     <div>
+      {benchmarks.length > 0 && (
+        <div className="mb-3 flex flex-wrap items-center gap-2 rounded-lg bg-off-white p-2.5">
+          <select
+            value={selectedBenchmark}
+            onChange={(e) => setSelectedBenchmark(e.target.value)}
+            className="min-w-[200px] flex-1 rounded-md border border-charcoal/15 bg-white px-2.5 py-1.5 text-sm text-navy-black focus:border-amber focus:outline-none focus:ring-1 focus:ring-amber"
+          >
+            <option value="">Quick-add from benchmarks...</option>
+            {benchmarks.map((b) => (
+              <option key={b.id} value={b.id}>
+                {b.category ? `${b.category} — ` : ""}
+                {b.label} (₦{b.typical_amount.toLocaleString("en-NG")})
+              </option>
+            ))}
+          </select>
+          <button
+            type="button"
+            onClick={addFromBenchmark}
+            disabled={!selectedBenchmark}
+            className="rounded-md border border-charcoal/20 px-3 py-1.5 text-sm font-medium text-navy-black hover:border-charcoal/40 disabled:opacity-40"
+          >
+            Add
+          </button>
+        </div>
+      )}
       <input
         type="hidden"
         name="costBreakdown"

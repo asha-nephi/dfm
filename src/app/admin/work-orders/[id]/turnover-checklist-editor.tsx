@@ -4,6 +4,19 @@ import { useState } from "react";
 
 type ChecklistItem = { item: string; done: boolean };
 
+const DEFAULT_STR_CHECKLIST = [
+  "Linens changed",
+  "Towels replaced",
+  "Trash removed",
+  "Kitchen and dishes cleaned",
+  "Bathroom cleaned and restocked",
+  "Fridge cleaned / emptied of prior guest items",
+  "Floors swept and mopped",
+  "Toiletries and welcome supplies restocked",
+  "Appliances checked (AC, water heater, etc.)",
+  "Door/window locks checked",
+];
+
 export function TurnoverChecklistEditor({ initial }: { initial: ChecklistItem[] }) {
   const [rows, setRows] = useState<ChecklistItem[]>(
     initial.length > 0 ? initial : [{ item: "", done: false }],
@@ -21,8 +34,26 @@ export function TurnoverChecklistEditor({ initial }: { initial: ChecklistItem[] 
     setRows((prev) => prev.filter((_, idx) => idx !== i));
   }
 
+  function loadDefaultChecklist() {
+    setRows((prev) => {
+      const existingLabels = new Set(prev.map((r) => r.item.trim().toLowerCase()));
+      const withoutBlank = prev.filter((r) => r.item.trim() !== "");
+      const toAdd = DEFAULT_STR_CHECKLIST.filter(
+        (item) => !existingLabels.has(item.toLowerCase()),
+      ).map((item) => ({ item, done: false }));
+      return [...withoutBlank, ...toAdd];
+    });
+  }
+
   return (
     <div>
+      <button
+        type="button"
+        onClick={loadDefaultChecklist}
+        className="mb-2 rounded-md border border-charcoal/20 px-3 py-1.5 text-xs font-medium text-navy-black hover:border-charcoal/40"
+      >
+        Load default checklist
+      </button>
       <input
         type="hidden"
         name="turnoverChecklist"

@@ -27,11 +27,19 @@ export default async function ClientPropertyPage({
 
   if (!property) notFound();
 
-  const { data: workOrders } = await supabase
-    .from("work_orders")
-    .select("*, work_order_photos(*)")
-    .eq("property_id", id)
-    .order("date", { ascending: false });
+  const [{ data: workOrders }, { data: schedules }] = await Promise.all([
+    supabase
+      .from("work_orders")
+      .select("*, work_order_photos(*)")
+      .eq("property_id", id)
+      .order("date", { ascending: false }),
+    supabase
+      .from("maintenance_schedules")
+      .select("*")
+      .eq("property_id", id)
+      .eq("active", true)
+      .order("next_due_date", { ascending: true }),
+  ]);
 
   // photo_url stores the storage object path (private bucket), not a public
   // URL — resolve every path in one batch call to a short-lived signed URL.
@@ -66,6 +74,12 @@ export default async function ClientPropertyPage({
             <p className="mt-1 text-sm text-navy-black/60">{property.notes}</p>
           )}
         </div>
+        <Link
+          href={`/client/properties/${property.id}/statement`}
+          className="shrink-0 rounded-lg border border-charcoal/20 px-3 py-1.5 text-sm font-medium text-navy-black hover:border-charcoal/40"
+        >
+          Statement
+        </Link>
       </div>
 
       <section className="mt-10 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-6">
@@ -97,6 +111,23 @@ export default async function ClientPropertyPage({
           </button>
         </form>
       </section>
+
+      {schedules && schedules.length > 0 && (
+        <section className="mt-10">
+          <h2 className="font-semibold text-navy-black">Upcoming preventive maintenance</h2>
+          <ul className="mt-3 space-y-2">
+            {schedules.map((s) => (
+              <li
+                key={s.id}
+                className="flex items-center justify-between rounded-lg bg-white px-4 py-2.5 text-sm shadow-sm shadow-charcoal/5"
+              >
+                <span className="text-navy-black">{s.title}</span>
+                <span className="text-navy-black/60">{formatDate(s.next_due_date)}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       <section className="mt-10">
         <h2 className="font-semibold text-navy-black">Maintenance history</h2>

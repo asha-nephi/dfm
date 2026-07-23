@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { notifyClientWorkOrderComplete } from "@/lib/email";
 
 const lineItemSchema = z.object({
   label: z.string().trim().min(1),
@@ -71,6 +72,13 @@ export async function updateWorkOrder(formData: FormData) {
   const costAmount = breakdown.reduce((sum, item) => sum + item.amount, 0);
 
   const supabase = await createClient();
+
+  const { data: before } = await supabase
+    .from("work_orders")
+    .select("status, property_id, properties(address, clients(email))")
+    .eq("id", parsed.data.workOrderId)
+    .maybeSingle();
+
   const { error } = await supabase
     .from("work_orders")
     .update({
@@ -90,43 +98,59 @@ export async function updateWorkOrder(formData: FormData) {
     redirect(`/admin/work-orders/${parsed.data.workOrderId}?error=1`);
   }
 
+  if (before && before.status !== "complete" && parsed.data.status === "complete" && before.properties) {
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+    const clientEmail = before.properties.clients?.email;
+    if (clientEmail) {
+      await notifyClientWorkOrderComplete({
+        clientEmail,
+        propertyAddress: before.properties.address,
+        description: parsed.data.description,
+        siteUrl,
+      });
+    }
+  }
+
   revalidatePath(`/admin/work-orders/${parsed.data.workOrderId}`);
   redirect(`/admin/work-orders/${parsed.data.workOrderId}?updated=1`);
 }
 
 export async function uploadWorkOrderPhoto(formData: FormData) {
   const workOrderId = String(formData.get("workOrderId") ?? "");
-  const file = formData.get("file") as File | null;
+  const files = formData.getAll("file").filter((f): f is File => f instanceof File && f.size > 0);
 
-  if (!workOrderId || !file || file.size === 0) {
+  if (!workOrderId || files.length === 0) {
     redirect(`/admin/work-orders/${workOrderId}?photo_error=1`);
   }
 
   const supabase = await createClient();
-  const ext = file.name.split(".").pop() || "jpg";
-  const path = `${workOrderId}/${crypto.randomUUID()}.${ext}`;
-  const buffer = Buffer.from(await file.arrayBuffer());
+  let hadError = false;
 
-  const { error: uploadError } = await supabase.storage
-    .from("work-order-photos")
-    .upload(path, buffer, { contentType: file.type || "image/jpeg" });
+  for (const file of files) {
+    const ext = file.name.split(".").pop() || "jpg";
+    const path = `${workOrderId}/${crypto.randomUUID()}.${ext}`;
+    const buffer = Buffer.from(await file.arrayBuffer());
 
-  if (uploadError) {
-    redirect(`/admin/work-orders/${workOrderId}?photo_error=1`);
-  }
+    const { error: uploadError } = await supabase.storage
+      .from("work-order-photos")
+      .upload(path, buffer, { contentType: file.type || "image/jpeg" });
 
-  const { error: insertError } = await supabase.from("work_order_photos").insert({
-    work_order_id: workOrderId,
-    uploaded_by: "admin",
-    photo_url: path,
-  });
+    if (uploadError) {
+      hadError = true;
+      continue;
+    }
 
-  if (insertError) {
-    redirect(`/admin/work-orders/${workOrderId}?photo_error=1`);
+    const { error: insertError } = await supabase.from("work_order_photos").insert({
+      work_order_id: workOrderId,
+      uploaded_by: "admin",
+      photo_url: path,
+    });
+
+    if (insertError) hadError = true;
   }
 
   revalidatePath(`/admin/work-orders/${workOrderId}`);
-  redirect(`/admin/work-orders/${workOrderId}`);
+  redirect(`/admin/work-orders/${workOrderId}${hadError ? "?photo_error=1" : ""}`);
 }
 
 export async function deleteWorkOrderPhoto(formData: FormData) {

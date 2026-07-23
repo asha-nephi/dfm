@@ -33,6 +33,11 @@ export default async function AdminWorkOrderDetailPage({
     .select("id, name")
     .order("name");
 
+  const { data: benchmarks } = await supabase
+    .from("cost_benchmarks")
+    .select("id, label, category, typical_amount")
+    .order("label");
+
   const photos = workOrder.work_order_photos ?? [];
   const paths = photos.map((p) => p.photo_url);
   const signedUrlByPath = new Map<string, string>();
@@ -137,7 +142,7 @@ export default async function AdminWorkOrderDetailPage({
           <div>
             <label className="block text-sm font-medium text-navy-black">Itemized costs</label>
             <div className="mt-1">
-              <CostBreakdownEditor initial={breakdown} />
+              <CostBreakdownEditor initial={breakdown} benchmarks={benchmarks ?? []} />
             </div>
           </div>
 
@@ -196,6 +201,7 @@ export default async function AdminWorkOrderDetailPage({
             type="file"
             name="file"
             accept="image/*"
+            multiple
             required
             className="w-full text-sm sm:w-auto"
           />
