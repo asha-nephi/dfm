@@ -8,6 +8,8 @@ import { CostBreakdownEditor } from "./cost-breakdown-editor";
 import { TurnoverChecklistEditor } from "./turnover-checklist-editor";
 import { updateWorkOrder, uploadWorkOrderPhoto, deleteWorkOrderPhoto, addComment } from "./actions";
 import { SubmitButton } from "@/components/submit-button";
+import { ConfirmSubmitButton } from "@/components/confirm-submit-button";
+import { RealtimeRefresh } from "@/components/realtime-refresh";
 
 type CostLineItem = { label: string; amount: number };
 type ChecklistItem = { item: string; done: boolean };
@@ -69,6 +71,7 @@ export default async function AdminWorkOrderDetailPage({
 
   return (
     <div>
+      <RealtimeRefresh tables={["work_orders", "work_order_comments"]} />
       <Link
         href={`/admin/properties/${workOrder.properties?.id}`}
         className="text-sm text-charcoal underline underline-offset-2"
@@ -255,9 +258,12 @@ export default async function AdminWorkOrderDetailPage({
                     <input type="hidden" name="workOrderId" value={workOrder.id} />
                     <input type="hidden" name="photoId" value={photo.id} />
                     <input type="hidden" name="photoPath" value={photo.photo_url} />
-                    <SubmitButton className="text-xs text-navy-black/50 hover:text-red-600">
-  Remove
-</SubmitButton>
+                    <ConfirmSubmitButton
+                      confirmMessage="Remove this photo?"
+                      className="text-xs text-navy-black/50 hover:text-red-600"
+                    >
+                      Remove
+                    </ConfirmSubmitButton>
                   </form>
                 </div>
               );

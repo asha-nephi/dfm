@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { formatDate } from "@/lib/format";
 import { approveCohostRequest, closeCohostRequest } from "../actions";
 import { SubmitButton } from "@/components/submit-button";
+import { ConfirmSubmitButton } from "@/components/confirm-submit-button";
 
 export default async function AdminCohostDetailPage({
   params,
@@ -67,9 +68,12 @@ export default async function AdminCohostDetailPage({
         {(request.status === "open" || request.status === "pending_review") && (
           <form action={closeCohostRequest}>
             <input type="hidden" name="id" value={request.id} />
-            <SubmitButton className="rounded-md border border-charcoal/20 px-4 py-2 text-sm font-medium text-navy-black hover:border-charcoal/40">
-  Close request
-</SubmitButton>
+            <ConfirmSubmitButton
+              confirmMessage="Close this request? It won't accept new applications after this."
+              className="rounded-md border border-charcoal/20 px-4 py-2 text-sm font-medium text-navy-black hover:border-charcoal/40"
+            >
+              Close request
+            </ConfirmSubmitButton>
           </form>
         )}
       </section>

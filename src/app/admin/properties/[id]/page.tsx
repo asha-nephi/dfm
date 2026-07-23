@@ -10,6 +10,7 @@ import {
   deleteMaintenanceSchedule,
 } from "./actions";
 import { SubmitButton } from "@/components/submit-button";
+import { ConfirmSubmitButton } from "@/components/confirm-submit-button";
 
 export default async function AdminPropertyDetailPage({
   params,
@@ -168,9 +169,12 @@ export default async function AdminPropertyDetailPage({
                 <form action={deleteMaintenanceSchedule}>
                   <input type="hidden" name="propertyId" value={property.id} />
                   <input type="hidden" name="scheduleId" value={s.id} />
-                  <SubmitButton className="text-xs text-navy-black/50 hover:text-red-600">
-  Remove
-</SubmitButton>
+                  <ConfirmSubmitButton
+                    confirmMessage="Remove this maintenance schedule?"
+                    className="text-xs text-navy-black/50 hover:text-red-600"
+                  >
+                    Remove
+                  </ConfirmSubmitButton>
                 </form>
               </li>
             ))}

@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { formatNaira } from "@/lib/format";
 import { createBenchmark, deleteBenchmark } from "./actions";
 import { SubmitButton } from "@/components/submit-button";
+import { ConfirmSubmitButton } from "@/components/confirm-submit-button";
 
 export default async function AdminBenchmarksPage() {
   const supabase = await createClient();
@@ -69,9 +70,12 @@ export default async function AdminBenchmarksPage() {
                   <span className="text-sm text-navy-black/70">{formatNaira(b.typical_amount)}</span>
                   <form action={deleteBenchmark}>
                     <input type="hidden" name="id" value={b.id} />
-                    <SubmitButton className="text-xs text-navy-black/50 hover:text-red-600">
-  Remove
-</SubmitButton>
+                    <ConfirmSubmitButton
+                      confirmMessage="Remove this benchmark?"
+                      className="text-xs text-navy-black/50 hover:text-red-600"
+                    >
+                      Remove
+                    </ConfirmSubmitButton>
                   </form>
                 </div>
               </li>

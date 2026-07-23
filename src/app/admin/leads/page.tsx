@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { formatDate } from "@/lib/format";
 import { convertLeadToClient, archiveLead } from "./actions";
 import { SubmitButton } from "@/components/submit-button";
+import { ConfirmSubmitButton } from "@/components/confirm-submit-button";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -93,9 +94,12 @@ export default async function AdminLeadsPage({
                       </form>
                       <form action={archiveLead} className="mt-2">
                         <input type="hidden" name="leadId" value={lead.id} />
-                        <SubmitButton className="text-xs text-navy-black/50 hover:text-red-600">
-  Archive
-</SubmitButton>
+                        <ConfirmSubmitButton
+                          confirmMessage="Archive this lead?"
+                          className="text-xs text-navy-black/50 hover:text-red-600"
+                        >
+                          Archive
+                        </ConfirmSubmitButton>
                       </form>
                     </div>
                   )}

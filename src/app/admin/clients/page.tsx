@@ -6,14 +6,21 @@ import { SubmitButton } from "@/components/submit-button";
 export default async function AdminClientsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ added?: string; error?: string }>;
+  searchParams: Promise<{ added?: string; error?: string; q?: string }>;
 }) {
-  const { added, error } = await searchParams;
+  const { added, error, q } = await searchParams;
   const supabase = await createClient();
-  const { data: clients } = await supabase
+
+  let query = supabase
     .from("clients")
     .select("*, properties(id)")
     .order("created_at", { ascending: false });
+
+  if (q) {
+    query = query.or(`name.ilike.%${q}%,email.ilike.%${q}%`);
+  }
+
+  const { data: clients } = await query;
 
   return (
     <div>
@@ -59,10 +66,30 @@ export default async function AdminClientsPage({
       </section>
 
       <section className="mt-8">
+        <form className="flex gap-2">
+          <input
+            type="search"
+            name="q"
+            defaultValue={q ?? ""}
+            placeholder="Search by name or email..."
+            className="w-full max-w-xs rounded-lg border border-charcoal/15 bg-white px-3.5 py-2 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+          />
+          {q && (
+            <Link
+              href="/admin/clients"
+              className="rounded-lg border border-charcoal/20 px-3 py-2 text-sm text-navy-black hover:border-charcoal/40"
+            >
+              Clear
+            </Link>
+          )}
+        </form>
+
         {!clients || clients.length === 0 ? (
-          <p className="text-sm text-navy-black/60">No clients yet.</p>
+          <p className="mt-4 text-sm text-navy-black/60">
+            {q ? "No clients match that search." : "No clients yet."}
+          </p>
         ) : (
-          <ul className="divide-y divide-charcoal/10 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5">
+          <ul className="mt-4 divide-y divide-charcoal/10 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5">
             {clients.map((c) => (
               <li key={c.id}>
                 <Link
