@@ -213,6 +213,33 @@ export type Database = {
         }
         Relationships: []
       }
+      contact_leads: {
+        Row: {
+          contact: string
+          created_at: string
+          id: string
+          message: string | null
+          name: string
+          property_location: string | null
+        }
+        Insert: {
+          contact: string
+          created_at?: string
+          id?: string
+          message?: string | null
+          name: string
+          property_location?: string | null
+        }
+        Update: {
+          contact?: string
+          created_at?: string
+          id?: string
+          message?: string | null
+          name?: string
+          property_location?: string | null
+        }
+        Relationships: []
+      }
       payments: {
         Row: {
           amount: number
