@@ -3,9 +3,11 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { formatDate } from "@/lib/format";
 import { CostBreakdownEditor } from "./cost-breakdown-editor";
+import { TurnoverChecklistEditor } from "./turnover-checklist-editor";
 import { updateWorkOrder, uploadWorkOrderPhoto, deleteWorkOrderPhoto } from "./actions";
 
 type CostLineItem = { label: string; amount: number };
+type ChecklistItem = { item: string; done: boolean };
 
 export default async function AdminWorkOrderDetailPage({
   params,
@@ -20,7 +22,7 @@ export default async function AdminWorkOrderDetailPage({
 
   const { data: workOrder } = await supabase
     .from("work_orders")
-    .select("*, properties(id, address, clients(id, name)), work_order_photos(*)")
+    .select("*, properties(id, address, property_type, clients(id, name)), work_order_photos(*)")
     .eq("id", id)
     .maybeSingle();
 
@@ -46,6 +48,10 @@ export default async function AdminWorkOrderDetailPage({
   const breakdown = Array.isArray(workOrder.cost_breakdown)
     ? (workOrder.cost_breakdown as CostLineItem[])
     : [];
+  const checklist = Array.isArray(workOrder.turnover_checklist)
+    ? (workOrder.turnover_checklist as ChecklistItem[])
+    : [];
+  const isShortTermRental = workOrder.properties?.property_type === "short_term_rental";
 
   return (
     <div>
@@ -134,6 +140,21 @@ export default async function AdminWorkOrderDetailPage({
               <CostBreakdownEditor initial={breakdown} />
             </div>
           </div>
+
+          {isShortTermRental && (
+            <div>
+              <label className="block text-sm font-medium text-navy-black">
+                Turnover checklist
+              </label>
+              <p className="mt-1 text-xs text-navy-black/50">
+                Short-term rental property — set the checklist here; the
+                assigned artisan checks items off as they complete them.
+              </p>
+              <div className="mt-2">
+                <TurnoverChecklistEditor initial={checklist} />
+              </div>
+            </div>
+          )}
 
           <div className="rounded-md bg-off-white p-4">
             <label className="flex items-center gap-2 text-sm font-medium text-navy-black">

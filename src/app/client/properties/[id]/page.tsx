@@ -6,6 +6,7 @@ import { StatusBadge } from "@/components/status-badge";
 import { submitMaintenanceRequest } from "./actions";
 
 type CostLineItem = { label?: string; amount?: number };
+type ChecklistItem = { item?: string; done?: boolean };
 
 export default async function ClientPropertyPage({
   params,
@@ -110,6 +111,9 @@ export default async function ClientPropertyPage({
               const breakdown = Array.isArray(wo.cost_breakdown)
                 ? (wo.cost_breakdown as CostLineItem[])
                 : [];
+              const checklist = Array.isArray(wo.turnover_checklist)
+                ? (wo.turnover_checklist as ChecklistItem[])
+                : [];
               return (
                 <li key={wo.id} className="rounded-lg border border-charcoal/10 bg-white p-5">
                   <div className="flex flex-wrap items-center justify-between gap-2">
@@ -146,6 +150,22 @@ export default async function ClientPropertyPage({
                           </tr>
                         </tbody>
                       </table>
+                    </div>
+                  )}
+
+                  {checklist.length > 0 && (
+                    <div className="mt-4 border-t border-charcoal/10 pt-3">
+                      <p className="text-xs font-medium text-navy-black/60">Turnover checklist</p>
+                      <ul className="mt-1 space-y-0.5">
+                        {checklist.map((item, i) => (
+                          <li
+                            key={i}
+                            className={`text-sm ${item.done ? "text-navy-black/50 line-through" : "text-navy-black"}`}
+                          >
+                            {item.item}
+                          </li>
+                        ))}
+                      </ul>
                     </div>
                   )}
 

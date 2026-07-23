@@ -5,25 +5,42 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 
+const checklistItemSchema = z.object({
+  item: z.string().trim().min(1),
+  done: z.boolean(),
+});
+
 const statusSchema = z.object({
   jobId: z.string().uuid(),
   status: z.enum(["accepted", "in_progress", "complete"]),
+  turnoverChecklist: z.string().optional().or(z.literal("")),
 });
 
 export async function updateJobStatus(formData: FormData) {
   const parsed = statusSchema.safeParse({
     jobId: formData.get("jobId"),
     status: formData.get("status"),
+    turnoverChecklist: formData.get("turnoverChecklist"),
   });
 
   if (!parsed.success) {
     redirect(`/artisan/jobs/${formData.get("jobId")}?error=1`);
   }
 
+  let checklist: { item: string; done: boolean }[] | undefined;
+  if (parsed.data.turnoverChecklist) {
+    try {
+      checklist = z.array(checklistItemSchema).parse(JSON.parse(parsed.data.turnoverChecklist));
+    } catch {
+      redirect(`/artisan/jobs/${parsed.data.jobId}?error=1`);
+    }
+  }
+
   const supabase = await createClient();
   const { error } = await supabase.rpc("artisan_update_work_order", {
     p_work_order_id: parsed.data.jobId,
     p_status: parsed.data.status,
+    p_turnover_checklist: checklist,
   });
 
   if (error) {

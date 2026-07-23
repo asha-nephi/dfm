@@ -3,7 +3,10 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { formatDate } from "@/lib/format";
 import { StatusBadge } from "@/components/status-badge";
+import { TurnoverChecklist } from "./turnover-checklist";
 import { updateJobStatus, uploadJobPhoto } from "./actions";
+
+type ChecklistItem = { item: string; done: boolean };
 
 export default async function ArtisanJobDetailPage({
   params,
@@ -18,7 +21,7 @@ export default async function ArtisanJobDetailPage({
 
   const { data: job } = await supabase
     .from("work_orders")
-    .select("*, properties(address, notes), work_order_photos(*)")
+    .select("*, properties(address, notes, property_type), work_order_photos(*)")
     .eq("id", id)
     .maybeSingle();
 
@@ -40,6 +43,10 @@ export default async function ArtisanJobDetailPage({
   const defaultStatus = statusOptions.includes(job.status as (typeof statusOptions)[number])
     ? job.status
     : "accepted";
+  const checklist = Array.isArray(job.turnover_checklist)
+    ? (job.turnover_checklist as ChecklistItem[])
+    : [];
+  const isShortTermRental = job.properties?.property_type === "short_term_rental";
 
   return (
     <div>
@@ -75,23 +82,34 @@ export default async function ArtisanJobDetailPage({
 
       <section className="mt-6 rounded-lg border border-charcoal/10 bg-white p-6">
         <h2 className="font-semibold text-navy-black">Update status</h2>
-        <form action={updateJobStatus} className="mt-3 flex flex-wrap items-center gap-3">
+
+        <form action={updateJobStatus} className="mt-3">
           <input type="hidden" name="jobId" value={job.id} />
-          <select
-            name="status"
-            defaultValue={defaultStatus}
-            className="rounded-md border border-charcoal/20 px-3 py-2 text-sm focus:border-amber focus:outline-none focus:ring-1 focus:ring-amber"
-          >
-            <option value="accepted">Accepted</option>
-            <option value="in_progress">In progress</option>
-            <option value="complete">Complete</option>
-          </select>
-          <button
-            type="submit"
-            className="rounded-md bg-charcoal px-4 py-2 text-sm font-medium text-off-white hover:bg-navy-black"
-          >
-            Save status
-          </button>
+
+          {isShortTermRental && checklist.length > 0 && (
+            <div className="mb-4 rounded-md bg-off-white p-4">
+              <p className="mb-2 text-sm font-medium text-navy-black">Turnover checklist</p>
+              <TurnoverChecklist initial={checklist} />
+            </div>
+          )}
+
+          <div className="flex flex-wrap items-center gap-3">
+            <select
+              name="status"
+              defaultValue={defaultStatus}
+              className="rounded-md border border-charcoal/20 px-3 py-2 text-sm focus:border-amber focus:outline-none focus:ring-1 focus:ring-amber"
+            >
+              <option value="accepted">Accepted</option>
+              <option value="in_progress">In progress</option>
+              <option value="complete">Complete</option>
+            </select>
+            <button
+              type="submit"
+              className="rounded-md bg-charcoal px-4 py-2 text-sm font-medium text-off-white hover:bg-navy-black"
+            >
+              Save status
+            </button>
+          </div>
         </form>
       </section>
 

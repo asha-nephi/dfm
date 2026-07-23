@@ -10,27 +10,38 @@ const lineItemSchema = z.object({
   amount: z.coerce.number().min(0),
 });
 
+const checklistItemSchema = z.object({
+  item: z.string().trim().min(1),
+  done: z.boolean(),
+});
+
 const updateSchema = z.object({
   workOrderId: z.string().uuid(),
   date: z.string().min(1),
   description: z.string().trim().min(1).max(2000),
   status: z.enum(["requested", "accepted", "in_progress", "complete", "cancelled"]),
   assignedArtisanId: z.string().uuid().optional().or(z.literal("")),
-  flagged: z.string().optional(),
   flagReason: z.string().trim().max(1000).optional().or(z.literal("")),
   costBreakdown: z.string(),
+  turnoverChecklist: z.string().optional().or(z.literal("")),
 });
 
 export async function updateWorkOrder(formData: FormData) {
+  // Unchecked checkboxes are omitted from FormData entirely, so
+  // formData.get("flagged") is `null`, not `undefined` — zod's
+  // `.optional()` only accepts the latter, so this is handled outside the
+  // schema rather than tripping validation on every unflagged save.
+  const flagged = formData.get("flagged") === "on";
+
   const parsed = updateSchema.safeParse({
     workOrderId: formData.get("workOrderId"),
     date: formData.get("date"),
     description: formData.get("description"),
     status: formData.get("status"),
     assignedArtisanId: formData.get("assignedArtisanId"),
-    flagged: formData.get("flagged"),
     flagReason: formData.get("flagReason"),
     costBreakdown: formData.get("costBreakdown"),
+    turnoverChecklist: formData.get("turnoverChecklist"),
   });
 
   if (!parsed.success) {
@@ -45,8 +56,19 @@ export async function updateWorkOrder(formData: FormData) {
     redirect(`/admin/work-orders/${parsed.data.workOrderId}?error=1`);
   }
 
+  // Only present on the form for short-term-rental properties (Section
+  // 3.7) — absent entirely for long-term-let, which keeps it null.
+  let checklist: { item: string; done: boolean }[] | null = null;
+  if (parsed.data.turnoverChecklist) {
+    try {
+      const rawItems = JSON.parse(parsed.data.turnoverChecklist);
+      checklist = z.array(checklistItemSchema).parse(rawItems);
+    } catch {
+      redirect(`/admin/work-orders/${parsed.data.workOrderId}?error=1`);
+    }
+  }
+
   const costAmount = breakdown.reduce((sum, item) => sum + item.amount, 0);
-  const flagged = parsed.data.flagged === "on";
 
   const supabase = await createClient();
   const { error } = await supabase
@@ -60,6 +82,7 @@ export async function updateWorkOrder(formData: FormData) {
       flag_reason: flagged ? parsed.data.flagReason || null : null,
       cost_breakdown: breakdown,
       cost_amount: costAmount,
+      turnover_checklist: checklist,
     })
     .eq("id", parsed.data.workOrderId);
 
