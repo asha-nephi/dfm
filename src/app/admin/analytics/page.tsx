@@ -1,5 +1,6 @@
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { formatNaira } from "@/lib/format";
+import { formatNaira, workOrderStatusLabel } from "@/lib/format";
 
 function monthLabel(key: string): string {
   const [year, month] = key.split("-").map(Number);
@@ -9,19 +10,77 @@ function monthLabel(key: string): string {
   });
 }
 
+const WORK_ORDER_STATUSES = ["requested", "accepted", "in_progress", "complete", "cancelled"];
+
 export default async function AdminAnalyticsPage() {
   const supabase = await createClient();
 
-  const [{ data: payments }, { data: workOrders }] = await Promise.all([
-    supabase.from("payments").select("amount, date, status").eq("status", "success"),
+  const [{ data: payments }, { data: workOrders }, { data: leads }] = await Promise.all([
+    supabase.from("payments").select("amount, date, status, client_id, clients(name)"),
     supabase
       .from("work_orders")
       .select(
-        "cost_amount, status, assigned_artisan_id, artisan_rating, properties(address), artisans(name)",
+        "cost_amount, status, date, assigned_artisan_id, artisan_rating, flagged_for_review, properties(address), artisans(name)",
       ),
+    supabase.from("contact_leads").select("status"),
   ]);
 
-  // Monthly revenue — last 6 calendar months, oldest first.
+  const successPayments = (payments ?? []).filter((p) => p.status === "success");
+  const pendingPayments = (payments ?? []).filter((p) => p.status === "pending");
+
+  // KPIs
+  const outstandingAmount = pendingPayments.reduce((sum, p) => sum + Number(p.amount), 0);
+  const outstandingCount = pendingPayments.length;
+
+  const activeWorkOrders = (workOrders ?? []).filter(
+    (wo) => wo.status !== "complete" && wo.status !== "cancelled",
+  ).length;
+  const flaggedCount = (workOrders ?? []).filter((wo) => wo.flagged_for_review).length;
+
+  const completedJobs = (workOrders ?? []).filter((wo) => wo.status === "complete");
+  const avgJobCost =
+    completedJobs.length > 0
+      ? completedJobs.reduce((sum, wo) => sum + wo.cost_amount, 0) / completedJobs.length
+      : 0;
+
+  const convertedLeads = (leads ?? []).filter((l) => l.status === "converted").length;
+  const nonArchivedLeads = (leads ?? []).filter((l) => l.status !== "archived").length;
+  const conversionRate = nonArchivedLeads > 0 ? (convertedLeads / nonArchivedLeads) * 100 : 0;
+
+  const kpis = [
+    {
+      label: "Outstanding payments",
+      value: formatNaira(outstandingAmount),
+      sub: `${outstandingCount} pending`,
+      href: "/admin/payments",
+    },
+    {
+      label: "Active work orders",
+      value: String(activeWorkOrders),
+      sub: "not yet complete",
+      href: "/admin/work-orders",
+    },
+    {
+      label: "Flagged for review",
+      value: String(flaggedCount),
+      sub: "needs attention",
+      href: "/admin/work-orders?filter=flagged",
+    },
+    {
+      label: "Avg cost per completed job",
+      value: formatNaira(avgJobCost),
+      sub: `${completedJobs.length} jobs`,
+      href: "/admin/benchmarks",
+    },
+    {
+      label: "Lead conversion",
+      value: `${conversionRate.toFixed(0)}%`,
+      sub: `${convertedLeads} of ${nonArchivedLeads} leads`,
+      href: "/admin/leads",
+    },
+  ];
+
+  // Revenue vs cost — last 6 calendar months, oldest first.
   const now = new Date();
   const months: string[] = [];
   for (let i = 5; i >= 0; i--) {
@@ -29,15 +88,34 @@ export default async function AdminAnalyticsPage() {
     months.push(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`);
   }
   const revenueByMonth = new Map<string, number>(months.map((m) => [m, 0]));
-  for (const p of payments ?? []) {
+  for (const p of successPayments) {
     const key = p.date.slice(0, 7);
     if (revenueByMonth.has(key)) {
       revenueByMonth.set(key, (revenueByMonth.get(key) ?? 0) + Number(p.amount));
     }
   }
-  const maxRevenue = Math.max(1, ...Array.from(revenueByMonth.values()));
+  const costByMonth = new Map<string, number>(months.map((m) => [m, 0]));
+  for (const wo of workOrders ?? []) {
+    if (wo.status === "cancelled") continue;
+    const key = wo.date.slice(0, 7);
+    if (costByMonth.has(key)) {
+      costByMonth.set(key, (costByMonth.get(key) ?? 0) + wo.cost_amount);
+    }
+  }
+  const maxMonthly = Math.max(
+    1,
+    ...Array.from(revenueByMonth.values()),
+    ...Array.from(costByMonth.values()),
+  );
 
-  // Cost per property.
+  // Work order status breakdown.
+  const statusCounts = new Map<string, number>(WORK_ORDER_STATUSES.map((s) => [s, 0]));
+  for (const wo of workOrders ?? []) {
+    statusCounts.set(wo.status, (statusCounts.get(wo.status) ?? 0) + 1);
+  }
+  const totalWorkOrders = workOrders?.length ?? 0;
+
+  // Cost by property.
   const costByProperty = new Map<string, number>();
   for (const wo of workOrders ?? []) {
     const address = wo.properties?.address ?? "Unknown property";
@@ -47,38 +125,81 @@ export default async function AdminAnalyticsPage() {
     .sort((a, b) => b[1] - a[1])
     .slice(0, 10);
 
-  // Artisan completed-job counts + average rating.
-  const completedByArtisan = new Map<string, { count: number; ratingSum: number; ratingCount: number }>();
+  // Artisan performance: completed-job count, avg rating, total value handled.
+  const artisanStats = new Map<
+    string,
+    { count: number; ratingSum: number; ratingCount: number; totalValue: number }
+  >();
   for (const wo of workOrders ?? []) {
     if (wo.status !== "complete" || !wo.assigned_artisan_id) continue;
     const name = wo.artisans?.name ?? "Unknown artisan";
-    const entry = completedByArtisan.get(name) ?? { count: 0, ratingSum: 0, ratingCount: 0 };
+    const entry = artisanStats.get(name) ?? { count: 0, ratingSum: 0, ratingCount: 0, totalValue: 0 };
     entry.count += 1;
+    entry.totalValue += wo.cost_amount;
     if (wo.artisan_rating) {
       entry.ratingSum += wo.artisan_rating;
       entry.ratingCount += 1;
     }
-    completedByArtisan.set(name, entry);
+    artisanStats.set(name, entry);
   }
-  const artisanRows = Array.from(completedByArtisan.entries()).sort((a, b) => b[1].count - a[1].count);
+  const artisanRows = Array.from(artisanStats.entries()).sort((a, b) => b[1].count - a[1].count);
+
+  // Top clients by revenue.
+  const revenueByClient = new Map<string, number>();
+  for (const p of successPayments) {
+    const name = p.clients?.name ?? "Unknown client";
+    revenueByClient.set(name, (revenueByClient.get(name) ?? 0) + Number(p.amount));
+  }
+  const topClientRows = Array.from(revenueByClient.entries())
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 8);
 
   return (
     <div>
       <h1 className="text-2xl font-semibold text-navy-black">Analytics</h1>
 
-      <section className="mt-6 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-6">
-        <h2 className="font-semibold text-navy-black">Revenue — last 6 months</h2>
-        <div className="mt-4 flex items-end gap-3" style={{ height: 160 }}>
+      <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+        {kpis.map((k) => (
+          <Link
+            key={k.label}
+            href={k.href}
+            className="rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-5 hover:border-amber/60"
+          >
+            <p className="text-xl font-semibold text-navy-black">{k.value}</p>
+            <p className="mt-1 text-sm text-navy-black/60">{k.label}</p>
+            <p className="mt-0.5 text-xs text-navy-black/40">{k.sub}</p>
+          </Link>
+        ))}
+      </div>
+
+      <section className="mt-8 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-6">
+        <div className="flex items-center justify-between">
+          <h2 className="font-semibold text-navy-black">Revenue vs. cost — last 6 months</h2>
+          <div className="flex items-center gap-4 text-xs text-navy-black/60">
+            <span className="flex items-center gap-1.5">
+              <span className="h-2.5 w-2.5 rounded-sm bg-amber" /> Revenue
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span className="h-2.5 w-2.5 rounded-sm bg-charcoal/30" /> Cost
+            </span>
+          </div>
+        </div>
+        <div className="mt-4 flex items-end gap-4" style={{ height: 180 }}>
           {months.map((m) => {
-            const value = revenueByMonth.get(m) ?? 0;
-            const heightPct = Math.max(4, (value / maxRevenue) * 100);
+            const revenue = revenueByMonth.get(m) ?? 0;
+            const cost = costByMonth.get(m) ?? 0;
             return (
               <div key={m} className="flex flex-1 flex-col items-center gap-2">
-                <div className="flex w-full flex-1 items-end">
+                <div className="flex w-full flex-1 items-end justify-center gap-1">
                   <div
-                    className="w-full rounded-t-md bg-amber"
-                    style={{ height: `${heightPct}%` }}
-                    title={formatNaira(value)}
+                    className="w-1/2 rounded-t-md bg-amber"
+                    style={{ height: `${Math.max(4, (revenue / maxMonthly) * 100)}%` }}
+                    title={`Revenue: ${formatNaira(revenue)}`}
+                  />
+                  <div
+                    className="w-1/2 rounded-t-md bg-charcoal/30"
+                    style={{ height: `${Math.max(4, (cost / maxMonthly) * 100)}%` }}
+                    title={`Cost: ${formatNaira(cost)}`}
                   />
                 </div>
                 <span className="text-xs text-navy-black/50">{monthLabel(m)}</span>
@@ -87,9 +208,53 @@ export default async function AdminAnalyticsPage() {
           })}
         </div>
         <p className="mt-3 text-sm text-navy-black/70">
-          Total: {formatNaira(Array.from(revenueByMonth.values()).reduce((a, b) => a + b, 0))}
+          Revenue: {formatNaira(Array.from(revenueByMonth.values()).reduce((a, b) => a + b, 0))}
+          {" · "}
+          Cost: {formatNaira(Array.from(costByMonth.values()).reduce((a, b) => a + b, 0))}
         </p>
       </section>
+
+      <div className="mt-8 grid gap-8 lg:grid-cols-2">
+        <section>
+          <h2 className="font-semibold text-navy-black">Work orders by status</h2>
+          <ul className="mt-3 space-y-2 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-4">
+            {WORK_ORDER_STATUSES.map((status) => {
+              const count = statusCounts.get(status) ?? 0;
+              const pct = totalWorkOrders > 0 ? (count / totalWorkOrders) * 100 : 0;
+              return (
+                <li key={status}>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-navy-black">{workOrderStatusLabel(status)}</span>
+                    <span className="text-navy-black/60">{count}</span>
+                  </div>
+                  <div className="mt-1 h-1.5 w-full rounded-full bg-off-white">
+                    <div
+                      className="h-1.5 rounded-full bg-amber"
+                      style={{ width: `${pct}%` }}
+                    />
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+
+        <section>
+          <h2 className="font-semibold text-navy-black">Top clients by revenue</h2>
+          {topClientRows.length === 0 ? (
+            <p className="mt-2 text-sm text-navy-black/60">No successful payments yet.</p>
+          ) : (
+            <ul className="mt-3 divide-y divide-charcoal/10 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5">
+              {topClientRows.map(([name, total]) => (
+                <li key={name} className="flex items-center justify-between px-4 py-3 text-sm">
+                  <span className="text-navy-black">{name}</span>
+                  <span className="font-medium text-navy-black">{formatNaira(total)}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+      </div>
 
       <div className="mt-8 grid gap-8 lg:grid-cols-2">
         <section>
@@ -109,22 +274,25 @@ export default async function AdminAnalyticsPage() {
         </section>
 
         <section>
-          <h2 className="font-semibold text-navy-black">Jobs completed by artisan</h2>
+          <h2 className="font-semibold text-navy-black">Artisan performance</h2>
           {artisanRows.length === 0 ? (
             <p className="mt-2 text-sm text-navy-black/60">No completed jobs yet.</p>
           ) : (
             <ul className="mt-3 divide-y divide-charcoal/10 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5">
               {artisanRows.map(([name, stats]) => (
                 <li key={name} className="flex items-center justify-between px-4 py-3 text-sm">
-                  <span className="text-navy-black">{name}</span>
-                  <span className="flex items-center gap-2">
-                    {stats.ratingCount > 0 && (
-                      <span className="text-amber">
-                        &#9733; {(stats.ratingSum / stats.ratingCount).toFixed(1)}
-                      </span>
-                    )}
-                    <span className="font-medium text-navy-black">{stats.count}</span>
-                  </span>
+                  <div>
+                    <span className="text-navy-black">{name}</span>
+                    <p className="text-xs text-navy-black/50">
+                      {stats.count} job{stats.count === 1 ? "" : "s"} &middot;{" "}
+                      {formatNaira(stats.totalValue)} handled
+                    </p>
+                  </div>
+                  {stats.ratingCount > 0 && (
+                    <span className="text-amber">
+                      &#9733; {(stats.ratingSum / stats.ratingCount).toFixed(1)}
+                    </span>
+                  )}
                 </li>
               ))}
             </ul>

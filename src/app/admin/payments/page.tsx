@@ -1,9 +1,8 @@
 import { createClient } from "@/lib/supabase/server";
 import { formatDate, formatNaira } from "@/lib/format";
 import { PaymentStatusBadge } from "@/components/payment-status-badge";
-import { createPaymentRequest } from "./actions";
 import { PaymentStatusSelect } from "./payment-status-select";
-import { SubmitButton } from "@/components/submit-button";
+import { CreatePaymentForm } from "./create-payment-form";
 
 export default async function AdminPaymentsPage({
   searchParams,
@@ -13,16 +12,34 @@ export default async function AdminPaymentsPage({
   const { added, updated, error } = await searchParams;
   const supabase = await createClient();
 
-  const [{ data: payments }, { data: properties }] = await Promise.all([
+  const [{ data: payments }, { data: properties }, { data: workOrders }] = await Promise.all([
     supabase
       .from("payments")
-      .select("*, clients(name), properties(address)")
+      .select("*, clients(name), properties(address), work_orders(description)")
       .order("date", { ascending: false }),
     supabase
       .from("properties")
       .select("id, address, clients(name)")
       .order("address"),
+    supabase
+      .from("work_orders")
+      .select("id, property_id, description, cost_amount, status")
+      .order("date", { ascending: false }),
   ]);
+
+  const propertyOptions = (properties ?? []).map((p) => ({
+    id: p.id,
+    address: p.address,
+    clientName: p.clients?.name ?? null,
+  }));
+
+  const workOrderOptions = (workOrders ?? []).map((wo) => ({
+    id: wo.id,
+    propertyId: wo.property_id,
+    description: wo.description,
+    costAmount: wo.cost_amount,
+    status: wo.status,
+  }));
 
   return (
     <div>
@@ -45,41 +62,7 @@ export default async function AdminPaymentsPage({
             Something went wrong — please check the form and try again.
           </p>
         )}
-        <form
-          action={createPaymentRequest}
-          className="mt-4 grid gap-3 sm:grid-cols-[2fr_1fr_2fr_auto]"
-        >
-          <select
-            name="propertyId"
-            required
-            className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
-          >
-            <option value="">Select property...</option>
-            {properties?.map((p) => (
-              <option key={p.id} value={p.id}>
-                {p.clients?.name} — {p.address}
-              </option>
-            ))}
-          </select>
-          <input
-            type="number"
-            name="amount"
-            placeholder="Amount (₦)"
-            min={1}
-            step="1"
-            required
-            className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
-          />
-          <input
-            name="description"
-            placeholder="e.g. July 2026 management fee"
-            required
-            className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
-          />
-          <SubmitButton className="rounded-lg bg-charcoal shadow-sm px-4 py-2 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90">
-  Create
-</SubmitButton>
-        </form>
+        <CreatePaymentForm properties={propertyOptions} workOrders={workOrderOptions} />
       </section>
 
       <section className="mt-8">
@@ -98,6 +81,11 @@ export default async function AdminPaymentsPage({
                     {p.properties?.address ? ` · ${p.properties.address}` : ""}
                   </p>
                   <p className="mt-0.5 text-navy-black">{p.description ?? "Payment"}</p>
+                  {p.work_orders?.description && (
+                    <p className="mt-0.5 text-xs text-navy-black/40">
+                      Work order: {p.work_orders.description}
+                    </p>
+                  )}
                   {p.paystack_reference && (
                     <p className="mt-0.5 text-xs text-navy-black/40">
                       Ref: {p.paystack_reference}

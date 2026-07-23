@@ -313,6 +313,7 @@ export type Database = {
           property_id: string | null
           recurring_period: string | null
           status: string
+          work_order_id: string | null
         }
         Insert: {
           amount: number
@@ -324,6 +325,7 @@ export type Database = {
           property_id?: string | null
           recurring_period?: string | null
           status?: string
+          work_order_id?: string | null
         }
         Update: {
           amount?: number
@@ -335,6 +337,7 @@ export type Database = {
           property_id?: string | null
           recurring_period?: string | null
           status?: string
+          work_order_id?: string | null
         }
         Relationships: [
           {
@@ -349,6 +352,13 @@ export type Database = {
             columns: ["property_id"]
             isOneToOne: false
             referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payments_work_order_id_fkey"
+            columns: ["work_order_id"]
+            isOneToOne: false
+            referencedRelation: "work_orders"
             referencedColumns: ["id"]
           },
         ]

@@ -9,6 +9,7 @@ import { notifyClientPaymentDue, notifyClientPaymentReceived } from "@/lib/email
 
 const createPaymentSchema = z.object({
   propertyId: z.string().uuid(),
+  workOrderId: z.string().uuid().optional().or(z.literal("")),
   amount: z.coerce.number().positive(),
   description: z.string().trim().min(1).max(300),
 });
@@ -16,6 +17,7 @@ const createPaymentSchema = z.object({
 export async function createPaymentRequest(formData: FormData) {
   const parsed = createPaymentSchema.safeParse({
     propertyId: formData.get("propertyId"),
+    workOrderId: formData.get("workOrderId"),
     amount: formData.get("amount"),
     description: formData.get("description"),
   });
@@ -36,9 +38,22 @@ export async function createPaymentRequest(formData: FormData) {
     redirect("/admin/payments?error=1");
   }
 
+  if (parsed.data.workOrderId) {
+    const { data: workOrder } = await supabase
+      .from("work_orders")
+      .select("property_id")
+      .eq("id", parsed.data.workOrderId)
+      .maybeSingle();
+
+    if (!workOrder || workOrder.property_id !== parsed.data.propertyId) {
+      redirect("/admin/payments?error=1");
+    }
+  }
+
   const { error } = await supabase.from("payments").insert({
     client_id: property.client_id,
     property_id: parsed.data.propertyId,
+    work_order_id: parsed.data.workOrderId || null,
     amount: parsed.data.amount,
     description: parsed.data.description,
     status: "pending",
