@@ -120,3 +120,55 @@ export async function notifyClientPaymentReceived(params: {
     `),
   });
 }
+
+export async function notifyClientInvited(params: {
+  clientEmail: string;
+  clientName: string;
+  siteUrl: string;
+}): Promise<void> {
+  await sendEmail({
+    to: params.clientEmail,
+    subject: "You've been added to Deseret Facility Management",
+    html: wrapper(`
+      <h2>Welcome, ${params.clientName}</h2>
+      <p>DFM has added you as a client. Set your password to access your dashboard — property details, maintenance history, and payments, all in one place.</p>
+      <p><a href="${params.siteUrl}/signup" style="color:#1C2233;">Set your password &rarr;</a></p>
+      <p style="font-size:13px; color:#666;">Use this same email address (${params.clientEmail}) when setting your password.</p>
+    `),
+  });
+}
+
+export async function notifyArtisanInvited(params: {
+  artisanEmail: string;
+  artisanName: string;
+  siteUrl: string;
+}): Promise<void> {
+  await sendEmail({
+    to: params.artisanEmail,
+    subject: "You've been added to Deseret Facility Management",
+    html: wrapper(`
+      <h2>Welcome, ${params.artisanName}</h2>
+      <p>DFM has added you to the artisan roster. Set your password to access your dashboard — you'll see jobs assigned to you, and can update status and upload completion photos from there.</p>
+      <p><a href="${params.siteUrl}/signup" style="color:#1C2233;">Set your password &rarr;</a></p>
+      <p style="font-size:13px; color:#666;">Use this same email address (${params.artisanEmail}) when setting your password.</p>
+    `),
+  });
+}
+
+export async function notifyArtisanJobAssigned(params: {
+  artisanEmail: string;
+  propertyAddress: string;
+  description: string;
+  siteUrl: string;
+}): Promise<void> {
+  await sendEmail({
+    to: params.artisanEmail,
+    subject: `New job assigned — ${params.propertyAddress}`,
+    html: wrapper(`
+      <h2>You've been assigned a job</h2>
+      <p><strong>${params.propertyAddress}</strong></p>
+      <p>${params.description}</p>
+      <p><a href="${params.siteUrl}/artisan" style="color:#1C2233;">View job details &rarr;</a></p>
+    `),
+  });
+}

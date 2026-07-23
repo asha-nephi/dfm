@@ -708,6 +708,18 @@ export type Database = {
           id: string
         }[]
       }
+      update_own_artisan_profile: {
+        Args: { p_name: string; p_phone: string }
+        Returns: {
+          added_by_admin: string | null
+          auth_user_id: string | null
+          created_at: string
+          email: string
+          id: string
+          name: string
+          phone: string | null
+        }
+      }
       update_own_client_profile: {
         Args: { p_name: string; p_phone: string }
         Returns: {

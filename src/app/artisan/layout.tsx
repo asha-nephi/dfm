@@ -22,7 +22,10 @@ export default async function ArtisanLayout({
     <DashboardShell
       roleLabel="Artisan"
       homeHref="/artisan"
-      nav={[{ href: "/artisan", label: "My jobs" }]}
+      nav={[
+        { href: "/artisan", label: "My jobs" },
+        { href: "/artisan/profile", label: "My profile" },
+      ]}
     >
       {children}
     </DashboardShell>

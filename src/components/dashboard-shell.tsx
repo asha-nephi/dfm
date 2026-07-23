@@ -73,6 +73,12 @@ function RoleFooter({ roleLabel }: { roleLabel: string }) {
 </SubmitButton>
         </form>
       </div>
+      <Link
+        href="/"
+        className="mt-2 block text-xs text-navy-black/50 underline underline-offset-2 hover:text-navy-black/70"
+      >
+        &larr; Back to deseretfacilities.com
+      </Link>
     </div>
   );
 }

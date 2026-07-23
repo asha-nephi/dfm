@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { notifyClientInvited } from "@/lib/email";
 
 const clientSchema = z.object({
   name: z.string().trim().min(1).max(200),
@@ -32,6 +33,12 @@ export async function createClientRecord(formData: FormData) {
   if (error) {
     redirect(`/admin/clients?error=${encodeURIComponent(error.message)}`);
   }
+
+  await notifyClientInvited({
+    clientEmail: parsed.data.email,
+    clientName: parsed.data.name,
+    siteUrl: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
+  });
 
   revalidatePath("/admin/clients");
   redirect("/admin/clients?added=1");

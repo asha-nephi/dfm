@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
-import { notifyClientWorkOrderComplete } from "@/lib/email";
+import { notifyClientWorkOrderComplete, notifyArtisanJobAssigned } from "@/lib/email";
 
 const lineItemSchema = z.object({
   label: z.string().trim().min(1),
@@ -79,7 +79,7 @@ export async function updateWorkOrder(formData: FormData) {
 
   const { data: before } = await supabase
     .from("work_orders")
-    .select("status, property_id, properties(address, clients(email))")
+    .select("status, assigned_artisan_id, property_id, properties(address, clients(email))")
     .eq("id", parsed.data.workOrderId)
     .maybeSingle();
 
@@ -104,12 +104,30 @@ export async function updateWorkOrder(formData: FormData) {
     redirect(`/admin/work-orders/${parsed.data.workOrderId}?error=1`);
   }
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+
   if (before && before.status !== "complete" && parsed.data.status === "complete" && before.properties) {
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
     const clientEmail = before.properties.clients?.email;
     if (clientEmail) {
       await notifyClientWorkOrderComplete({
         clientEmail,
+        propertyAddress: before.properties.address,
+        description: parsed.data.description,
+        siteUrl,
+      });
+    }
+  }
+
+  const newArtisanId = parsed.data.assignedArtisanId || null;
+  if (before && before.properties && newArtisanId && newArtisanId !== before.assigned_artisan_id) {
+    const { data: artisan } = await supabase
+      .from("artisans")
+      .select("email")
+      .eq("id", newArtisanId)
+      .maybeSingle();
+    if (artisan?.email) {
+      await notifyArtisanJobAssigned({
+        artisanEmail: artisan.email,
         propertyAddress: before.properties.address,
         description: parsed.data.description,
         siteUrl,

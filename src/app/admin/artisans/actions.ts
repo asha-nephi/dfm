@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { notifyArtisanInvited } from "@/lib/email";
 
 const artisanSchema = z.object({
   name: z.string().trim().min(1).max(200),
@@ -43,6 +44,12 @@ export async function createArtisan(formData: FormData) {
   if (error) {
     redirect(`/admin/artisans?error=${encodeURIComponent(error.message)}`);
   }
+
+  await notifyArtisanInvited({
+    artisanEmail: parsed.data.email,
+    artisanName: parsed.data.name,
+    siteUrl: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
+  });
 
   revalidatePath("/admin/artisans");
   redirect("/admin/artisans?added=1");
