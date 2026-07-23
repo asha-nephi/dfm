@@ -25,6 +25,7 @@ export default async function ClientLayout({
       nav={[
         { href: "/client", label: "My properties" },
         { href: "/client/payments", label: "Payments" },
+        { href: "/client/profile", label: "My profile" },
       ]}
     >
       {children}

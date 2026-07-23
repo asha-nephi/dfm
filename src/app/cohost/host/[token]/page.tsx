@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import { LogoMark } from "@/components/logo";
 import { formatDate } from "@/lib/format";
 import { createClient } from "@/lib/supabase/server";
@@ -53,6 +54,12 @@ export default async function CohostHostStatusPage({
         <p className="mt-3 text-sm font-medium text-navy-black/60">
           Status: {STATUS_COPY[request.status] ?? request.status}
         </p>
+        <Link
+          href="/cohost/terms"
+          className="mt-1 inline-block text-xs text-charcoal underline underline-offset-2"
+        >
+          View Terms of Service
+        </Link>
 
         {submitted && (
           <p className="mt-4 rounded-md bg-green-50 px-3 py-2 text-sm text-green-700">

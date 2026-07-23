@@ -3,7 +3,9 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { formatDate, formatNaira, propertyTypeLabel } from "@/lib/format";
 import { StatusBadge } from "@/components/status-badge";
-import { submitMaintenanceRequest } from "./actions";
+import { WorkOrderComments } from "@/components/work-order-comments";
+import { submitMaintenanceRequest, addComment } from "./actions";
+import { RatingForm } from "./rating-form";
 
 type CostLineItem = { label?: string; amount?: number };
 type ChecklistItem = { item?: string; done?: boolean };
@@ -53,6 +55,24 @@ export default async function ClientPropertyPage({
       .createSignedUrls(allPaths, 60 * 60);
     signed?.forEach((s) => {
       if (s.signedUrl) signedUrlByPath.set(s.path ?? "", s.signedUrl);
+    });
+  }
+
+  const workOrderIds = (workOrders ?? []).map((wo) => wo.id);
+  const commentsByWorkOrder = new Map<
+    string,
+    { id: string; author_role: string; author_name: string; body: string; created_at: string }[]
+  >();
+  if (workOrderIds.length > 0) {
+    const { data: comments } = await supabase
+      .from("work_order_comments")
+      .select("*")
+      .in("work_order_id", workOrderIds)
+      .order("created_at", { ascending: true });
+    comments?.forEach((c) => {
+      const list = commentsByWorkOrder.get(c.work_order_id) ?? [];
+      list.push(c);
+      commentsByWorkOrder.set(c.work_order_id, list);
     });
   }
 
@@ -217,6 +237,41 @@ export default async function ClientPropertyPage({
                       })}
                     </div>
                   )}
+
+                  {wo.status === "complete" && (
+                    <div className="mt-4 border-t border-charcoal/10 pt-3">
+                      {wo.artisan_rating ? (
+                        <div>
+                          <p className="text-xs font-medium text-navy-black/60">Your rating</p>
+                          <p className="mt-1 text-amber">
+                            {"★".repeat(wo.artisan_rating)}
+                            <span className="text-charcoal/20">
+                              {"★".repeat(5 - wo.artisan_rating)}
+                            </span>
+                          </p>
+                          {wo.artisan_rating_note && (
+                            <p className="mt-1 text-sm text-navy-black/70">
+                              {wo.artisan_rating_note}
+                            </p>
+                          )}
+                        </div>
+                      ) : (
+                        <div>
+                          <p className="text-xs font-medium text-navy-black/60">
+                            How was this job?
+                          </p>
+                          <RatingForm workOrderId={wo.id} propertyId={property.id} />
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  <WorkOrderComments
+                    comments={commentsByWorkOrder.get(wo.id) ?? []}
+                    action={addComment}
+                    workOrderId={wo.id}
+                    extraFields={{ propertyId: property.id }}
+                  />
                 </li>
               );
             })}

@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { isSpamSubmission } from "@/lib/spam-protection";
 
 const leadSchema = z.object({
   name: z.string().trim().min(1, "Name is required").max(200),
@@ -24,6 +25,12 @@ export async function submitLead(formData: FormData) {
   }
 
   const supabase = await createClient();
+
+  if (await isSpamSubmission(formData, supabase, "contact_lead")) {
+    // Pretend it worked — don't tip off whatever's submitting this.
+    redirect("/?contact_sent=1#contact");
+  }
+
   const { error } = await supabase.from("contact_leads").insert({
     name: parsed.data.name,
     contact: parsed.data.contact,

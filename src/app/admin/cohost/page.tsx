@@ -25,9 +25,12 @@ export default async function AdminCohostPage() {
         </span>
       </div>
       <p className="mt-2 text-sm text-navy-black/60">
-        No terms of service exist for this yet — keep it out of public-facing
-        promotion until that&apos;s finalized. See Section 6 of the build
-        brief.
+        Requesters and applicants now agree to the{" "}
+        <Link href="/cohost/terms" className="text-charcoal underline underline-offset-2">
+          Terms of Service
+        </Link>{" "}
+        before submitting. Still worth keeping this out of heavy promotion
+        until you&apos;ve run a few real matches through it.
       </p>
 
       {!requests || requests.length === 0 ? (

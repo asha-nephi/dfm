@@ -3,11 +3,13 @@
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { isSpamSubmission } from "@/lib/spam-protection";
 
 const requestSchema = z.object({
   host_name: z.string().trim().min(1).max(200),
   host_contact: z.string().trim().min(1).max(200),
   property_description: z.string().trim().min(1).max(2000),
+  agree_terms: z.literal("on"),
 });
 
 export async function submitCohostRequest(formData: FormData) {
@@ -15,6 +17,7 @@ export async function submitCohostRequest(formData: FormData) {
     host_name: formData.get("host_name"),
     host_contact: formData.get("host_contact"),
     property_description: formData.get("property_description"),
+    agree_terms: formData.get("agree_terms"),
   });
 
   if (!parsed.success) {
@@ -22,6 +25,13 @@ export async function submitCohostRequest(formData: FormData) {
   }
 
   const supabase = await createClient();
+
+  if (await isSpamSubmission(formData, supabase, "cohost_request")) {
+    // No real request/token exists to pretend-succeed with — just bounce
+    // back quietly rather than exposing a rejection reason.
+    redirect("/#cohost");
+  }
+
   const { data, error } = await supabase.rpc("submit_cohost_request", {
     p_host_name: parsed.data.host_name,
     p_host_contact: parsed.data.host_contact,

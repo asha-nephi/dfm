@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import { LogoMark } from "@/components/logo";
 import { createClient } from "@/lib/supabase/server";
+import { HoneypotField } from "@/components/honeypot-field";
 import { submitApplication } from "./actions";
 
 export default async function CohostApplyPage({
@@ -38,10 +40,12 @@ export default async function CohostApplyPage({
         </h1>
         <p className="mt-2 text-navy-black/70">{request.property_description}</p>
         <p className="mt-3 text-xs text-navy-black/50">
-          This is an early beta. Terms of service for host/co-host
-          arrangements are still being finalized — DFM facilitates the
-          introduction only, and isn&apos;t yet a party to any agreement
-          between you and the host.
+          DFM facilitates the introduction only, and isn&apos;t a party to
+          any agreement between you and the host. Full details in the{" "}
+          <Link href="/cohost/terms" className="text-charcoal underline underline-offset-2">
+            Terms of Service
+          </Link>
+          .
         </p>
 
         {request.status !== "open" ? (
@@ -61,6 +65,7 @@ export default async function CohostApplyPage({
               </p>
             )}
             <form action={submitApplication} className="mt-6 grid gap-3">
+              <HoneypotField />
               <input type="hidden" name="requestId" value={request.id} />
               <input
                 name="applicant_name"
@@ -80,6 +85,16 @@ export default async function CohostApplyPage({
                 rows={3}
                 className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
               />
+              <label className="flex items-start gap-2 text-sm text-navy-black/70">
+                <input type="checkbox" name="agree_terms" required className="mt-0.5" />
+                <span>
+                  I agree to the{" "}
+                  <Link href="/cohost/terms" className="text-charcoal underline underline-offset-2">
+                    Terms of Service
+                  </Link>{" "}
+                  for the co-host marketplace.
+                </span>
+              </label>
               <button
                 type="submit"
                 className="w-fit rounded-lg bg-charcoal shadow-sm px-6 py-2.5 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90"

@@ -25,6 +25,8 @@ const updateSchema = z.object({
   flagReason: z.string().trim().max(1000).optional().or(z.literal("")),
   costBreakdown: z.string(),
   turnoverChecklist: z.string().optional().or(z.literal("")),
+  artisanRating: z.string().optional().or(z.literal("")),
+  artisanRatingNote: z.string().trim().max(500).optional().or(z.literal("")),
 });
 
 export async function updateWorkOrder(formData: FormData) {
@@ -43,6 +45,8 @@ export async function updateWorkOrder(formData: FormData) {
     flagReason: formData.get("flagReason"),
     costBreakdown: formData.get("costBreakdown"),
     turnoverChecklist: formData.get("turnoverChecklist"),
+    artisanRating: formData.get("artisanRating"),
+    artisanRatingNote: formData.get("artisanRatingNote"),
   });
 
   if (!parsed.success) {
@@ -91,6 +95,8 @@ export async function updateWorkOrder(formData: FormData) {
       cost_breakdown: breakdown,
       cost_amount: costAmount,
       turnover_checklist: checklist,
+      artisan_rating: parsed.data.artisanRating ? Number(parsed.data.artisanRating) : null,
+      artisan_rating_note: parsed.data.artisanRatingNote || null,
     })
     .eq("id", parsed.data.workOrderId);
 
@@ -161,6 +167,20 @@ export async function deleteWorkOrderPhoto(formData: FormData) {
   const supabase = await createClient();
   await supabase.storage.from("work-order-photos").remove([photoPath]);
   await supabase.from("work_order_photos").delete().eq("id", photoId);
+
+  revalidatePath(`/admin/work-orders/${workOrderId}`);
+  redirect(`/admin/work-orders/${workOrderId}`);
+}
+
+export async function addComment(formData: FormData) {
+  const workOrderId = String(formData.get("workOrderId") ?? "");
+  const body = String(formData.get("body") ?? "");
+
+  const supabase = await createClient();
+  await supabase.rpc("add_work_order_comment", {
+    p_work_order_id: workOrderId,
+    p_body: body,
+  });
 
   revalidatePath(`/admin/work-orders/${workOrderId}`);
   redirect(`/admin/work-orders/${workOrderId}`);

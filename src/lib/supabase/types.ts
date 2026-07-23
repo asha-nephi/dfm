@@ -391,6 +391,62 @@ export type Database = {
           },
         ]
       }
+      rate_limit_events: {
+        Row: {
+          action: string
+          created_at: string
+          id: string
+          identifier: string
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          id?: string
+          identifier: string
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          id?: string
+          identifier?: string
+        }
+        Relationships: []
+      }
+      work_order_comments: {
+        Row: {
+          author_name: string
+          author_role: string
+          body: string
+          created_at: string
+          id: string
+          work_order_id: string
+        }
+        Insert: {
+          author_name: string
+          author_role: string
+          body: string
+          created_at?: string
+          id?: string
+          work_order_id: string
+        }
+        Update: {
+          author_name?: string
+          author_role?: string
+          body?: string
+          created_at?: string
+          id?: string
+          work_order_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "work_order_comments_work_order_id_fkey"
+            columns: ["work_order_id"]
+            isOneToOne: false
+            referencedRelation: "work_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       work_order_photos: {
         Row: {
           caption: string | null
@@ -428,6 +484,8 @@ export type Database = {
       }
       work_orders: {
         Row: {
+          artisan_rating: number | null
+          artisan_rating_note: string | null
           assigned_artisan_id: string | null
           cost_amount: number
           cost_breakdown: Json
@@ -444,6 +502,8 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          artisan_rating?: number | null
+          artisan_rating_note?: string | null
           assigned_artisan_id?: string | null
           cost_amount?: number
           cost_breakdown?: Json
@@ -460,6 +520,8 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          artisan_rating?: number | null
+          artisan_rating_note?: string | null
           assigned_artisan_id?: string | null
           cost_amount?: number
           cost_breakdown?: Json
@@ -497,6 +559,17 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      add_work_order_comment: {
+        Args: { p_body: string; p_work_order_id: string }
+        Returns: {
+          author_name: string
+          author_role: string
+          body: string
+          created_at: string
+          id: string
+          work_order_id: string
+        }
+      }
       artisan_assigned_to_property: {
         Args: { p_property_id: string }
         Returns: boolean
@@ -512,6 +585,8 @@ export type Database = {
           p_work_order_id: string
         }
         Returns: {
+          artisan_rating: number | null
+          artisan_rating_note: string | null
           assigned_artisan_id: string | null
           cost_amount: number
           cost_breakdown: Json
@@ -532,9 +607,39 @@ export type Database = {
         Args: { p_work_order_id: string }
         Returns: boolean
       }
+      check_rate_limit: {
+        Args: {
+          p_action: string
+          p_identifier: string
+          p_max_events: number
+          p_window_minutes: number
+        }
+        Returns: boolean
+      }
       client_owns_property: {
         Args: { p_property_id: string }
         Returns: boolean
+      }
+      client_rate_work_order: {
+        Args: { p_note: string; p_rating: number; p_work_order_id: string }
+        Returns: {
+          artisan_rating: number | null
+          artisan_rating_note: string | null
+          assigned_artisan_id: string | null
+          cost_amount: number
+          cost_breakdown: Json
+          created_at: string
+          created_by: string
+          date: string
+          description: string
+          flag_reason: string | null
+          flagged_for_review: boolean
+          id: string
+          property_id: string
+          status: string
+          turnover_checklist: Json | null
+          updated_at: string
+        }
       }
       current_artisan_id: { Args: never; Returns: string }
       current_client_id: { Args: never; Returns: string }
@@ -602,6 +707,17 @@ export type Database = {
           host_token: string
           id: string
         }[]
+      }
+      update_own_client_profile: {
+        Args: { p_name: string; p_phone: string }
+        Returns: {
+          auth_user_id: string | null
+          created_at: string
+          email: string
+          id: string
+          name: string
+          phone: string | null
+        }
       }
     }
     Enums: {

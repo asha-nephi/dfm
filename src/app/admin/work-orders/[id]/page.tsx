@@ -2,9 +2,11 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { formatDate } from "@/lib/format";
+import { WorkOrderComments } from "@/components/work-order-comments";
+import { CompressedFileInput } from "@/components/compressed-file-input";
 import { CostBreakdownEditor } from "./cost-breakdown-editor";
 import { TurnoverChecklistEditor } from "./turnover-checklist-editor";
-import { updateWorkOrder, uploadWorkOrderPhoto, deleteWorkOrderPhoto } from "./actions";
+import { updateWorkOrder, uploadWorkOrderPhoto, deleteWorkOrderPhoto, addComment } from "./actions";
 
 type CostLineItem = { label: string; amount: number };
 type ChecklistItem = { item: string; done: boolean };
@@ -37,6 +39,12 @@ export default async function AdminWorkOrderDetailPage({
     .from("cost_benchmarks")
     .select("id, label, category, typical_amount")
     .order("label");
+
+  const { data: comments } = await supabase
+    .from("work_order_comments")
+    .select("*")
+    .eq("work_order_id", id)
+    .order("created_at", { ascending: true });
 
   const photos = workOrder.work_order_photos ?? [];
   const paths = photos.map((p) => p.photo_url);
@@ -161,6 +169,34 @@ export default async function AdminWorkOrderDetailPage({
             </div>
           )}
 
+          <div>
+            <label className="block text-sm font-medium text-navy-black">
+              Artisan rating {workOrder.status !== "complete" && (
+                <span className="font-normal text-navy-black/40">(job not yet complete)</span>
+              )}
+            </label>
+            <div className="mt-1 grid gap-3 sm:grid-cols-2">
+              <select
+                name="artisanRating"
+                defaultValue={workOrder.artisan_rating ?? ""}
+                className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+              >
+                <option value="">No rating</option>
+                <option value="1">1 star</option>
+                <option value="2">2 stars</option>
+                <option value="3">3 stars</option>
+                <option value="4">4 stars</option>
+                <option value="5">5 stars</option>
+              </select>
+              <input
+                name="artisanRatingNote"
+                defaultValue={workOrder.artisan_rating_note ?? ""}
+                placeholder="Note (optional)"
+                className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+              />
+            </div>
+          </div>
+
           <div className="rounded-md bg-off-white p-4">
             <label className="flex items-center gap-2 text-sm font-medium text-navy-black">
               <input
@@ -197,14 +233,7 @@ export default async function AdminWorkOrderDetailPage({
         )}
         <form action={uploadWorkOrderPhoto} className="mt-4 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
           <input type="hidden" name="workOrderId" value={workOrder.id} />
-          <input
-            type="file"
-            name="file"
-            accept="image/*"
-            multiple
-            required
-            className="w-full text-sm sm:w-auto"
-          />
+          <CompressedFileInput name="file" className="w-full text-sm sm:w-auto" />
           <button
             type="submit"
             className="rounded-lg bg-charcoal shadow-sm px-4 py-2 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90"
@@ -244,6 +273,8 @@ export default async function AdminWorkOrderDetailPage({
           </div>
         )}
       </section>
+
+      <WorkOrderComments comments={comments ?? []} action={addComment} workOrderId={workOrder.id} />
 
       <p className="mt-4 text-xs text-navy-black/40">
         Logged {formatDate(workOrder.created_at)}

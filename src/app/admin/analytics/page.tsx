@@ -16,7 +16,9 @@ export default async function AdminAnalyticsPage() {
     supabase.from("payments").select("amount, date, status").eq("status", "success"),
     supabase
       .from("work_orders")
-      .select("cost_amount, status, assigned_artisan_id, properties(address), artisans(name)"),
+      .select(
+        "cost_amount, status, assigned_artisan_id, artisan_rating, properties(address), artisans(name)",
+      ),
   ]);
 
   // Monthly revenue — last 6 calendar months, oldest first.
@@ -45,14 +47,20 @@ export default async function AdminAnalyticsPage() {
     .sort((a, b) => b[1] - a[1])
     .slice(0, 10);
 
-  // Artisan completed-job counts.
-  const completedByArtisan = new Map<string, number>();
+  // Artisan completed-job counts + average rating.
+  const completedByArtisan = new Map<string, { count: number; ratingSum: number; ratingCount: number }>();
   for (const wo of workOrders ?? []) {
     if (wo.status !== "complete" || !wo.assigned_artisan_id) continue;
     const name = wo.artisans?.name ?? "Unknown artisan";
-    completedByArtisan.set(name, (completedByArtisan.get(name) ?? 0) + 1);
+    const entry = completedByArtisan.get(name) ?? { count: 0, ratingSum: 0, ratingCount: 0 };
+    entry.count += 1;
+    if (wo.artisan_rating) {
+      entry.ratingSum += wo.artisan_rating;
+      entry.ratingCount += 1;
+    }
+    completedByArtisan.set(name, entry);
   }
-  const artisanRows = Array.from(completedByArtisan.entries()).sort((a, b) => b[1] - a[1]);
+  const artisanRows = Array.from(completedByArtisan.entries()).sort((a, b) => b[1].count - a[1].count);
 
   return (
     <div>
@@ -106,10 +114,17 @@ export default async function AdminAnalyticsPage() {
             <p className="mt-2 text-sm text-navy-black/60">No completed jobs yet.</p>
           ) : (
             <ul className="mt-3 divide-y divide-charcoal/10 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5">
-              {artisanRows.map(([name, count]) => (
+              {artisanRows.map(([name, stats]) => (
                 <li key={name} className="flex items-center justify-between px-4 py-3 text-sm">
                   <span className="text-navy-black">{name}</span>
-                  <span className="font-medium text-navy-black">{count}</span>
+                  <span className="flex items-center gap-2">
+                    {stats.ratingCount > 0 && (
+                      <span className="text-amber">
+                        &#9733; {(stats.ratingSum / stats.ratingCount).toFixed(1)}
+                      </span>
+                    )}
+                    <span className="font-medium text-navy-black">{stats.count}</span>
+                  </span>
                 </li>
               ))}
             </ul>

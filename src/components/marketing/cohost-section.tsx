@@ -1,4 +1,6 @@
+import Link from "next/link";
 import { submitCohostRequest } from "@/app/cohost-actions";
+import { HoneypotField } from "@/components/honeypot-field";
 
 export function CohostSection({ error }: { error: boolean }) {
   return (
@@ -14,10 +16,13 @@ export function CohostSection({ error }: { error: boolean }) {
           <p className="mt-3 max-w-2xl text-navy-black/70">
             If you host a short-term rental and want a co-host to help manage
             it, tell us about the property and we&apos;ll help match you with
-            someone. This is an early beta: terms of service for host/co-host
-            arrangements are still being finalized, and DFM facilitates the
-            introduction only — it isn&apos;t yet a party to any agreement
-            between you and a co-host.
+            someone. DFM facilitates the introduction only — we&apos;re not a
+            party to any agreement between you and a co-host. Full details in
+            the{" "}
+            <Link href="/cohost/terms" className="text-charcoal underline underline-offset-2">
+              Terms of Service
+            </Link>
+            .
           </p>
 
           {error && (
@@ -27,6 +32,7 @@ export function CohostSection({ error }: { error: boolean }) {
           )}
 
           <form action={submitCohostRequest} className="mt-6 grid gap-3 sm:grid-cols-2">
+            <HoneypotField />
             <input
               name="host_name"
               placeholder="Your name"
@@ -46,6 +52,16 @@ export function CohostSection({ error }: { error: boolean }) {
               rows={3}
               className="sm:col-span-2 rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
             />
+            <label className="sm:col-span-2 flex items-start gap-2 text-sm text-navy-black/70">
+              <input type="checkbox" name="agree_terms" required className="mt-0.5" />
+              <span>
+                I agree to the{" "}
+                <Link href="/cohost/terms" className="text-charcoal underline underline-offset-2">
+                  Terms of Service
+                </Link>{" "}
+                for the co-host marketplace.
+              </span>
+            </label>
             <button
               type="submit"
               className="sm:col-span-2 w-fit rounded-lg bg-charcoal shadow-sm px-6 py-2.5 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90"

@@ -120,3 +120,17 @@ export async function uploadJobPhoto(formData: FormData) {
   revalidatePath(`/artisan/jobs/${jobId}`);
   redirect(`/artisan/jobs/${jobId}${hadError ? "?photo_error=1" : ""}`);
 }
+
+export async function addComment(formData: FormData) {
+  const jobId = String(formData.get("workOrderId") ?? "");
+  const body = String(formData.get("body") ?? "");
+
+  const supabase = await createClient();
+  await supabase.rpc("add_work_order_comment", {
+    p_work_order_id: jobId,
+    p_body: body,
+  });
+
+  revalidatePath(`/artisan/jobs/${jobId}`);
+  redirect(`/artisan/jobs/${jobId}`);
+}

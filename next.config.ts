@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 import path from "node:path";
+import { withSentryConfig } from "@sentry/nextjs";
 
 const nextConfig: NextConfig = {
   turbopack: {
@@ -12,4 +13,10 @@ const nextConfig: NextConfig = {
   allowedDevOrigins: ["192.168.137.1", "10.158.122.78"],
 };
 
-export default nextConfig;
+export default withSentryConfig(nextConfig, {
+  org: "deseret-facility-management",
+  project: "dfm-web",
+  // Only upload source maps / annotate builds when SENTRY_AUTH_TOKEN is set
+  // (CI/Vercel). Local dev builds skip this silently.
+  silent: true,
+});
