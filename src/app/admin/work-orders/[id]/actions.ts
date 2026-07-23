@@ -36,6 +36,10 @@ export async function updateWorkOrder(formData: FormData) {
   // schema rather than tripping validation on every unflagged save.
   const flagged = formData.get("flagged") === "on";
 
+  // Same issue for turnoverChecklist: that field only renders in the form
+  // for short-term-rental properties, so on a long-term-let work order
+  // formData.get() returns `null` (absent), not `undefined` — coerce to ""
+  // so it doesn't trip .optional() validation on every LTL save.
   const parsed = updateSchema.safeParse({
     workOrderId: formData.get("workOrderId"),
     date: formData.get("date"),
@@ -44,7 +48,7 @@ export async function updateWorkOrder(formData: FormData) {
     assignedArtisanId: formData.get("assignedArtisanId"),
     flagReason: formData.get("flagReason"),
     costBreakdown: formData.get("costBreakdown"),
-    turnoverChecklist: formData.get("turnoverChecklist"),
+    turnoverChecklist: formData.get("turnoverChecklist") ?? "",
     artisanRating: formData.get("artisanRating"),
     artisanRatingNote: formData.get("artisanRatingNote"),
   });
