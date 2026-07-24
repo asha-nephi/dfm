@@ -11,6 +11,11 @@ const ARTICLES: HelpArticle[] = [
   },
   {
     category: "My jobs",
+    title: "Send DFM a price quote",
+    body: "Open the job → Price quote → add priced line items (e.g. labor, materials) and an optional note → Submit quote. DFM gets notified and reviews it — once accepted, it becomes the job's official cost. You can revise and resubmit anytime before that happens.",
+  },
+  {
+    category: "My jobs",
     title: "Update a job's status",
     body: "Open the job → Update status → choose Accepted, In progress, or Complete → Save status. Marking a job Complete emails the client automatically.",
   },

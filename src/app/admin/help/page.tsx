@@ -31,6 +31,11 @@ const ARTICLES: HelpArticle[] = [
   },
   {
     category: "Work orders",
+    title: "Review and accept an artisan's price quote",
+    body: "Once you've assigned an artisan, they can propose itemized pricing from their own job page. It shows as an amber \"Artisan's quote — awaiting review\" panel at the top of the work order, plus a \"Quoted\" filter on the work orders list. Accept copies it straight into Itemized costs (and emails the artisan); Decline clears it so they can revise and resubmit.",
+  },
+  {
+    category: "Work orders",
     title: "Set up a turnover checklist",
     body: "Only appears on short-term-rental properties. Open the work order → Turnover checklist section → add items. The assigned artisan checks them off as they complete the turnover.",
   },

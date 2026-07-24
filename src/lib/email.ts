@@ -188,6 +188,55 @@ export async function notifyArtisanPayoutSent(params: {
   });
 }
 
+export async function notifyAdminArtisanQuoteSubmitted(params: {
+  artisanName: string;
+  propertyAddress: string;
+  amount: string;
+  workOrderId: string;
+  siteUrl: string;
+}): Promise<void> {
+  await sendEmail({
+    to: ADMIN_NOTIFY_EMAIL,
+    subject: `Quote submitted — ${params.propertyAddress} (${params.amount})`,
+    html: wrapper(`
+      <h2>Artisan submitted a quote</h2>
+      <p><strong>${params.artisanName}</strong> proposed <strong>${params.amount}</strong> for ${params.propertyAddress}.</p>
+      <p><a href="${params.siteUrl}/admin/work-orders/${params.workOrderId}" style="color:#1C2233;">Review the quote &rarr;</a></p>
+    `),
+  });
+}
+
+export async function notifyArtisanQuoteAccepted(params: {
+  artisanEmail: string;
+  artisanName: string;
+  propertyAddress: string;
+  amount: string;
+}): Promise<void> {
+  await sendEmail({
+    to: params.artisanEmail,
+    subject: `Quote accepted — ${params.propertyAddress}`,
+    html: wrapper(`
+      <h2>Your quote was accepted</h2>
+      <p>Hi ${params.artisanName}, DFM accepted your quote of <strong>${params.amount}</strong> for ${params.propertyAddress} — it's now the job's itemized cost.</p>
+    `),
+  });
+}
+
+export async function notifyArtisanQuoteDeclined(params: {
+  artisanEmail: string;
+  artisanName: string;
+  propertyAddress: string;
+}): Promise<void> {
+  await sendEmail({
+    to: params.artisanEmail,
+    subject: `Quote declined — ${params.propertyAddress}`,
+    html: wrapper(`
+      <h2>Your quote wasn't accepted</h2>
+      <p>Hi ${params.artisanName}, DFM didn't accept your quote for ${params.propertyAddress}. Check the job's comments, or reach out directly, and feel free to submit a revised quote.</p>
+    `),
+  });
+}
+
 export async function notifyAdminNewCohostRequest(params: {
   hostName: string;
   propertyDescription: string;

@@ -6,7 +6,15 @@ import { WorkOrderComments } from "@/components/work-order-comments";
 import { CompressedFileInput } from "@/components/compressed-file-input";
 import { CostBreakdownEditor } from "./cost-breakdown-editor";
 import { TurnoverChecklistEditor } from "./turnover-checklist-editor";
-import { updateWorkOrder, uploadWorkOrderPhoto, deleteWorkOrderPhoto, addComment } from "./actions";
+import {
+  updateWorkOrder,
+  uploadWorkOrderPhoto,
+  deleteWorkOrderPhoto,
+  addComment,
+  acceptArtisanQuote,
+  declineArtisanQuote,
+} from "./actions";
+import { formatNaira } from "@/lib/format";
 import { SubmitButton } from "@/components/submit-button";
 import { ConfirmSubmitButton } from "@/components/confirm-submit-button";
 import { RealtimeRefresh } from "@/components/realtime-refresh";
@@ -64,6 +72,10 @@ export default async function AdminWorkOrderDetailPage({
   const breakdown = Array.isArray(workOrder.cost_breakdown)
     ? (workOrder.cost_breakdown as CostLineItem[])
     : [];
+  const pendingQuote = Array.isArray(workOrder.artisan_quote)
+    ? (workOrder.artisan_quote as CostLineItem[])
+    : [];
+  const pendingQuoteTotal = pendingQuote.reduce((sum, item) => sum + item.amount, 0);
   const checklist = Array.isArray(workOrder.turnover_checklist)
     ? (workOrder.turnover_checklist as ChecklistItem[])
     : [];
@@ -91,6 +103,45 @@ export default async function AdminWorkOrderDetailPage({
         <p className="mt-3 rounded-md bg-green-50 px-3 py-2 text-sm text-green-700">
           Work order updated.
         </p>
+      )}
+
+      {pendingQuote.length > 0 && (
+        <section className="mt-6 rounded-xl border border-amber/40 bg-amber/5 shadow-sm shadow-charcoal/5 p-6">
+          <h2 className="font-semibold text-navy-black">Artisan&apos;s quote — awaiting review</h2>
+          <ul className="mt-3 space-y-1">
+            {pendingQuote.map((item, i) => (
+              <li key={i} className="flex items-center justify-between text-sm text-navy-black">
+                <span>{item.label}</span>
+                <span>{formatNaira(item.amount)}</span>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-2 text-sm font-medium text-navy-black">
+            Total: {formatNaira(pendingQuoteTotal)}
+          </p>
+          {workOrder.artisan_quote_note && (
+            <p className="mt-2 text-sm text-navy-black/70">
+              &ldquo;{workOrder.artisan_quote_note}&rdquo;
+            </p>
+          )}
+          <div className="mt-4 flex gap-3">
+            <form action={acceptArtisanQuote}>
+              <input type="hidden" name="workOrderId" value={workOrder.id} />
+              <SubmitButton className="rounded-lg bg-charcoal shadow-sm px-4 py-2 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90">
+  Accept — apply to itemized costs
+</SubmitButton>
+            </form>
+            <form action={declineArtisanQuote}>
+              <input type="hidden" name="workOrderId" value={workOrder.id} />
+              <ConfirmSubmitButton
+                confirmMessage="Decline this quote? The artisan can revise and resubmit."
+                className="rounded-lg border border-charcoal/20 px-4 py-2 text-sm font-medium text-navy-black hover:border-charcoal/40"
+              >
+                Decline
+              </ConfirmSubmitButton>
+            </form>
+          </div>
+        </section>
       )}
 
       <section className="mt-6 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-6">

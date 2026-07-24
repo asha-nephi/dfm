@@ -627,6 +627,8 @@ export type Database = {
       }
       work_orders: {
         Row: {
+          artisan_quote: Json | null
+          artisan_quote_note: string | null
           artisan_rating: number | null
           artisan_rating_note: string | null
           assigned_artisan_id: string | null
@@ -645,6 +647,8 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          artisan_quote?: Json | null
+          artisan_quote_note?: string | null
           artisan_rating?: number | null
           artisan_rating_note?: string | null
           assigned_artisan_id?: string | null
@@ -663,6 +667,8 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          artisan_quote?: Json | null
+          artisan_quote_note?: string | null
           artisan_rating?: number | null
           artisan_rating_note?: string | null
           assigned_artisan_id?: string | null
@@ -727,6 +733,35 @@ export type Database = {
         Args: { p_work_order_id: string }
         Returns: boolean
       }
+      artisan_submit_quote: {
+        Args: { p_note?: string; p_quote: Json; p_work_order_id: string }
+        Returns: {
+          artisan_quote: Json | null
+          artisan_quote_note: string | null
+          artisan_rating: number | null
+          artisan_rating_note: string | null
+          assigned_artisan_id: string | null
+          cost_amount: number
+          cost_breakdown: Json
+          created_at: string
+          created_by: string
+          date: string
+          description: string
+          flag_reason: string | null
+          flagged_for_review: boolean
+          id: string
+          property_id: string
+          status: string
+          turnover_checklist: Json | null
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "work_orders"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       artisan_update_work_order: {
         Args: {
           p_status: string
@@ -734,6 +769,8 @@ export type Database = {
           p_work_order_id: string
         }
         Returns: {
+          artisan_quote: Json | null
+          artisan_quote_note: string | null
           artisan_rating: number | null
           artisan_rating_note: string | null
           assigned_artisan_id: string | null
@@ -778,6 +815,8 @@ export type Database = {
       client_rate_work_order: {
         Args: { p_note: string; p_rating: number; p_work_order_id: string }
         Returns: {
+          artisan_quote: Json | null
+          artisan_quote_note: string | null
           artisan_rating: number | null
           artisan_rating_note: string | null
           assigned_artisan_id: string | null

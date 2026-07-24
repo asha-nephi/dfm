@@ -7,6 +7,7 @@ import { RealtimeRefresh } from "@/components/realtime-refresh";
 const FILTERS = [
   { key: "all", label: "All" },
   { key: "requested", label: "Requested" },
+  { key: "quoted", label: "Quoted" },
   { key: "flagged", label: "Flagged" },
   { key: "complete", label: "Complete" },
 ] as const;
@@ -27,6 +28,7 @@ export default async function AdminWorkOrdersPage({
   if (filter === "requested") query = query.eq("status", "requested");
   if (filter === "complete") query = query.eq("status", "complete");
   if (filter === "flagged") query = query.eq("flagged_for_review", true);
+  if (filter === "quoted") query = query.not("artisan_quote", "is", null);
   if (q) query = query.ilike("description", `%${q}%`);
 
   const { data: workOrders } = await query;
@@ -101,6 +103,9 @@ export default async function AdminWorkOrdersPage({
                     <p className="mt-0.5 text-navy-black">{wo.description}</p>
                   </div>
                   <div className="flex items-center gap-3">
+                    {Array.isArray(wo.artisan_quote) && wo.artisan_quote.length > 0 && (
+                      <span className="text-xs font-medium text-amber-900">Quoted</span>
+                    )}
                     {wo.flagged_for_review && (
                       <span className="text-xs font-medium text-amber-900">Flagged</span>
                     )}

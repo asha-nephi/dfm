@@ -5,11 +5,23 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { notifyClientWorkOrderComplete } from "@/lib/email";
+import { notifyClientWorkOrderComplete, notifyAdminArtisanQuoteSubmitted } from "@/lib/email";
+import { formatNaira } from "@/lib/format";
 
 const checklistItemSchema = z.object({
   item: z.string().trim().min(1),
   done: z.boolean(),
+});
+
+const quoteLineItemSchema = z.object({
+  label: z.string().trim().min(1),
+  amount: z.coerce.number().min(0),
+});
+
+const quoteSchema = z.object({
+  jobId: z.string().uuid(),
+  quote: z.string(),
+  note: z.string().trim().max(500).optional().or(z.literal("")),
 });
 
 const statusSchema = z.object({
@@ -86,6 +98,72 @@ export async function updateJobStatus(formData: FormData) {
 
   revalidatePath(`/artisan/jobs/${parsed.data.jobId}`);
   redirect(`/artisan/jobs/${parsed.data.jobId}?updated=1`);
+}
+
+export async function submitQuote(formData: FormData) {
+  const parsed = quoteSchema.safeParse({
+    jobId: formData.get("jobId"),
+    quote: formData.get("quote"),
+    note: formData.get("note") ?? "",
+  });
+
+  if (!parsed.success) {
+    redirect(`/artisan/jobs/${formData.get("jobId")}?quote_error=1`);
+  }
+
+  let lineItems: { label: string; amount: number }[] = [];
+  try {
+    const rawItems = JSON.parse(parsed.data.quote);
+    lineItems = z.array(quoteLineItemSchema).parse(rawItems);
+  } catch {
+    redirect(`/artisan/jobs/${parsed.data.jobId}?quote_error=1`);
+  }
+
+  if (lineItems.length === 0) {
+    redirect(`/artisan/jobs/${parsed.data.jobId}?quote_error=1`);
+  }
+
+  const supabase = await createClient();
+
+  const { error } = await supabase.rpc("artisan_submit_quote", {
+    p_work_order_id: parsed.data.jobId,
+    p_quote: lineItems,
+    p_note: parsed.data.note || undefined,
+  });
+
+  if (error) {
+    redirect(`/artisan/jobs/${parsed.data.jobId}?quote_error=1`);
+  }
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (user) {
+    const [{ data: artisan }, { data: job }] = await Promise.all([
+      supabase.from("artisans").select("name").eq("auth_user_id", user.id).maybeSingle(),
+      supabase
+        .from("work_orders")
+        .select("properties(address)")
+        .eq("id", parsed.data.jobId)
+        .maybeSingle(),
+    ]);
+
+    if (artisan && job?.properties) {
+      const amount = lineItems.reduce((sum, item) => sum + item.amount, 0);
+      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+      await notifyAdminArtisanQuoteSubmitted({
+        artisanName: artisan.name,
+        propertyAddress: job.properties.address,
+        amount: formatNaira(amount),
+        workOrderId: parsed.data.jobId,
+        siteUrl,
+      });
+    }
+  }
+
+  revalidatePath(`/artisan/jobs/${parsed.data.jobId}`);
+  redirect(`/artisan/jobs/${parsed.data.jobId}?quoted=1`);
 }
 
 export async function uploadJobPhoto(formData: FormData) {

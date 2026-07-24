@@ -6,20 +6,28 @@ import { StatusBadge } from "@/components/status-badge";
 import { TurnoverChecklist } from "./turnover-checklist";
 import { WorkOrderComments } from "@/components/work-order-comments";
 import { CompressedFileInput } from "@/components/compressed-file-input";
+import { QuoteEditor } from "./quote-editor";
 import { updateJobStatus, uploadJobPhoto, addComment } from "./actions";
 import { SubmitButton } from "@/components/submit-button";
 
 type ChecklistItem = { item: string; done: boolean };
+type QuoteLineItem = { label: string; amount: number };
 
 export default async function ArtisanJobDetailPage({
   params,
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ error?: string; updated?: string; photo_error?: string }>;
+  searchParams: Promise<{
+    error?: string;
+    updated?: string;
+    photo_error?: string;
+    quoted?: string;
+    quote_error?: string;
+  }>;
 }) {
   const { id } = await params;
-  const { error, updated, photo_error } = await searchParams;
+  const { error, updated, photo_error, quoted, quote_error } = await searchParams;
   const supabase = await createClient();
 
   const { data: job } = await supabase
@@ -56,6 +64,9 @@ export default async function ArtisanJobDetailPage({
     ? (job.turnover_checklist as ChecklistItem[])
     : [];
   const isShortTermRental = job.properties?.property_type === "short_term_rental";
+  const pendingQuote = Array.isArray(job.artisan_quote)
+    ? (job.artisan_quote as QuoteLineItem[])
+    : [];
 
   return (
     <div>
@@ -88,6 +99,30 @@ export default async function ArtisanJobDetailPage({
           Status updated.
         </p>
       )}
+      {quoted && (
+        <p className="mt-4 rounded-md bg-green-50 px-3 py-2 text-sm text-green-700">
+          Quote sent to DFM.
+        </p>
+      )}
+      {quote_error && (
+        <p className="mt-4 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
+          Add at least one priced line item before submitting.
+        </p>
+      )}
+
+      <section className="mt-6 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-6">
+        <h2 className="font-semibold text-navy-black">Price quote</h2>
+        <p className="mt-1 text-sm text-navy-black/60">
+          {pendingQuote.length > 0
+            ? "Sent to DFM — awaiting review. You can revise and resubmit below."
+            : "Propose itemized pricing for this job. DFM reviews it and, once accepted, it becomes the job's official cost."}
+        </p>
+        <QuoteEditor
+          jobId={job.id}
+          initial={pendingQuote}
+          initialNote={job.artisan_quote_note ?? ""}
+        />
+      </section>
 
       <section className="mt-6 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-6">
         <h2 className="font-semibold text-navy-black">Update status</h2>

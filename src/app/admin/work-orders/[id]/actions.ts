@@ -4,7 +4,13 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
-import { notifyClientWorkOrderComplete, notifyArtisanJobAssigned } from "@/lib/email";
+import {
+  notifyClientWorkOrderComplete,
+  notifyArtisanJobAssigned,
+  notifyArtisanQuoteAccepted,
+  notifyArtisanQuoteDeclined,
+} from "@/lib/email";
+import { formatNaira } from "@/lib/format";
 
 const lineItemSchema = z.object({
   label: z.string().trim().min(1),
@@ -141,6 +147,86 @@ export async function updateWorkOrder(formData: FormData) {
 
   revalidatePath(`/admin/work-orders/${parsed.data.workOrderId}`);
   redirect(`/admin/work-orders/${parsed.data.workOrderId}?updated=1`);
+}
+
+export async function acceptArtisanQuote(formData: FormData) {
+  const workOrderId = String(formData.get("workOrderId") ?? "");
+  const supabase = await createClient();
+
+  const { data: before } = await supabase
+    .from("work_orders")
+    .select("artisan_quote, properties(address), artisans(email, name)")
+    .eq("id", workOrderId)
+    .maybeSingle();
+
+  const breakdown = Array.isArray(before?.artisan_quote)
+    ? (before.artisan_quote as { label: string; amount: number }[])
+    : [];
+
+  if (breakdown.length === 0) {
+    redirect(`/admin/work-orders/${workOrderId}?error=1`);
+  }
+
+  const costAmount = breakdown.reduce((sum, item) => sum + item.amount, 0);
+
+  const { error } = await supabase
+    .from("work_orders")
+    .update({
+      cost_breakdown: breakdown,
+      cost_amount: costAmount,
+      artisan_quote: null,
+      artisan_quote_note: null,
+    })
+    .eq("id", workOrderId);
+
+  if (error) {
+    redirect(`/admin/work-orders/${workOrderId}?error=1`);
+  }
+
+  const artisanEmail = before?.artisans?.email;
+  if (artisanEmail && before?.properties) {
+    await notifyArtisanQuoteAccepted({
+      artisanEmail,
+      artisanName: before.artisans?.name ?? "there",
+      propertyAddress: before.properties.address,
+      amount: formatNaira(costAmount),
+    });
+  }
+
+  revalidatePath(`/admin/work-orders/${workOrderId}`);
+  redirect(`/admin/work-orders/${workOrderId}?updated=1`);
+}
+
+export async function declineArtisanQuote(formData: FormData) {
+  const workOrderId = String(formData.get("workOrderId") ?? "");
+  const supabase = await createClient();
+
+  const { data: before } = await supabase
+    .from("work_orders")
+    .select("properties(address), artisans(email, name)")
+    .eq("id", workOrderId)
+    .maybeSingle();
+
+  const { error } = await supabase
+    .from("work_orders")
+    .update({ artisan_quote: null, artisan_quote_note: null })
+    .eq("id", workOrderId);
+
+  if (error) {
+    redirect(`/admin/work-orders/${workOrderId}?error=1`);
+  }
+
+  const artisanEmail = before?.artisans?.email;
+  if (artisanEmail && before?.properties) {
+    await notifyArtisanQuoteDeclined({
+      artisanEmail,
+      artisanName: before.artisans?.name ?? "there",
+      propertyAddress: before.properties.address,
+    });
+  }
+
+  revalidatePath(`/admin/work-orders/${workOrderId}`);
+  redirect(`/admin/work-orders/${workOrderId}?updated=1`);
 }
 
 export async function uploadWorkOrderPhoto(formData: FormData) {
