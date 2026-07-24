@@ -19,10 +19,15 @@ const statusSchema = z.object({
 });
 
 export async function updateJobStatus(formData: FormData) {
+  // The turnover checklist field only renders in the form for STR jobs
+  // that already have a checklist — otherwise it's absent from the DOM, so
+  // formData.get() returns `null` (not `undefined`), which trips zod's
+  // `.optional()` validation. Coerce to "" so every non-STR/no-checklist
+  // save doesn't fail validation.
   const parsed = statusSchema.safeParse({
     jobId: formData.get("jobId"),
     status: formData.get("status"),
-    turnoverChecklist: formData.get("turnoverChecklist"),
+    turnoverChecklist: formData.get("turnoverChecklist") ?? "",
   });
 
   if (!parsed.success) {
