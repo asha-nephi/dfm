@@ -294,6 +294,33 @@ export type Database = {
         }
         Relationships: []
       }
+      expenses: {
+        Row: {
+          amount: number
+          category: string
+          created_at: string
+          date: string
+          description: string | null
+          id: string
+        }
+        Insert: {
+          amount: number
+          category: string
+          created_at?: string
+          date?: string
+          description?: string | null
+          id?: string
+        }
+        Update: {
+          amount?: number
+          category?: string
+          created_at?: string
+          date?: string
+          description?: string | null
+          id?: string
+        }
+        Relationships: []
+      }
       maintenance_schedules: {
         Row: {
           active: boolean
@@ -335,6 +362,7 @@ export type Database = {
       payments: {
         Row: {
           amount: number
+          charge_breakdown: Json
           client_id: string
           date: string
           description: string | null
@@ -347,6 +375,7 @@ export type Database = {
         }
         Insert: {
           amount: number
+          charge_breakdown?: Json
           client_id: string
           date?: string
           description?: string | null
@@ -359,6 +388,7 @@ export type Database = {
         }
         Update: {
           amount?: number
+          charge_breakdown?: Json
           client_id?: string
           date?: string
           description?: string | null

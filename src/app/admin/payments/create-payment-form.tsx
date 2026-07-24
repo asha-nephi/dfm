@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { createPaymentRequest } from "./actions";
+import { ChargeBreakdownEditor } from "./charge-breakdown-editor";
 import { SubmitButton } from "@/components/submit-button";
 
 type WorkOrderOption = {
@@ -17,6 +18,8 @@ type PropertyOption = {
   address: string;
   clientName: string | null;
 };
+
+type ChargeRow = { label: string; amount: number };
 
 const STATUS_LABEL: Record<string, string> = {
   requested: "Requested",
@@ -35,8 +38,8 @@ export function CreatePaymentForm({
 }) {
   const [propertyId, setPropertyId] = useState("");
   const [workOrderId, setWorkOrderId] = useState("");
-  const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
+  const [chargeRows, setChargeRows] = useState<ChargeRow[]>([]);
 
   const workOrdersForProperty = useMemo(
     () => workOrders.filter((wo) => wo.propertyId === propertyId),
@@ -52,8 +55,11 @@ export function CreatePaymentForm({
     setWorkOrderId(value);
     const wo = workOrdersForProperty.find((w) => w.id === value);
     if (wo) {
-      setAmount(String(wo.costAmount || ""));
       setDescription(wo.description);
+      setChargeRows((prev) => {
+        const withoutJobCost = prev.filter((r) => r.label !== "Repair / job cost");
+        return [...withoutJobCost, { label: "Repair / job cost", amount: wo.costAmount }];
+      });
     }
   }
 
@@ -94,22 +100,17 @@ export function CreatePaymentForm({
         </select>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-[1fr_2fr_auto]">
-        <input
-          type="number"
-          name="amount"
-          placeholder="Amount (₦)"
-          min={1}
-          step="1"
-          required
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-          className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
-        />
+      <div>
+        <label className="block text-sm font-medium text-navy-black">Charges</label>
+        <div className="mt-1">
+          <ChargeBreakdownEditor rows={chargeRows} onChange={setChargeRows} />
+        </div>
+      </div>
+
+      <div className="grid gap-3 sm:grid-cols-[1fr_auto]">
         <input
           name="description"
-          placeholder="e.g. July 2026 management fee"
-          required
+          placeholder="Note (optional, e.g. July 2026 management fee)"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
@@ -120,7 +121,8 @@ export function CreatePaymentForm({
       </div>
       {workOrderId && (
         <p className="text-xs text-navy-black/50">
-          Amount and description were pre-filled from the selected work order — edit either before creating.
+          A &quot;Repair / job cost&quot; charge was pre-filled from the selected work order —
+          edit the amount, or add more charges (like a coordination fee), before creating.
         </p>
       )}
     </form>

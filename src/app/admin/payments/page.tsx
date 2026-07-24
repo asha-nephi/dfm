@@ -81,6 +81,13 @@ export default async function AdminPaymentsPage({
                     {p.properties?.address ? ` · ${p.properties.address}` : ""}
                   </p>
                   <p className="mt-0.5 text-navy-black">{p.description ?? "Payment"}</p>
+                  {Array.isArray(p.charge_breakdown) && p.charge_breakdown.length > 1 && (
+                    <p className="mt-0.5 text-xs text-navy-black/40">
+                      {(p.charge_breakdown as { label: string; amount: number }[])
+                        .map((c) => `${c.label}: ${formatNaira(c.amount)}`)
+                        .join(" · ")}
+                    </p>
+                  )}
                   {p.work_orders?.description && (
                     <p className="mt-0.5 text-xs text-navy-black/40">
                       Work order: {p.work_orders.description}

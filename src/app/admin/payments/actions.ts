@@ -7,24 +7,44 @@ import { createClient } from "@/lib/supabase/server";
 import { formatNaira } from "@/lib/format";
 import { notifyClientPaymentDue, notifyClientPaymentReceived } from "@/lib/email";
 
+const chargeLineItemSchema = z.object({
+  label: z.string().trim().min(1),
+  amount: z.coerce.number().min(0),
+});
+
 const createPaymentSchema = z.object({
   propertyId: z.string().uuid(),
   workOrderId: z.string().uuid().optional().or(z.literal("")),
-  amount: z.coerce.number().positive(),
-  description: z.string().trim().min(1).max(300),
+  chargeBreakdown: z.string(),
+  description: z.string().trim().max(300).optional().or(z.literal("")),
 });
 
 export async function createPaymentRequest(formData: FormData) {
   const parsed = createPaymentSchema.safeParse({
     propertyId: formData.get("propertyId"),
     workOrderId: formData.get("workOrderId"),
-    amount: formData.get("amount"),
+    chargeBreakdown: formData.get("chargeBreakdown"),
     description: formData.get("description"),
   });
 
   if (!parsed.success) {
     redirect("/admin/payments?error=1");
   }
+
+  let breakdown: { label: string; amount: number }[] = [];
+  try {
+    const rawItems = JSON.parse(parsed.data.chargeBreakdown);
+    breakdown = z.array(chargeLineItemSchema).parse(rawItems);
+  } catch {
+    redirect("/admin/payments?error=1");
+  }
+
+  const amount = breakdown.reduce((sum, item) => sum + item.amount, 0);
+  if (breakdown.length === 0 || amount <= 0) {
+    redirect("/admin/payments?error=1");
+  }
+
+  const description = parsed.data.description || breakdown.map((b) => b.label).join(", ");
 
   const supabase = await createClient();
 
@@ -54,8 +74,9 @@ export async function createPaymentRequest(formData: FormData) {
     client_id: property.client_id,
     property_id: parsed.data.propertyId,
     work_order_id: parsed.data.workOrderId || null,
-    amount: parsed.data.amount,
-    description: parsed.data.description,
+    amount,
+    charge_breakdown: breakdown,
+    description,
     status: "pending",
   });
 
@@ -68,8 +89,8 @@ export async function createPaymentRequest(formData: FormData) {
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
     await notifyClientPaymentDue({
       clientEmail,
-      amount: formatNaira(parsed.data.amount),
-      description: parsed.data.description,
+      amount: formatNaira(amount),
+      description,
       siteUrl,
     });
   }
