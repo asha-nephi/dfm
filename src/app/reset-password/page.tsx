@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { updatePassword } from "./actions";
 import { SubmitButton } from "@/components/submit-button";
+import { PasswordInput } from "@/components/password-input";
 
 export default async function ResetPasswordPage({
   searchParams,
@@ -32,10 +33,9 @@ export default async function ResetPasswordPage({
               <label htmlFor="password" className="block text-sm font-medium text-navy-black">
                 New password
               </label>
-              <input
+              <PasswordInput
                 id="password"
                 name="password"
-                type="password"
                 required
                 minLength={8}
                 autoComplete="new-password"

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { signup } from "./actions";
 import { SubmitButton } from "@/components/submit-button";
+import { PasswordInput } from "@/components/password-input";
 
 export const metadata: Metadata = { title: "Set your password" };
 
@@ -53,10 +54,9 @@ export default async function SignupPage({
               <label htmlFor="password" className="block text-sm font-medium text-navy-black">
                 Choose a password
               </label>
-              <input
+              <PasswordInput
                 id="password"
                 name="password"
-                type="password"
                 required
                 minLength={8}
                 autoComplete="new-password"

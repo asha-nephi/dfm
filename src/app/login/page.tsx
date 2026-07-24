@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { login } from "./actions";
 import { SubmitButton } from "@/components/submit-button";
+import { PasswordInput } from "@/components/password-input";
 
 export const metadata: Metadata = { title: "Log in" };
 
@@ -72,10 +73,9 @@ export default async function LoginPage({
                   Forgot password?
                 </Link>
               </div>
-              <input
+              <PasswordInput
                 id="password"
                 name="password"
-                type="password"
                 required
                 autoComplete="current-password"
                 className="mt-1 w-full rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
