@@ -3,7 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { notifyArtisanInvited } from "@/lib/email";
+import { notifyArtisanInvited, notifyArtisanApplicationDeclined } from "@/lib/email";
+import { looksLikeEmail } from "@/lib/format";
 
 // Approving pulls the applicant straight onto the vetted roster — same
 // invite email path as adding an artisan by hand from /admin/artisans, so
@@ -41,8 +42,7 @@ export async function approveArtisanApplication(formData: FormData) {
   // number, same convention as leads — but an artisan account needs a
   // real email to log in with, so require one at approval time rather
   // than guessing.
-  const emailMatch = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(application.contact);
-  if (!emailMatch) {
+  if (!looksLikeEmail(application.contact)) {
     redirect(
       `/admin/artisan-applications?error=${encodeURIComponent("Applicant's contact isn't an email address — add them manually from Artisans with their email instead.")}`,
     );
@@ -78,10 +78,23 @@ export async function declineArtisanApplication(formData: FormData) {
   const applicationId = String(formData.get("applicationId") ?? "");
   const supabase = await createClient();
 
+  const { data: application } = await supabase
+    .from("artisan_applications")
+    .select("name, contact")
+    .eq("id", applicationId)
+    .maybeSingle();
+
   await supabase
     .from("artisan_applications")
     .update({ status: "declined" })
     .eq("id", applicationId);
+
+  if (application && looksLikeEmail(application.contact)) {
+    await notifyArtisanApplicationDeclined({
+      applicantEmail: application.contact,
+      applicantName: application.name,
+    });
+  }
 
   revalidatePath("/admin/artisan-applications");
   redirect("/admin/artisan-applications");

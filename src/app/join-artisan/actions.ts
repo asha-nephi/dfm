@@ -4,7 +4,8 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { isSpamSubmission } from "@/lib/spam-protection";
-import { notifyAdminNewArtisanApplication } from "@/lib/email";
+import { notifyAdminNewArtisanApplication, notifyArtisanApplicationReceived } from "@/lib/email";
+import { looksLikeEmail } from "@/lib/format";
 
 const applicationSchema = z.object({
   name: z.string().trim().min(1, "Name is required").max(200),
@@ -51,6 +52,16 @@ export async function submitArtisanApplication(formData: FormData) {
     trade: parsed.data.trade,
     serviceArea: parsed.data.service_area || "not specified",
   });
+
+  // Contact may be a WhatsApp number rather than an email (same convention
+  // as leads) — only send the confirmation when we actually have somewhere
+  // to send it.
+  if (looksLikeEmail(parsed.data.contact)) {
+    await notifyArtisanApplicationReceived({
+      applicantEmail: parsed.data.contact,
+      applicantName: parsed.data.name,
+    });
+  }
 
   redirect("/join-artisan?submitted=1");
 }

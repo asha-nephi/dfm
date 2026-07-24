@@ -273,6 +273,34 @@ export async function notifyAdminNewArtisanApplication(params: {
   });
 }
 
+export async function notifyArtisanApplicationReceived(params: {
+  applicantEmail: string;
+  applicantName: string;
+}): Promise<void> {
+  await sendEmail({
+    to: params.applicantEmail,
+    subject: "Application received — Deseret Facility Management",
+    html: wrapper(`
+      <h2>Thanks for applying, ${params.applicantName}</h2>
+      <p>We've received your application to join DFM's artisan network. We review every application by hand — if it's a fit, we'll reach out to add you to the roster.</p>
+    `),
+  });
+}
+
+export async function notifyArtisanApplicationDeclined(params: {
+  applicantEmail: string;
+  applicantName: string;
+}): Promise<void> {
+  await sendEmail({
+    to: params.applicantEmail,
+    subject: "Update on your artisan application",
+    html: wrapper(`
+      <h2>Application update</h2>
+      <p>Hi ${params.applicantName}, thanks for applying to join DFM's artisan network. We're not able to bring you on at this time, but we'll keep your details on file as we grow.</p>
+    `),
+  });
+}
+
 export async function notifyAdminNewCohostRequest(params: {
   hostName: string;
   propertyDescription: string;
