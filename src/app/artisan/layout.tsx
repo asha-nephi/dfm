@@ -25,6 +25,7 @@ export default async function ArtisanLayout({
       nav={[
         { href: "/artisan", label: "My jobs" },
         { href: "/artisan/profile", label: "My profile" },
+        { href: "/artisan/help", label: "Help" },
       ]}
     >
       {children}
