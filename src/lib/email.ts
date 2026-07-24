@@ -44,11 +44,31 @@ export async function sendEmail({
 const ADMIN_NOTIFY_EMAIL = "nephi.asha@deseretfacilities.com";
 
 function wrapper(bodyHtml: string): string {
+  // Absolute URL: email clients can't resolve relative paths, and most
+  // (Outlook especially) render inline SVG unreliably or not at all — a
+  // hosted PNG is the safe, universal choice. See scripts/gen-email-logo.js
+  // for how public/email-logo.png is generated from the app's own mark.
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
   return `
     <div style="font-family: Arial, sans-serif; color: #12151F; max-width: 480px;">
-      <p style="font-size: 13px; letter-spacing: 0.05em; text-transform: uppercase; color: #D9A441; font-weight: 600;">
-        Deseret Facility Management
-      </p>
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 18px;">
+        <tr>
+          <td style="vertical-align: middle; padding-right: 10px;">
+            <img
+              src="${siteUrl}/email-logo.png"
+              width="32"
+              height="32"
+              alt="Deseret Facility Management"
+              style="display: block; width: 32px; height: 32px; border-radius: 7px;"
+            />
+          </td>
+          <td style="vertical-align: middle;">
+            <span style="font-size: 13px; letter-spacing: 0.05em; text-transform: uppercase; color: #D9A441; font-weight: 600;">
+              Deseret Facility Management
+            </span>
+          </td>
+        </tr>
+      </table>
       ${bodyHtml}
     </div>
   `;
