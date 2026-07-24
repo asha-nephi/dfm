@@ -257,6 +257,22 @@ export async function notifyArtisanQuoteDeclined(params: {
   });
 }
 
+export async function notifyAdminNewArtisanApplication(params: {
+  name: string;
+  trade: string;
+  serviceArea: string;
+}): Promise<void> {
+  await sendEmail({
+    to: ADMIN_NOTIFY_EMAIL,
+    subject: `New artisan application — ${params.name} (${params.trade})`,
+    html: wrapper(`
+      <h2>New artisan application</h2>
+      <p><strong>${params.name}</strong> applied to join the artisan network as a <strong>${params.trade}</strong>, working in ${params.serviceArea}.</p>
+      <p>Review it in the admin artisan applications queue.</p>
+    `),
+  });
+}
+
 export async function notifyAdminNewCohostRequest(params: {
   hostName: string;
   propertyDescription: string;

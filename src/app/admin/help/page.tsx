@@ -65,6 +65,11 @@ const ARTICLES: HelpArticle[] = [
     body: "Analytics page → Artisan performance section shows completed job count, average rating, and total value of jobs handled per artisan.",
   },
   {
+    category: "Artisans",
+    title: "Recruit new artisans",
+    body: "Artisan applications page has a shareable link (/join-artisan) — send it out in WhatsApp groups or to trade contacts. Applications land in a queue there; Approve adds them straight to the roster (same invite email as adding one manually), Decline just dismisses it.",
+  },
+  {
     category: "Leads",
     title: "Convert a lead to a client",
     body: "Leads page → find the lead → Convert to client. This creates the client record and marks the lead converted — you'll still need to add their property separately.",

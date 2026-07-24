@@ -21,6 +21,9 @@ export function SiteFooter() {
             </div>
           </div>
           <div className="flex gap-6 text-sm text-navy-black/70">
+            <Link href="/join-artisan" className="hover:text-navy-black">
+              Work with us
+            </Link>
             <Link href="/faq" className="hover:text-navy-black">
               FAQ
             </Link>

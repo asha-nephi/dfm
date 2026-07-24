@@ -38,6 +38,39 @@ export type Database = {
         }
         Relationships: []
       }
+      artisan_applications: {
+        Row: {
+          contact: string
+          created_at: string
+          experience: string | null
+          id: string
+          name: string
+          service_area: string | null
+          status: string
+          trade: string
+        }
+        Insert: {
+          contact: string
+          created_at?: string
+          experience?: string | null
+          id?: string
+          name: string
+          service_area?: string | null
+          status?: string
+          trade: string
+        }
+        Update: {
+          contact?: string
+          created_at?: string
+          experience?: string | null
+          id?: string
+          name?: string
+          service_area?: string | null
+          status?: string
+          trade?: string
+        }
+        Relationships: []
+      }
       artisans: {
         Row: {
           account_name: string | null
