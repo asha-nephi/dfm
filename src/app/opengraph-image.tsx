@@ -47,7 +47,7 @@ export default function Image() {
             maxWidth: 980,
           }}
         >
-          Verified, transparent property management for landlords who can&apos;t be there.
+          Verified, transparent property management for property owners who can&apos;t be there.
         </div>
         <div
           style={{

@@ -34,9 +34,8 @@ export function Pricing() {
           ))}
         </div>
         <p className="mt-8 text-sm text-navy-black/60">
-          Exact naira figures depend on the property and are shared once we
-          scope it with you — reach out below and we&apos;ll walk you through
-          it.
+          Exact figures depend on the property and are shared once we scope
+          it with you — reach out below and we&apos;ll walk you through it.
         </p>
       </div>
     </section>

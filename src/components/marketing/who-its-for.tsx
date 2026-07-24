@@ -1,7 +1,7 @@
 const AUDIENCES = [
   {
     title: "Diaspora landlords",
-    body: "You own property in Lagos but live abroad and can't drop by to check on it. You need proof of work, not a phone call promising it's handled.",
+    body: "You live in a different country from your property — the US, the UK, India, anywhere — and can't drop by to check on it. You need proof of work, not a phone call promising it's handled.",
   },
   {
     title: "Long-term-let owners",
@@ -21,8 +21,8 @@ export function WhoItsFor() {
           Who DFM is for
         </h2>
         <p className="mt-4 max-w-2xl text-navy-black/70">
-          Built for landlords who can&apos;t be on-site — whichever of these
-          sounds like you, the same verified record-keeping applies.
+          Built for property owners who can&apos;t be on-site — whichever of
+          these sounds like you, the same verified record-keeping applies.
         </p>
         <div className="mt-10 grid gap-8 sm:grid-cols-3">
           {AUDIENCES.map((item) => (

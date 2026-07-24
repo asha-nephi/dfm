@@ -31,7 +31,7 @@ export default async function HomePage({
     logo: `${siteUrl}/icon.svg`,
     image: `${siteUrl}/opengraph-image`,
     description:
-      "Verified, transparent property management for absentee and diaspora landlords in Lagos, Nigeria — dated photos of every job, itemized costs, one flat monthly fee.",
+      "Verified, transparent property management for absentee and diaspora property owners, wherever you are — dated photos of every job, itemized costs, one flat monthly fee.",
     email: "nephi.asha@deseretfacilities.com",
     ...(whatsapp ? { telephone: whatsapp.startsWith("+") ? whatsapp : `+${whatsapp}` } : {}),
     address: {
@@ -40,7 +40,6 @@ export default async function HomePage({
       addressRegion: "Lagos",
       addressCountry: "NG",
     },
-    areaServed: ["Ikeja GRA", "Opebi", "Allen Avenue", "Maryland", "Ogba"],
     priceRange: "₦₦",
   };
 

@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "Deseret Facility Management",
     short_name: "DFM",
     description:
-      "Verified, transparent facility management for landlords who can't be there in person.",
+      "Verified, transparent facility management for property owners who can't be there in person, wherever you are.",
     start_url: "/dashboard",
     display: "standalone",
     background_color: "#FAF7F1",

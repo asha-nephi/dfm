@@ -7,7 +7,7 @@ export const metadata = { title: "FAQ — Deseret Facility Management" };
 const FAQS = [
   {
     q: "Who is DFM for?",
-    a: "Landlords who own property in Lagos but can't be there in person to check on it — most often diaspora or absentee owners. That covers both long-term-let (tenanted residential) properties and short-term-rental (Airbnb-style) properties.",
+    a: "Property owners who can't be there in person to check on their property — most often diaspora or absentee owners, wherever they live and wherever the property is. That covers both long-term-let (tenanted residential) properties and short-term-rental (Airbnb-style) properties.",
   },
   {
     q: "What does DFM actually do?",
@@ -19,7 +19,7 @@ const FAQS = [
   },
   {
     q: "How does pricing work?",
-    a: "A flat monthly management fee per property, repairs billed at actual cost with an itemized breakdown, and a small, clearly disclosed coordination fee on repair jobs — never a percentage of the repair cost, since that creates an incentive to inflate it. Exact naira figures depend on the property, so reach out and we'll scope it with you.",
+    a: "A flat monthly management fee per property, repairs billed at actual cost with an itemized breakdown, and a small, clearly disclosed coordination fee on repair jobs — never a percentage of the repair cost, since that creates an incentive to inflate it. Exact figures depend on the property, so reach out and we'll scope it with you.",
   },
   {
     q: "Is there a contract, and can I cancel?",
@@ -27,7 +27,7 @@ const FAQS = [
   },
   {
     q: "What areas do you serve?",
-    a: "Ikeja and its immediate surroundings (GRA, Opebi, Allen Avenue, Maryland, Ogba) — we're expanding carefully as we take on more properties, since every property is personally overseen.",
+    a: "Wherever your property is. We connect you with vetted, on-the-ground artisans and oversee the work remotely, so you're not limited to one neighborhood or even one country. We're currently strongest in Lagos and growing from there — reach out with your property's location and we'll confirm exactly how we can help.",
   },
   {
     q: "How do I pay?",

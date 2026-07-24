@@ -3,10 +3,10 @@ export function Hero() {
     <section className="bg-charcoal">
       <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-28">
         <p className="text-sm font-medium tracking-wide text-amber uppercase">
-          Facility management for absentee &amp; diaspora landlords
+          Facility management for property owners, wherever you live
         </p>
         <h1 className="mt-4 max-w-3xl text-4xl font-semibold text-off-white sm:text-5xl">
-          Verified, transparent property management for landlords who can&apos;t be there in person.
+          Verified, transparent property management for owners who can&apos;t be there in person.
         </h1>
         <p className="mt-6 max-w-2xl text-lg text-off-white/80">
           Dated photos of every job, itemized and benchmarked costs, and one

@@ -14,7 +14,7 @@ export default function PrivacyPage() {
         <div className="mt-8 space-y-6 text-navy-black/80">
           <p>
             Deseret Facility Management Ltd (&quot;DFM&quot;, &quot;we&quot;)
-            manages properties on behalf of landlords. This notice explains,
+            manages properties on behalf of property owners. This notice explains,
             in plain terms, what personal data we collect through this site
             and while managing your property, and what we do with it.
           </p>
@@ -68,11 +68,6 @@ export default function PrivacyPage() {
               it directly.
             </p>
           </div>
-
-          <p className="text-sm text-navy-black/50">
-            This is a plain-language notice for v1. Full NDPR-aligned
-            data-handling documentation is planned as the operation grows.
-          </p>
         </div>
       </main>
       <SiteFooter />

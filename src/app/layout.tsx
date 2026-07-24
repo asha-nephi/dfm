@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 const title = "Deseret Facility Management";
 const description =
-  "Verified, transparent facility management for landlords who can't be there in person. Dated photos, itemized costs, one flat fee.";
+  "Verified, transparent facility management for property owners who can't be there in person, wherever you are. Dated photos, itemized costs, one flat fee.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
