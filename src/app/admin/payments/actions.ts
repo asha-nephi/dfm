@@ -17,6 +17,7 @@ const createPaymentSchema = z.object({
   workOrderId: z.string().uuid().optional().or(z.literal("")),
   chargeBreakdown: z.string(),
   description: z.string().trim().max(300).optional().or(z.literal("")),
+  provider: z.enum(["paystack", "manual_bank_transfer"]).default("paystack"),
 });
 
 export async function createPaymentRequest(formData: FormData) {
@@ -25,6 +26,7 @@ export async function createPaymentRequest(formData: FormData) {
     workOrderId: formData.get("workOrderId"),
     chargeBreakdown: formData.get("chargeBreakdown"),
     description: formData.get("description"),
+    provider: formData.get("provider") || undefined,
   });
 
   if (!parsed.success) {
@@ -78,6 +80,7 @@ export async function createPaymentRequest(formData: FormData) {
     charge_breakdown: breakdown,
     description,
     status: "pending",
+    provider: parsed.data.provider,
   });
 
   if (error) {
@@ -142,4 +145,56 @@ export async function setPaymentStatus(formData: FormData) {
 
   revalidatePath("/admin/payments");
   redirect("/admin/payments?updated=1");
+}
+
+const recordBankTransferSchema = z.object({
+  propertyId: z.string().uuid(),
+  amount: z.coerce.number().positive(),
+  date: z.string().min(1),
+  reference: z.string().trim().min(1).max(300),
+  description: z.string().trim().max(300).optional().or(z.literal("")),
+});
+
+export async function recordBankTransferPayment(formData: FormData) {
+  const parsed = recordBankTransferSchema.safeParse({
+    propertyId: formData.get("propertyId"),
+    amount: formData.get("amount"),
+    date: formData.get("date"),
+    reference: formData.get("reference"),
+    description: formData.get("description"),
+  });
+
+  if (!parsed.success) {
+    redirect("/admin/payments?error=1");
+  }
+
+  const supabase = await createClient();
+
+  const { data: property } = await supabase
+    .from("properties")
+    .select("client_id")
+    .eq("id", parsed.data.propertyId)
+    .maybeSingle();
+
+  if (!property) {
+    redirect("/admin/payments?error=1");
+  }
+
+  const { error } = await supabase.from("payments").insert({
+    client_id: property.client_id,
+    property_id: parsed.data.propertyId,
+    amount: parsed.data.amount,
+    description: parsed.data.description || "Bank transfer payment",
+    date: parsed.data.date,
+    status: "success",
+    provider: "manual_bank_transfer",
+    bank_transfer_reference: parsed.data.reference,
+  });
+
+  if (error) {
+    redirect("/admin/payments?error=1");
+  }
+
+  revalidatePath("/admin/payments");
+  redirect("/admin/payments?added=1");
 }

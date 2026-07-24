@@ -3,6 +3,7 @@ import { formatDate, formatNaira } from "@/lib/format";
 import { PaymentStatusBadge } from "@/components/payment-status-badge";
 import { PaymentStatusSelect } from "./payment-status-select";
 import { CreatePaymentForm } from "./create-payment-form";
+import { RecordBankTransferForm } from "./record-bank-transfer-form";
 
 export default async function AdminPaymentsPage({
   searchParams,
@@ -65,6 +66,15 @@ export default async function AdminPaymentsPage({
         <CreatePaymentForm properties={propertyOptions} workOrders={workOrderOptions} />
       </section>
 
+      <section className="mt-6 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-6">
+        <h2 className="font-semibold text-navy-black">Record a bank transfer payment</h2>
+        <p className="mt-1 text-sm text-navy-black/60">
+          For diaspora/international clients who wired payment directly, since Paystack
+          can&apos;t process their payments. Logs it as received immediately.
+        </p>
+        <RecordBankTransferForm properties={propertyOptions} />
+      </section>
+
       <section className="mt-8">
         {!payments || payments.length === 0 ? (
           <p className="text-sm text-navy-black/60">No payments yet.</p>
@@ -96,6 +106,11 @@ export default async function AdminPaymentsPage({
                   {p.paystack_reference && (
                     <p className="mt-0.5 text-xs text-navy-black/40">
                       Ref: {p.paystack_reference}
+                    </p>
+                  )}
+                  {p.provider === "manual_bank_transfer" && (
+                    <p className="mt-0.5 text-xs text-navy-black/40">
+                      Bank transfer{p.bank_transfer_reference ? ` — ${p.bank_transfer_reference}` : ""}
                     </p>
                   )}
                 </div>

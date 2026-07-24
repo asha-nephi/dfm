@@ -362,6 +362,7 @@ export type Database = {
       payments: {
         Row: {
           amount: number
+          bank_transfer_reference: string | null
           charge_breakdown: Json
           client_id: string
           date: string
@@ -369,12 +370,14 @@ export type Database = {
           id: string
           paystack_reference: string | null
           property_id: string | null
+          provider: string
           recurring_period: string | null
           status: string
           work_order_id: string | null
         }
         Insert: {
           amount: number
+          bank_transfer_reference?: string | null
           charge_breakdown?: Json
           client_id: string
           date?: string
@@ -382,12 +385,14 @@ export type Database = {
           id?: string
           paystack_reference?: string | null
           property_id?: string | null
+          provider?: string
           recurring_period?: string | null
           status?: string
           work_order_id?: string | null
         }
         Update: {
           amount?: number
+          bank_transfer_reference?: string | null
           charge_breakdown?: Json
           client_id?: string
           date?: string
@@ -395,6 +400,7 @@ export type Database = {
           id?: string
           paystack_reference?: string | null
           property_id?: string | null
+          provider?: string
           recurring_period?: string | null
           status?: string
           work_order_id?: string | null
@@ -706,6 +712,12 @@ export type Database = {
           id: string
           work_order_id: string
         }
+        SetofOptions: {
+          from: "*"
+          to: "work_order_comments"
+          isOneToOne: true
+          isSetofReturn: false
+        }
       }
       artisan_assigned_to_property: {
         Args: { p_property_id: string }
@@ -738,6 +750,12 @@ export type Database = {
           status: string
           turnover_checklist: Json | null
           updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "work_orders"
+          isOneToOne: true
+          isSetofReturn: false
         }
       }
       can_access_work_order: {
@@ -777,6 +795,12 @@ export type Database = {
           turnover_checklist: Json | null
           updated_at: string
         }
+        SetofOptions: {
+          from: "*"
+          to: "work_orders"
+          isOneToOne: true
+          isSetofReturn: false
+        }
       }
       current_artisan_id: { Args: never; Returns: string }
       current_client_id: { Args: never; Returns: string }
@@ -791,6 +815,12 @@ export type Database = {
           message: string | null
           status: string
         }[]
+        SetofOptions: {
+          from: "*"
+          to: "cohost_applications"
+          isOneToOne: false
+          isSetofReturn: true
+        }
       }
       get_cohost_request_by_host_token: {
         Args: { p_token: string }
@@ -803,6 +833,12 @@ export type Database = {
           property_description: string
           status: string
         }[]
+        SetofOptions: {
+          from: "*"
+          to: "cohost_requests"
+          isOneToOne: false
+          isSetofReturn: true
+        }
       }
       get_cohost_request_public: {
         Args: { p_request_id: string }
@@ -867,6 +903,12 @@ export type Database = {
           paystack_recipient_code: string | null
           phone: string | null
         }
+        SetofOptions: {
+          from: "*"
+          to: "artisans"
+          isOneToOne: true
+          isSetofReturn: false
+        }
       }
       update_own_artisan_profile: {
         Args: { p_name: string; p_phone: string }
@@ -883,6 +925,12 @@ export type Database = {
           name: string
           paystack_recipient_code: string | null
           phone: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "artisans"
+          isOneToOne: true
+          isSetofReturn: false
         }
       }
       update_own_client_bank_details: {
@@ -906,6 +954,12 @@ export type Database = {
           paystack_recipient_code: string | null
           phone: string | null
         }
+        SetofOptions: {
+          from: "*"
+          to: "clients"
+          isOneToOne: true
+          isSetofReturn: false
+        }
       }
       update_own_client_profile: {
         Args: { p_name: string; p_phone: string }
@@ -921,6 +975,12 @@ export type Database = {
           name: string
           paystack_recipient_code: string | null
           phone: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "clients"
+          isOneToOne: true
+          isSetofReturn: false
         }
       }
     }

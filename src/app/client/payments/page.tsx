@@ -16,6 +16,11 @@ export default async function ClientPaymentsPage({
     .select("*, properties(address)")
     .order("date", { ascending: false });
 
+  const bankName = process.env.DFM_BANK_NAME;
+  const bankAccountName = process.env.DFM_BANK_ACCOUNT_NAME;
+  const bankAccountNumber = process.env.DFM_BANK_ACCOUNT_NUMBER;
+  const hasBankDetails = Boolean(bankName && bankAccountName && bankAccountNumber);
+
   return (
     <div>
       <h1 className="text-2xl font-semibold text-navy-black">Payments</h1>
@@ -43,29 +48,55 @@ export default async function ClientPaymentsPage({
           {payments.map((p) => (
             <li
               key={p.id}
-              className="flex flex-col gap-2 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-4 sm:flex-row sm:items-center sm:justify-between"
+              className="flex flex-col gap-2 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-4"
             >
-              <div>
-                <p className="text-sm text-navy-black/60">
-                  {formatDate(p.date)}
-                  {p.properties?.address ? ` · ${p.properties.address}` : ""}
-                </p>
-                <p className="mt-0.5 text-navy-black">{p.description ?? "Payment"}</p>
-              </div>
-              <div className="flex items-center gap-3">
-                <span className="text-sm font-medium text-navy-black">
-                  {formatNaira(p.amount)}
-                </span>
-                <PaymentStatusBadge status={p.status} />
-                {p.status === "pending" && (
-                  <form action={payNow}>
-                    <input type="hidden" name="paymentId" value={p.id} />
-                    <SubmitButton className="rounded-md bg-amber px-3 py-1.5 text-sm font-semibold text-charcoal hover:bg-amber/90">
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <p className="text-sm text-navy-black/60">
+                    {formatDate(p.date)}
+                    {p.properties?.address ? ` · ${p.properties.address}` : ""}
+                  </p>
+                  <p className="mt-0.5 text-navy-black">{p.description ?? "Payment"}</p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="text-sm font-medium text-navy-black">
+                    {formatNaira(p.amount)}
+                  </span>
+                  <PaymentStatusBadge status={p.status} />
+                  {p.status === "pending" && p.provider !== "manual_bank_transfer" && (
+                    <form action={payNow}>
+                      <input type="hidden" name="paymentId" value={p.id} />
+                      <SubmitButton className="rounded-md bg-amber px-3 py-1.5 text-sm font-semibold text-charcoal hover:bg-amber/90">
   Pay now
 </SubmitButton>
-                  </form>
-                )}
+                    </form>
+                  )}
+                </div>
               </div>
+              {p.status === "pending" && p.provider === "manual_bank_transfer" && (
+                <div className="rounded-lg border border-amber/30 bg-amber/5 p-3 text-sm text-navy-black/80">
+                  <p className="font-medium text-navy-black">Pay by bank transfer</p>
+                  {hasBankDetails ? (
+                    <>
+                      <p className="mt-1">
+                        {bankAccountName} &middot; {bankName} &middot; {bankAccountNumber}
+                      </p>
+                      <p className="mt-1 text-xs text-navy-black/60">
+                        Paystack can&apos;t process payments from outside Nigeria for this
+                        business, so please wire this amount directly. Include your name or
+                        property address as the transfer note, and let us know once it&apos;s
+                        sent — we&apos;ll confirm receipt on your account here.
+                      </p>
+                    </>
+                  ) : (
+                    <p className="mt-1 text-xs text-navy-black/60">
+                      Paystack can&apos;t process payments from outside Nigeria for this
+                      business. Contact DFM directly for our bank transfer details, and
+                      we&apos;ll confirm receipt on your account once it&apos;s sent.
+                    </p>
+                  )}
+                </div>
+              )}
             </li>
           ))}
         </ul>

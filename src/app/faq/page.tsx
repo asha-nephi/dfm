@@ -7,7 +7,7 @@ export const metadata = { title: "FAQ — Deseret Facility Management" };
 const FAQS = [
   {
     q: "Who is DFM for?",
-    a: "Property owners who can't be there in person to check on their property — most often diaspora or absentee owners, wherever they live and wherever the property is. That covers both long-term-let (tenanted residential) properties and short-term-rental (Airbnb-style) properties.",
+    a: "Property owners who can't be there in person to check on their property — most often diaspora or absentee owners, wherever they live. That covers both long-term-let (tenanted residential) properties and short-term-rental (Airbnb-style) properties.",
   },
   {
     q: "What does DFM actually do?",
@@ -19,19 +19,19 @@ const FAQS = [
   },
   {
     q: "How does pricing work?",
-    a: "A flat monthly management fee per property, repairs billed at actual cost with an itemized breakdown, and a small, clearly disclosed coordination fee on repair jobs — never a percentage of the repair cost, since that creates an incentive to inflate it. Exact figures depend on the property, so reach out and we'll scope it with you.",
+    a: "₦40,000/month flat management fee per property (may vary slightly by size or complexity). Repair and vendor costs are passed through at the actual invoiced cost — no markup. A disclosed 10% coordination fee applies to vendor costs, capped at ₦20,000 per job, shown as its own line next to the vendor's invoice.",
   },
   {
     q: "Is there a contract, and can I cancel?",
-    a: "Reach out to us directly and we'll walk you through the terms for your specific property — happy to answer this before you commit to anything.",
+    a: "No lock-in contract — service runs month-to-month. Either of us can end it with 30 days' written notice, and there's no early-termination fee.",
   },
   {
     q: "What areas do you serve?",
-    a: "Wherever your property is. We connect you with vetted, on-the-ground artisans and oversee the work remotely, so you're not limited to one neighborhood or even one country. We're currently strongest in Lagos and growing from there — reach out with your property's location and we'll confirm exactly how we can help.",
+    a: "Right now, Ikeja and its immediate surroundings in Lagos (Ikeja GRA, Opebi, Allen Avenue, Maryland, Ogba). We're expanding from there — if you're elsewhere in Lagos or beyond, reach out and we'll let you know when we can help.",
   },
   {
     q: "How do I pay?",
-    a: "Online, through Paystack — you'll see payment status and a full payment history on your client dashboard, plus printable statements for your records.",
+    a: "If you have a Nigerian bank card, online through Paystack — you'll see payment status and history on your dashboard. If you're paying from outside Nigeria, Paystack can't process that yet, so we'll arrange a direct bank transfer instead and confirm it on your account once received. Ask us about this when you reach out.",
   },
   {
     q: "What's different about short-term-rental properties?",

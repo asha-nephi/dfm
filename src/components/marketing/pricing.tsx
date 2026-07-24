@@ -1,15 +1,15 @@
 const LINE_ITEMS = [
   {
     title: "Flat monthly management fee",
-    body: "One predictable amount per property, regardless of how much maintenance activity happens that month.",
+    body: "₦40,000/month per property (may vary slightly by size or complexity) — one predictable amount, regardless of how much maintenance activity happens that month.",
   },
   {
     title: "Repairs at verified actual cost",
-    body: "Pass-through pricing on any repair or maintenance work — what the job actually costs, itemized, never marked up.",
+    body: "Repair and vendor costs are passed through at the actual invoiced cost — itemized, never marked up.",
   },
   {
     title: "Small, disclosed coordination fee",
-    body: "A capped fee on repair jobs for sourcing and overseeing the work, always shown separately, never hidden in the repair cost.",
+    body: "A disclosed 10% coordination fee on vendor costs, capped at ₦20,000 per job, always shown as its own line next to the vendor's invoice.",
   },
 ];
 
@@ -34,8 +34,9 @@ export function Pricing() {
           ))}
         </div>
         <p className="mt-8 text-sm text-navy-black/60">
-          Exact figures depend on the property and are shared once we scope
-          it with you — reach out below and we&apos;ll walk you through it.
+          Pilot pricing — may be adjusted slightly as we take on more
+          properties. Reach out below and we&apos;ll confirm the exact
+          figures for your property.
         </p>
       </div>
     </section>

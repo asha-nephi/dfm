@@ -107,6 +107,22 @@ export function CreatePaymentForm({
         </div>
       </div>
 
+      <div>
+        <label className="block text-sm font-medium text-navy-black">Payment method</label>
+        <select
+          name="provider"
+          defaultValue="paystack"
+          className="mt-1 w-full rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+        >
+          <option value="paystack">Paystack (Nigerian bank cards only)</option>
+          <option value="manual_bank_transfer">Bank transfer (diaspora / international clients)</option>
+        </select>
+        <p className="mt-1 text-xs text-navy-black/50">
+          Bank transfer shows the client our account details instead of a &quot;Pay now&quot;
+          button — Paystack can&apos;t process international payments for this business.
+        </p>
+      </div>
+
       <div className="grid gap-3 sm:grid-cols-[1fr_auto]">
         <input
           name="description"

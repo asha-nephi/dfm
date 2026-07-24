@@ -5,12 +5,12 @@ import Link from "next/link";
 import { LogoMark } from "@/components/logo";
 
 const NAV = [
-  { href: "#problem", label: "The problem" },
-  { href: "#how-it-works", label: "How it works" },
-  { href: "#pricing", label: "Pricing" },
-  { href: "#cohost", label: "Co-host (beta)" },
+  { href: "/#problem", label: "The problem" },
+  { href: "/#how-it-works", label: "How it works" },
+  { href: "/#pricing", label: "Pricing" },
+  { href: "/#cohost", label: "Co-host (beta)" },
   { href: "/faq", label: "FAQ" },
-  { href: "#contact", label: "Contact" },
+  { href: "/#contact", label: "Contact" },
 ];
 
 export function SiteHeader() {
