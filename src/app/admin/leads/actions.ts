@@ -17,7 +17,7 @@ export async function convertLeadToClient(formData: FormData) {
     leadId: formData.get("leadId"),
     name: formData.get("name"),
     email: formData.get("email"),
-    phone: formData.get("phone"),
+    phone: formData.get("phone") ?? "",
   });
 
   if (!parsed.success) {
