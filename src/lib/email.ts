@@ -187,3 +187,82 @@ export async function notifyArtisanPayoutSent(params: {
     `),
   });
 }
+
+export async function notifyAdminNewCohostRequest(params: {
+  hostName: string;
+  propertyDescription: string;
+}): Promise<void> {
+  await sendEmail({
+    to: ADMIN_NOTIFY_EMAIL,
+    subject: `New co-host request — ${params.hostName}`,
+    html: wrapper(`
+      <h2>New co-host request</h2>
+      <p><strong>${params.hostName}</strong> submitted a co-host request:</p>
+      <p style="background:#FAF7F1; padding:12px; border-radius:8px;">${params.propertyDescription}</p>
+      <p>Review it in the admin co-host marketplace.</p>
+    `),
+  });
+}
+
+export async function notifyHostCohostApproved(params: {
+  hostEmail: string;
+  hostName: string;
+  hostLink: string;
+}): Promise<void> {
+  await sendEmail({
+    to: params.hostEmail,
+    subject: "Your co-host request is open for applications",
+    html: wrapper(`
+      <h2>You're open for applications</h2>
+      <p>Hi ${params.hostName}, DFM has reviewed and approved your co-host request — it's now open for prospective co-hosts to apply.</p>
+      <p><a href="${params.hostLink}" style="color:#1C2233;">Check your request &rarr;</a></p>
+      <p style="font-size:13px; color:#666;">Bookmark this link — it's the only way to review applicants and select a co-host.</p>
+    `),
+  });
+}
+
+export async function notifyHostNewCohostApplication(params: {
+  hostEmail: string;
+  hostName: string;
+  applicantName: string;
+  hostLink: string;
+}): Promise<void> {
+  await sendEmail({
+    to: params.hostEmail,
+    subject: `New co-host applicant — ${params.applicantName}`,
+    html: wrapper(`
+      <h2>New applicant</h2>
+      <p>Hi ${params.hostName}, <strong>${params.applicantName}</strong> just applied to co-host your property.</p>
+      <p><a href="${params.hostLink}" style="color:#1C2233;">Review and select &rarr;</a></p>
+    `),
+  });
+}
+
+export async function notifyApplicantCohostSelected(params: {
+  applicantEmail: string;
+  applicantName: string;
+  hostName: string;
+}): Promise<void> {
+  await sendEmail({
+    to: params.applicantEmail,
+    subject: "You've been selected as a co-host",
+    html: wrapper(`
+      <h2>You've been selected</h2>
+      <p>Hi ${params.applicantName}, ${params.hostName} has selected you as their co-host. They'll be in touch directly to sort out next steps.</p>
+    `),
+  });
+}
+
+export async function notifyApplicantCohostNotSelected(params: {
+  applicantEmail: string;
+  applicantName: string;
+}): Promise<void> {
+  await sendEmail({
+    to: params.applicantEmail,
+    subject: "Update on your co-host application",
+    html: wrapper(`
+      <h2>Application update</h2>
+      <p>Hi ${params.applicantName}, thanks for applying — the host has chosen another co-host for this property this time. Keep an eye out for future requests.</p>
+    `),
+  });
+}

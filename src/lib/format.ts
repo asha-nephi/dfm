@@ -18,6 +18,12 @@ export function propertyTypeLabel(type: string): string {
   return type === "short_term_rental" ? "Short-term rental" : "Long-term let";
 }
 
+// Cohost host_contact/applicant_contact are free-text "email or WhatsApp
+// number" fields — only attempt an email send when it actually looks like one.
+export function looksLikeEmail(value: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}
+
 export function workOrderStatusLabel(status: string): string {
   switch (status) {
     case "requested":

@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { isSpamSubmission } from "@/lib/spam-protection";
+import { notifyAdminNewCohostRequest } from "@/lib/email";
 
 const requestSchema = z.object({
   host_name: z.string().trim().min(1).max(200),
@@ -42,6 +43,11 @@ export async function submitCohostRequest(formData: FormData) {
   if (error || !row) {
     redirect("/?cohost_error=1#cohost");
   }
+
+  await notifyAdminNewCohostRequest({
+    hostName: parsed.data.host_name,
+    propertyDescription: parsed.data.property_description,
+  });
 
   redirect(`/cohost/host/${row.host_token}?submitted=1`);
 }

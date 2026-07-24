@@ -2,16 +2,19 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { formatDate } from "@/lib/format";
-import { approveCohostRequest, closeCohostRequest } from "../actions";
+import { approveCohostRequest, closeCohostRequest, reopenCohostRequest } from "../actions";
 import { SubmitButton } from "@/components/submit-button";
 import { ConfirmSubmitButton } from "@/components/confirm-submit-button";
 
 export default async function AdminCohostDetailPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ error?: string }>;
 }) {
   const { id } = await params;
+  const { error } = await searchParams;
   const supabase = await createClient();
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
@@ -56,6 +59,12 @@ export default async function AdminCohostDetailPage({
 
       <p className="mt-4 text-navy-black">{request.property_description}</p>
 
+      {error && (
+        <p className="mt-4 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
+          Something went wrong — please try again.
+        </p>
+      )}
+
       <section className="mt-6 flex flex-wrap gap-3">
         {request.status === "pending_review" && (
           <form action={approveCohostRequest}>
@@ -73,6 +82,17 @@ export default async function AdminCohostDetailPage({
               className="rounded-md border border-charcoal/20 px-4 py-2 text-sm font-medium text-navy-black hover:border-charcoal/40"
             >
               Close request
+            </ConfirmSubmitButton>
+          </form>
+        )}
+        {(request.status === "matched" || request.status === "closed") && (
+          <form action={reopenCohostRequest}>
+            <input type="hidden" name="id" value={request.id} />
+            <ConfirmSubmitButton
+              confirmMessage="Reopen this request for new applications? Existing applicants and any prior match stay on record."
+              className="rounded-md border border-charcoal/20 px-4 py-2 text-sm font-medium text-navy-black hover:border-charcoal/40"
+            >
+              Reopen for new applications
             </ConfirmSubmitButton>
           </form>
         )}

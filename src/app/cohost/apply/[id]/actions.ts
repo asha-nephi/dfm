@@ -3,7 +3,10 @@
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { isSpamSubmission } from "@/lib/spam-protection";
+import { notifyHostNewCohostApplication } from "@/lib/email";
+import { looksLikeEmail } from "@/lib/format";
 
 const applySchema = z.object({
   requestId: z.string().uuid(),
@@ -41,6 +44,27 @@ export async function submitApplication(formData: FormData) {
 
   if (error) {
     redirect(`/cohost/apply/${parsed.data.requestId}?error=1`);
+  }
+
+  // The applicant-facing client has no read access to host_contact (admin-
+  // only RLS on cohost_requests) — the admin client is used here purely to
+  // fetch what's needed for this one notification, never surfaced to the
+  // applicant, same pattern as the artisan job-assignment notification.
+  const admin = createAdminClient();
+  const { data: request } = await admin
+    .from("cohost_requests")
+    .select("host_name, host_contact, host_token")
+    .eq("id", parsed.data.requestId)
+    .maybeSingle();
+
+  if (request && looksLikeEmail(request.host_contact)) {
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+    await notifyHostNewCohostApplication({
+      hostEmail: request.host_contact,
+      hostName: request.host_name,
+      applicantName: parsed.data.applicant_name,
+      hostLink: `${siteUrl}/cohost/host/${request.host_token}`,
+    });
   }
 
   redirect(`/cohost/apply/${parsed.data.requestId}?applied=1`);
