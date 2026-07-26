@@ -67,7 +67,12 @@ const ARTICLES: HelpArticle[] = [
   {
     category: "Artisans",
     title: "Recruit new artisans",
-    body: "Artisan applications page has a shareable link (/join-artisan) — send it out in WhatsApp groups or to trade contacts. Applications land in a queue there; Approve adds them straight to the roster (same invite email as adding one manually), Decline just dismisses it.",
+    body: "Artisan applications page has a shareable link (/join-artisan) — send it out in WhatsApp groups or to trade contacts. Applicants submit a photo ID and a reference contact along with their application.",
+  },
+  {
+    category: "Artisans",
+    title: "Vet an artisan application before approving",
+    body: "Open the application → View ID document to check the photo ID, call the reference they provided, then tick off the three vetting checklist boxes (ID reviewed, call completed, reference checked) and Save. Approve only becomes available once all three are checked — this is enforced server-side too, not just hidden in the UI. Approving adds them to the roster with the same invite email as adding one manually; Decline just dismisses it.",
   },
   {
     category: "Leads",

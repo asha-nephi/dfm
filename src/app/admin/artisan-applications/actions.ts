@@ -29,6 +29,16 @@ export async function approveArtisanApplication(formData: FormData) {
     redirect("/admin/artisan-applications?error=1");
   }
 
+  if (
+    !application.vetting_id_verified ||
+    !application.vetting_call_completed ||
+    !application.vetting_reference_checked
+  ) {
+    redirect(
+      `/admin/artisan-applications?error=${encodeURIComponent("Complete the vetting checklist before approving.")}`,
+    );
+  }
+
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -72,6 +82,27 @@ export async function approveArtisanApplication(formData: FormData) {
   revalidatePath("/admin/artisan-applications");
   revalidatePath("/admin/artisans");
   redirect("/admin/artisan-applications?approved=1");
+}
+
+export async function updateVettingChecklist(formData: FormData) {
+  const applicationId = String(formData.get("applicationId") ?? "");
+  if (!applicationId) {
+    redirect("/admin/artisan-applications?error=1");
+  }
+
+  const supabase = await createClient();
+
+  await supabase
+    .from("artisan_applications")
+    .update({
+      vetting_id_verified: formData.get("vetting_id_verified") === "on",
+      vetting_call_completed: formData.get("vetting_call_completed") === "on",
+      vetting_reference_checked: formData.get("vetting_reference_checked") === "on",
+    })
+    .eq("id", applicationId);
+
+  revalidatePath("/admin/artisan-applications");
+  redirect("/admin/artisan-applications");
 }
 
 export async function declineArtisanApplication(formData: FormData) {

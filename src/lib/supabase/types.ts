@@ -44,30 +44,48 @@ export type Database = {
           created_at: string
           experience: string | null
           id: string
+          id_document_url: string | null
           name: string
+          reference_contact: string | null
+          reference_name: string | null
           service_area: string | null
           status: string
           trade: string
+          vetting_call_completed: boolean
+          vetting_id_verified: boolean
+          vetting_reference_checked: boolean
         }
         Insert: {
           contact: string
           created_at?: string
           experience?: string | null
           id?: string
+          id_document_url?: string | null
           name: string
+          reference_contact?: string | null
+          reference_name?: string | null
           service_area?: string | null
           status?: string
           trade: string
+          vetting_call_completed?: boolean
+          vetting_id_verified?: boolean
+          vetting_reference_checked?: boolean
         }
         Update: {
           contact?: string
           created_at?: string
           experience?: string | null
           id?: string
+          id_document_url?: string | null
           name?: string
+          reference_contact?: string | null
+          reference_name?: string | null
           service_area?: string | null
           status?: string
           trade?: string
+          vetting_call_completed?: boolean
+          vetting_id_verified?: boolean
+          vetting_reference_checked?: boolean
         }
         Relationships: []
       }
