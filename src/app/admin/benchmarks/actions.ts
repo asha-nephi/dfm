@@ -37,6 +37,43 @@ export async function createBenchmark(formData: FormData) {
   redirect("/admin/benchmarks?added=1");
 }
 
+const updateBenchmarkSchema = z.object({
+  id: z.string().uuid(),
+  label: z.string().trim().min(1).max(200),
+  category: z.string().trim().max(100).optional().or(z.literal("")),
+  typicalAmount: z.coerce.number().positive(),
+});
+
+export async function updateBenchmark(formData: FormData) {
+  const parsed = updateBenchmarkSchema.safeParse({
+    id: formData.get("id"),
+    label: formData.get("label"),
+    category: formData.get("category"),
+    typicalAmount: formData.get("typicalAmount"),
+  });
+
+  if (!parsed.success) {
+    redirect("/admin/benchmarks?error=1");
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("cost_benchmarks")
+    .update({
+      label: parsed.data.label,
+      category: parsed.data.category || null,
+      typical_amount: parsed.data.typicalAmount,
+    })
+    .eq("id", parsed.data.id);
+
+  if (error) {
+    redirect("/admin/benchmarks?error=1");
+  }
+
+  revalidatePath("/admin/benchmarks");
+  redirect("/admin/benchmarks?updated=1");
+}
+
 export async function deleteBenchmark(formData: FormData) {
   const id = String(formData.get("id") ?? "");
   const supabase = await createClient();
