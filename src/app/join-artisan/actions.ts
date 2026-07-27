@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
-import { isSpamSubmission } from "@/lib/spam-protection";
+import { isSpamSubmission, containsSuspiciousLink } from "@/lib/spam-protection";
 import { notifyAdminNewArtisanApplication, notifyArtisanApplicationReceived } from "@/lib/email";
 import { looksLikeEmail } from "@/lib/format";
 
@@ -41,7 +41,10 @@ export async function submitArtisanApplication(formData: FormData) {
 
   const supabase = await createClient();
 
-  if (await isSpamSubmission(formData, supabase, "artisan_application")) {
+  if (
+    (await isSpamSubmission(formData, supabase, "artisan_application")) ||
+    containsSuspiciousLink(parsed.data.experience, parsed.data.name)
+  ) {
     // Pretend it worked — don't tip off whatever's submitting this.
     redirect("/join-artisan?submitted=1");
   }

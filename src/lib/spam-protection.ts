@@ -37,3 +37,16 @@ export async function isSpamSubmission(
 // excluded from tabbing/autofill instead of display:none (which some bots
 // skip filling).
 export const HONEYPOT_FIELD_NAME = "website";
+
+// Honeypot + rate limit only catch bulk/scripted abuse — neither inspects
+// what was actually typed, so a single well-formed submission with a
+// phishing link sails straight through both (this is exactly how a
+// crypto-scam link ended up in a co-host request). None of these free-text
+// fields (property description, application message, lead message,
+// artisan experience) have any legitimate reason to contain a link, so any
+// URL is treated as spam.
+const URL_PATTERN = /(https?:\/\/|www\.)\S+/i;
+
+export function containsSuspiciousLink(...values: (string | null | undefined)[]): boolean {
+  return values.some((v) => typeof v === "string" && URL_PATTERN.test(v));
+}

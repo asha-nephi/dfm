@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { isSpamSubmission } from "@/lib/spam-protection";
+import { isSpamSubmission, containsSuspiciousLink } from "@/lib/spam-protection";
 import { notifyHostNewCohostApplication } from "@/lib/email";
 import { looksLikeEmail } from "@/lib/format";
 
@@ -31,7 +31,10 @@ export async function submitApplication(formData: FormData) {
 
   const supabase = await createClient();
 
-  if (await isSpamSubmission(formData, supabase, "cohost_application")) {
+  if (
+    (await isSpamSubmission(formData, supabase, "cohost_application")) ||
+    containsSuspiciousLink(parsed.data.message, parsed.data.applicant_name)
+  ) {
     redirect(`/cohost/apply/${parsed.data.requestId}?applied=1`);
   }
 

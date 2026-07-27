@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
-import { isSpamSubmission } from "@/lib/spam-protection";
+import { isSpamSubmission, containsSuspiciousLink } from "@/lib/spam-protection";
 import { notifyAdminNewCohostRequest } from "@/lib/email";
 
 const requestSchema = z.object({
@@ -27,7 +27,10 @@ export async function submitCohostRequest(formData: FormData) {
 
   const supabase = await createClient();
 
-  if (await isSpamSubmission(formData, supabase, "cohost_request")) {
+  if (
+    (await isSpamSubmission(formData, supabase, "cohost_request")) ||
+    containsSuspiciousLink(parsed.data.property_description, parsed.data.host_name)
+  ) {
     // No real request/token exists to pretend-succeed with — just bounce
     // back quietly rather than exposing a rejection reason.
     redirect("/#cohost");
