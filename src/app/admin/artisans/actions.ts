@@ -10,6 +10,9 @@ const artisanSchema = z.object({
   name: z.string().trim().min(1).max(200),
   email: z.string().trim().email().max(200),
   phone: z.string().trim().max(50).optional().or(z.literal("")),
+  trade: z.string().trim().max(200).optional().or(z.literal("")),
+  trade_other: z.string().trim().max(200).optional().or(z.literal("")),
+  service_area: z.string().trim().max(300).optional().or(z.literal("")),
 });
 
 export async function createArtisan(formData: FormData) {
@@ -17,11 +20,17 @@ export async function createArtisan(formData: FormData) {
     name: formData.get("name"),
     email: formData.get("email"),
     phone: formData.get("phone"),
+    trade: formData.get("trade"),
+    trade_other: formData.get("trade_other") ?? "",
+    service_area: formData.get("service_area"),
   });
 
   if (!parsed.success) {
     redirect(`/admin/artisans?error=${encodeURIComponent(parsed.error.issues[0].message)}`);
   }
+
+  const trade =
+    parsed.data.trade === "Other" ? parsed.data.trade_other || "Other" : parsed.data.trade;
 
   const supabase = await createClient();
   const {
@@ -38,6 +47,8 @@ export async function createArtisan(formData: FormData) {
     name: parsed.data.name,
     email: parsed.data.email,
     phone: parsed.data.phone || null,
+    trade: trade || null,
+    service_area: parsed.data.service_area || null,
     added_by_admin: admin?.id ?? null,
   });
 

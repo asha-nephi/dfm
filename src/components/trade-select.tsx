@@ -7,8 +7,15 @@ const TRADES = ["Plumber", "Electrician", "AC Technician", "Other"];
 // DFM is prioritizing these three trades specifically — "Other" stays
 // available so a genuinely useful carpenter/painter isn't turned away
 // outright, it just isn't the primary recruiting focus right now.
-export function TradeSelect() {
-  const [trade, setTrade] = useState(TRADES[0]);
+export function TradeSelect({
+  defaultTrade,
+  defaultOther,
+}: {
+  defaultTrade?: string;
+  defaultOther?: string;
+}) {
+  const initialIsKnown = defaultTrade && TRADES.includes(defaultTrade);
+  const [trade, setTrade] = useState(initialIsKnown ? defaultTrade! : defaultTrade ? "Other" : TRADES[0]);
 
   return (
     <div className="space-y-2">
@@ -29,6 +36,7 @@ export function TradeSelect() {
           name="trade_other"
           type="text"
           required
+          defaultValue={initialIsKnown ? "" : defaultOther ?? defaultTrade ?? ""}
           placeholder="What's your trade?"
           className="w-full rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
         />

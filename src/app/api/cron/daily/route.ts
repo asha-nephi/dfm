@@ -1,17 +1,21 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { formatNaira } from "@/lib/format";
-import { notifyClientPaymentDue, sendEmail } from "@/lib/email";
+import { notifyClientPaymentDue, notifyClientPaymentOverdue, sendEmail } from "@/lib/email";
 
 const ADMIN_NOTIFY_EMAIL = "nephi.asha@deseretfacilities.com";
 
-// Runs daily via Vercel Cron (see vercel.json). Two independent jobs:
+// Runs daily via Vercel Cron (see vercel.json). Three independent jobs:
 //  1. On the 1st of the month, generate a pending payment for every
 //     property with a monthly_fee configured — idempotent via the
 //     (property_id, recurring_period) unique index, so re-running the same
 //     day is harmless.
 //  2. Any day: create a work order for any preventive maintenance schedule
 //     whose next_due_date has arrived, then advance that date.
+//  3. Any day: nudge clients with a payment still pending 3+ days after its
+//     date, then again every 7 days after that (tracked via
+//     last_reminder_sent_at) — a payment due once and never followed up on
+//     otherwise just sits silently as "outstanding" in Analytics forever.
 export async function GET(request: Request) {
   const authHeader = request.headers.get("authorization");
   if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
@@ -105,5 +109,49 @@ export async function GET(request: Request) {
     });
   }
 
-  return NextResponse.json({ ok: true, feesCreated, schedulesProcessed });
+  // --- 3. Overdue payment reminders ------------------------------------
+  const threeDaysAgo = new Date(today);
+  threeDaysAgo.setUTCDate(today.getUTCDate() - 3);
+  const threeDaysAgoIso = threeDaysAgo.toISOString().slice(0, 10);
+  const sevenDaysAgoMs = today.getTime() - 7 * 24 * 60 * 60 * 1000;
+
+  const { data: overduePayments } = await supabase
+    .from("payments")
+    .select("id, amount, description, date, last_reminder_sent_at, client_id, clients(email)")
+    .eq("status", "pending")
+    .lte("date", threeDaysAgoIso);
+
+  let remindersSent = 0;
+
+  for (const payment of overduePayments ?? []) {
+    const lastReminder = payment.last_reminder_sent_at
+      ? new Date(payment.last_reminder_sent_at).getTime()
+      : null;
+    if (lastReminder !== null && lastReminder > sevenDaysAgoMs) continue;
+
+    const clientEmail = payment.clients?.email;
+    if (!clientEmail) continue;
+
+    const daysOverdue = Math.max(
+      1,
+      Math.round((today.getTime() - new Date(payment.date).getTime()) / (24 * 60 * 60 * 1000)),
+    );
+
+    await notifyClientPaymentOverdue({
+      clientEmail,
+      amount: formatNaira(payment.amount),
+      description: payment.description ?? "your payment",
+      daysOverdue,
+      siteUrl,
+    });
+
+    await supabase
+      .from("payments")
+      .update({ last_reminder_sent_at: today.toISOString() })
+      .eq("id", payment.id);
+
+    remindersSent++;
+  }
+
+  return NextResponse.json({ ok: true, feesCreated, schedulesProcessed, remindersSent });
 }

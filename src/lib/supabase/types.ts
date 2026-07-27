@@ -103,6 +103,8 @@ export type Database = {
           name: string
           paystack_recipient_code: string | null
           phone: string | null
+          service_area: string | null
+          trade: string | null
         }
         Insert: {
           account_name?: string | null
@@ -117,6 +119,8 @@ export type Database = {
           name: string
           paystack_recipient_code?: string | null
           phone?: string | null
+          service_area?: string | null
+          trade?: string | null
         }
         Update: {
           account_name?: string | null
@@ -131,6 +135,8 @@ export type Database = {
           name?: string
           paystack_recipient_code?: string | null
           phone?: string | null
+          service_area?: string | null
+          trade?: string | null
         }
         Relationships: [
           {
@@ -410,6 +416,48 @@ export type Database = {
           },
         ]
       }
+      messages: {
+        Row: {
+          artisan_id: string | null
+          body: string
+          client_id: string | null
+          created_at: string
+          id: string
+          sender_role: string
+        }
+        Insert: {
+          artisan_id?: string | null
+          body: string
+          client_id?: string | null
+          created_at?: string
+          id?: string
+          sender_role: string
+        }
+        Update: {
+          artisan_id?: string | null
+          body?: string
+          client_id?: string | null
+          created_at?: string
+          id?: string
+          sender_role?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_artisan_id_fkey"
+            columns: ["artisan_id"]
+            isOneToOne: false
+            referencedRelation: "artisans"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "messages_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       payments: {
         Row: {
           amount: number
@@ -419,6 +467,7 @@ export type Database = {
           date: string
           description: string | null
           id: string
+          last_reminder_sent_at: string | null
           paystack_reference: string | null
           property_id: string | null
           provider: string
@@ -434,6 +483,7 @@ export type Database = {
           date?: string
           description?: string | null
           id?: string
+          last_reminder_sent_at?: string | null
           paystack_reference?: string | null
           property_id?: string | null
           provider?: string
@@ -449,6 +499,7 @@ export type Database = {
           date?: string
           description?: string | null
           id?: string
+          last_reminder_sent_at?: string | null
           paystack_reference?: string | null
           property_id?: string | null
           provider?: string
@@ -949,6 +1000,23 @@ export type Database = {
           id: string
         }[]
       }
+      send_message: {
+        Args: { p_artisan_id?: string; p_body: string; p_client_id?: string }
+        Returns: {
+          artisan_id: string | null
+          body: string
+          client_id: string | null
+          created_at: string
+          id: string
+          sender_role: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "messages"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       submit_cohost_application: {
         Args: {
           p_applicant_contact: string
@@ -992,6 +1060,8 @@ export type Database = {
           name: string
           paystack_recipient_code: string | null
           phone: string | null
+          service_area: string | null
+          trade: string | null
         }
         SetofOptions: {
           from: "*"
@@ -1015,6 +1085,8 @@ export type Database = {
           name: string
           paystack_recipient_code: string | null
           phone: string | null
+          service_area: string | null
+          trade: string | null
         }
         SetofOptions: {
           from: "*"

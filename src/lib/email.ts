@@ -126,6 +126,26 @@ export async function notifyClientPaymentDue(params: {
   });
 }
 
+export async function notifyClientPaymentOverdue(params: {
+  clientEmail: string;
+  amount: string;
+  description: string;
+  daysOverdue: number;
+  siteUrl: string;
+}): Promise<void> {
+  await sendEmail({
+    to: params.clientEmail,
+    subject: `Payment overdue — ${params.amount}`,
+    html: wrapper(`
+      <h2>Payment still outstanding</h2>
+      <p><strong>${params.description}</strong></p>
+      <p style="font-size: 20px; font-weight: 600;">${params.amount}</p>
+      <p>This has been pending for ${params.daysOverdue} day${params.daysOverdue === 1 ? "" : "s"}. If you've already paid, let us know and we'll confirm it on our side.</p>
+      <p><a href="${params.siteUrl}/client/payments" style="color:#1C2233;">Pay now &rarr;</a></p>
+    `),
+  });
+}
+
 export async function notifyClientPaymentReceived(params: {
   clientEmail: string;
   amount: string;

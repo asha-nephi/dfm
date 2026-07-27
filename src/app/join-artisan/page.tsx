@@ -4,16 +4,16 @@ import { SiteFooter } from "@/components/marketing/site-footer";
 import { HoneypotField } from "@/components/honeypot-field";
 import { SubmitButton } from "@/components/submit-button";
 import { submitArtisanApplication } from "./actions";
-import { TradeSelect } from "./trade-select";
+import { TradeSelect } from "@/components/trade-select";
 
 export const metadata: Metadata = { title: "Join our artisan network" };
 
 export default async function JoinArtisanPage({
   searchParams,
 }: {
-  searchParams: Promise<{ submitted?: string; error?: string }>;
+  searchParams: Promise<{ submitted?: string; error?: string; duplicate?: string }>;
 }) {
-  const { submitted, error } = await searchParams;
+  const { submitted, error, duplicate } = await searchParams;
 
   return (
     <div className="flex min-h-screen flex-col bg-off-white">
@@ -37,6 +37,15 @@ export default async function JoinArtisanPage({
               </p>
               <p className="mt-2 text-sm text-navy-black/70">
                 We&apos;ll review it and reach out if it&apos;s a fit.
+              </p>
+            </div>
+          ) : duplicate ? (
+            <div className="flex flex-col items-center justify-center py-10 text-center">
+              <p className="text-lg font-semibold text-navy-black">
+                You already have an application under review.
+              </p>
+              <p className="mt-2 text-sm text-navy-black/70">
+                No need to submit again — we&apos;ll reach out once it&apos;s been reviewed.
               </p>
             </div>
           ) : (

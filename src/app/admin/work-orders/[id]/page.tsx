@@ -43,7 +43,7 @@ export default async function AdminWorkOrderDetailPage({
 
   const { data: artisans } = await supabase
     .from("artisans")
-    .select("id, name")
+    .select("id, name, trade, service_area")
     .order("name");
 
   const { data: benchmarks } = await supabase
@@ -197,6 +197,8 @@ export default async function AdminWorkOrderDetailPage({
               {artisans?.map((a) => (
                 <option key={a.id} value={a.id}>
                   {a.name}
+                  {a.trade ? ` — ${a.trade}` : ""}
+                  {a.service_area ? ` (${a.service_area})` : ""}
                 </option>
               ))}
             </select>

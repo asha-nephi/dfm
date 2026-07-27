@@ -61,6 +61,8 @@ export async function approveArtisanApplication(formData: FormData) {
   const { error: insertError } = await supabase.from("artisans").insert({
     name: application.name,
     email: application.contact,
+    trade: application.trade,
+    service_area: application.service_area,
     added_by_admin: admin?.id ?? null,
   });
 

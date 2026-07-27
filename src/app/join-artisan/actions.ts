@@ -76,6 +76,14 @@ export async function submitArtisanApplication(formData: FormData) {
   });
 
   if (error) {
+    // Clean up the just-uploaded document rather than leaving an orphaned
+    // file behind — this path (insert failing after upload succeeded) is
+    // the only place that can happen.
+    await supabase.storage.from("artisan-application-documents").remove([path]);
+
+    if (error.code === "23505") {
+      redirect("/join-artisan?duplicate=1");
+    }
     redirect("/join-artisan?error=1");
   }
 
