@@ -57,7 +57,12 @@ const ARTICLES: HelpArticle[] = [
   {
     category: "Artisans",
     title: "Add an artisan to the roster",
-    body: "Artisans → fill in name, email, phone → Add artisan. They get an email inviting them to set a password and log in.",
+    body: "Artisans → fill in name, email, phone, trade, and areas they work in → Add artisan. They get an email inviting them to set a password and log in.",
+  },
+  {
+    category: "Artisans",
+    title: "See roster coverage by trade",
+    body: "Artisans page shows a count per priority trade (Plumber / Electrician / AC Technician) plus an \"Other\" bucket, right above the artisan list — a quick read on where the roster still has gaps.",
   },
   {
     category: "Artisans",
@@ -67,7 +72,7 @@ const ARTICLES: HelpArticle[] = [
   {
     category: "Artisans",
     title: "Recruit new artisans",
-    body: "Artisan applications page has a shareable link (/join-artisan) — send it out in WhatsApp groups or to trade contacts. Applicants submit a photo ID and a reference contact along with their application.",
+    body: "Artisan applications page has a shareable link (/join-artisan) — send it out in WhatsApp groups or to trade contacts. Applicants submit a photo ID and a reference contact along with their application. Their trade and service area carry over onto the roster automatically once approved.",
   },
   {
     category: "Artisans",
@@ -93,6 +98,16 @@ const ARTICLES: HelpArticle[] = [
     category: "Payments",
     title: "Mark a payment as paid or failed manually",
     body: "Payments list → status dropdown next to any payment. Normally Paystack updates this automatically when the client pays, but you can override it if needed.",
+  },
+  {
+    category: "Payments",
+    title: "Overdue payment reminders",
+    body: "Automatic — the daily job emails the client again if a payment is still pending 3+ days after its date, then every 7 days after that until it's paid. No action needed on your side.",
+  },
+  {
+    category: "Messages",
+    title: "Message a client or artisan directly",
+    body: "Messages → pick a client or artisan from the list → type and Send. This reaches them through the app even if all you have on file for them is a WhatsApp number, not an email.",
   },
   {
     category: "Payouts",

@@ -40,6 +40,11 @@ const ARTICLES: HelpArticle[] = [
     body: "Pending: not yet paid. Paid: successfully processed. Failed: the attempt didn't go through — try Pay now again or contact DFM.",
   },
   {
+    category: "Messages",
+    title: "Message DFM directly",
+    body: "Messages → type your message → Send. Use this for anything that doesn't fit a specific property or job — DFM sees it right away, no need to email or call.",
+  },
+  {
     category: "My profile",
     title: "Update your name or phone number",
     body: "My profile → edit Name or Phone / WhatsApp → Save changes. Your email is tied to your login and can't be changed here — contact DFM directly if it needs to change.",
