@@ -2,7 +2,12 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { formatDate } from "@/lib/format";
-import { approveCohostRequest, closeCohostRequest, reopenCohostRequest } from "../actions";
+import {
+  approveCohostRequest,
+  closeCohostRequest,
+  reopenCohostRequest,
+  markCohostRequestSpam,
+} from "../actions";
 import { SubmitButton } from "@/components/submit-button";
 import { ConfirmSubmitButton } from "@/components/confirm-submit-button";
 
@@ -85,7 +90,18 @@ export default async function AdminCohostDetailPage({
             </ConfirmSubmitButton>
           </form>
         )}
-        {(request.status === "matched" || request.status === "closed") && (
+        {(request.status === "pending_review" || request.status === "open") && (
+          <form action={markCohostRequestSpam}>
+            <input type="hidden" name="id" value={request.id} />
+            <ConfirmSubmitButton
+              confirmMessage="Mark this as spam? It'll stop accepting applications and won't show as a real request."
+              className="rounded-md border border-red-200 px-4 py-2 text-sm font-medium text-red-700 hover:border-red-400"
+            >
+              Mark as spam
+            </ConfirmSubmitButton>
+          </form>
+        )}
+        {(request.status === "matched" || request.status === "closed" || request.status === "spam") && (
           <form action={reopenCohostRequest}>
             <input type="hidden" name="id" value={request.id} />
             <ConfirmSubmitButton

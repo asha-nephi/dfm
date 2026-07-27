@@ -50,6 +50,21 @@ export async function closeCohostRequest(formData: FormData) {
   redirect(`/admin/cohost/${id}`);
 }
 
+export async function markCohostRequestSpam(formData: FormData) {
+  const id = String(formData.get("id") ?? "");
+  const supabase = await createClient();
+
+  const { error } = await supabase.from("cohost_requests").update({ status: "spam" }).eq("id", id);
+
+  if (error) {
+    redirect(`/admin/cohost/${id}?error=1`);
+  }
+
+  revalidatePath(`/admin/cohost/${id}`);
+  revalidatePath("/admin/cohost");
+  redirect(`/admin/cohost/${id}`);
+}
+
 export async function reopenCohostRequest(formData: FormData) {
   const id = String(formData.get("id") ?? "");
   const supabase = await createClient();

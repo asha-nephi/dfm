@@ -159,6 +159,11 @@ const ARTICLES: HelpArticle[] = [
     title: "Reopen a matched or closed request",
     body: "Open the request → \"Reopen for new applications.\" The previous match and application history stay on record; the request just becomes open to new applicants again.",
   },
+  {
+    category: "Co-host marketplace",
+    title: "Mark a request as spam",
+    body: "Open the request → \"Mark as spam.\" Distinct from Close — this is for fake/scam submissions rather than legitimate requests that just finished, so your records show which is which. It stops accepting applications immediately; Reopen brings it back if you flagged one by mistake.",
+  },
 ];
 
 export default function AdminHelpPage() {

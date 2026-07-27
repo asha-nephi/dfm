@@ -7,6 +7,7 @@ const STATUS_STYLES: Record<string, string> = {
   open: "bg-amber/20 text-amber-900",
   matched: "bg-green-50 text-green-700",
   closed: "bg-charcoal/10 text-navy-black/60",
+  spam: "bg-red-50 text-red-700",
 };
 
 export default async function AdminCohostPage() {
