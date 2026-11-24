@@ -72,7 +72,7 @@ export function ServicesGrid({ heading = true }: { heading?: boolean }) {
               Five services, one trusted team.
             </h2>
             <p className="mt-4 text-navy-black/70">
-              We find the client, send a vetted artisan, check the work and send you the proof.
+              We send a vetted artisan, check the work and send you the proof.
               You deal with one company instead of five different people.
             </p>
           </div>

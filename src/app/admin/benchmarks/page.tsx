@@ -18,7 +18,7 @@ export default async function AdminBenchmarksPage({
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold text-navy-black">Cost benchmarks</h1>
+      <h1 className="font-display text-3xl text-navy-black sm:text-4xl">Cost benchmarks</h1>
       <p className="mt-1 text-sm text-navy-black/60">
         Typical prices for common jobs — shows up as quick-add suggestions
         when itemizing costs on a work order, so entries stay consistent and

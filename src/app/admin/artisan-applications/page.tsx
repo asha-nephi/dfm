@@ -44,7 +44,7 @@ export default async function AdminArtisanApplicationsPage({
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold text-navy-black">Artisan applications</h1>
+      <h1 className="font-display text-3xl text-navy-black sm:text-4xl">Artisan applications</h1>
       <p className="mt-1 text-sm text-navy-black/60">
         People applying to join DFM&apos;s vetted artisan roster.
       </p>

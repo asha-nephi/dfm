@@ -1,5 +1,4 @@
 import { AuthShell } from "@/components/auth-shell";
-import Link from "next/link";
 import { updatePassword } from "./actions";
 import { SubmitButton } from "@/components/submit-button";
 import { PasswordInput } from "@/components/password-input";

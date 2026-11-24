@@ -32,7 +32,7 @@ export default async function AdminExpensesPage({
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold text-navy-black">Expenses</h1>
+      <h1 className="font-display text-3xl text-navy-black sm:text-4xl">Expenses</h1>
       <p className="mt-1 text-sm text-navy-black/60">
         Operating costs — salaries, transport, tools, and anything else that leaves the business
         outside of artisan payouts. Feeds into net profit on the analytics page.

@@ -43,7 +43,10 @@ export function ProofCard() {
           </div>
         </div>
 
-        <div className="relative h-52 overflow-hidden rounded-xl border border-line bg-sand sm:h-56">
+        <div
+          className="relative flex h-52 items-center overflow-hidden rounded-xl border border-line sm:h-56"
+          style={{ background: after ? "#F4F2EC" : "#E8E4DA" }}
+        >
           <svg viewBox="0 0 520 260" className="h-full w-full" aria-label={after ? "After servicing" : "Before servicing"}>
             <rect width="520" height="260" fill={after ? "#F4F2EC" : "#E8E4DA"} />
             <line x1="0" y1="210" x2="520" y2="210" stroke="#D5CFC1" strokeWidth="2" />

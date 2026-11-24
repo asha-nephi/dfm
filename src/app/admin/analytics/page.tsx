@@ -185,7 +185,7 @@ export default async function AdminAnalyticsPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold text-navy-black">Analytics</h1>
+      <h1 className="font-display text-3xl text-navy-black sm:text-4xl">Analytics</h1>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <div className="card p-5">
@@ -194,14 +194,14 @@ export default async function AdminAnalyticsPage() {
         </div>
         <Link
           href="/admin/payouts"
-          className="card p-5 hover:border-amber/60"
+          className="card p-5 hover:border-charcoal/40"
         >
           <p className="text-xl font-semibold text-navy-black">{formatNaira(totalPaidToArtisans)}</p>
           <p className="mt-1 text-sm text-navy-black/60">Paid to artisans</p>
         </Link>
         <Link
           href="/admin/expenses"
-          className="card p-5 hover:border-amber/60"
+          className="card p-5 hover:border-charcoal/40"
         >
           <p className="text-xl font-semibold text-navy-black">{formatNaira(totalExpenses)}</p>
           <p className="mt-1 text-sm text-navy-black/60">Operating expenses</p>
@@ -220,7 +220,7 @@ export default async function AdminAnalyticsPage() {
           <Link
             key={k.label}
             href={k.href}
-            className="card p-5 hover:border-amber/60"
+            className="card p-5 hover:border-charcoal/40"
           >
             <p className="text-xl font-semibold text-navy-black">{k.value}</p>
             <p className="mt-1 text-sm text-navy-black/60">{k.label}</p>

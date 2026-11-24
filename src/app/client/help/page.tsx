@@ -5,27 +5,37 @@ export const metadata: Metadata = { title: "Help" };
 
 const ARTICLES: HelpArticle[] = [
   {
-    category: "My properties",
-    title: "View maintenance history",
-    body: "My properties → open a property. Every job DFM has done shows up with its date, status, itemized cost, and any completion photos.",
+    category: "Booking",
+    title: "Book a service",
+    body: "Click \"Book a service\" (top of the menu) → pick the service, the property, describe what you need and when suits you → Send request. You'll see it under Jobs straight away, and we confirm within 24 hours.",
   },
   {
-    category: "My properties",
-    title: "Submit a maintenance request",
-    body: "Open a property → \"Submit a maintenance request\" → describe what needs attention → Submit. DFM reviews it and follows up — you'll see it appear in your maintenance history once it's logged as a work order.",
+    category: "Jobs",
+    title: "Track your jobs",
+    body: "Jobs shows every request and job across your properties. Open one to see its status, itemized costs, before-and-after photos and comments.",
   },
   {
-    category: "My properties",
+    category: "Properties",
+    title: "View a property's history",
+    body: "Properties → open a property. Every job DFM has done there shows up with its date, service, status, itemized cost and photos.",
+  },
+  {
+    category: "Properties",
+    title: "Send a quick request from a property",
+    body: "Open a property → \"Quick request\" → pick a service if you know it, describe the problem → Submit request. It works the same as booking.",
+  },
+  {
+    category: "Properties",
     title: "Download or view a statement",
     body: "Open a property → \"Statement\" button, top right. Gives you a printable summary of maintenance and cost history for that property.",
   },
   {
-    category: "My properties",
+    category: "Properties",
     title: "Rate a completed job",
     body: "Open the property → find the completed job → \"How was this job?\" → pick a star rating and optional note. Once submitted, the rating is locked in.",
   },
   {
-    category: "My properties",
+    category: "Properties",
     title: "Comment on a job",
     body: "Open the property → scroll to the job → comment box at the bottom of that job's card. Comments are visible to DFM admin and the assigned artisan.",
   },
@@ -59,7 +69,7 @@ const ARTICLES: HelpArticle[] = [
 export default function ClientHelpPage() {
   return (
     <div>
-      <h1 className="text-2xl font-semibold text-navy-black">Help</h1>
+      <h1 className="font-display text-3xl text-navy-black sm:text-4xl">Help</h1>
       <p className="mt-1 text-sm text-navy-black/60">
         How to guides for your dashboard.
       </p>

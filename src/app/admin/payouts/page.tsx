@@ -63,7 +63,7 @@ export default async function AdminPayoutsPage({
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold text-navy-black">Payouts</h1>
+      <h1 className="font-display text-3xl text-navy-black sm:text-4xl">Payouts</h1>
       <p className="mt-1 text-sm text-navy-black/60">
         Pay artisans by bank transfer via Paystack. Transfers draw from your Paystack account
         balance.

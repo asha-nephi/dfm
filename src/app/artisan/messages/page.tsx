@@ -21,7 +21,7 @@ export default async function ArtisanMessagesPage({
   return (
     <div>
       <RealtimeRefresh tables={["messages"]} />
-      <h1 className="text-2xl font-semibold text-navy-black">Messages</h1>
+      <h1 className="font-display text-3xl text-navy-black sm:text-4xl">Messages</h1>
       <p className="mt-1 text-sm text-navy-black/60">
         Message DFM directly — for anything that doesn&apos;t fit a specific job.
       </p>

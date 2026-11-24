@@ -23,7 +23,7 @@ export default async function ClientPaymentsPage({
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold text-navy-black">Payments</h1>
+      <h1 className="font-display text-3xl text-navy-black sm:text-4xl">Payments</h1>
 
       {paid && (
         <p className="mt-4 rounded-md bg-green-50 px-3 py-2 text-sm text-green-700">

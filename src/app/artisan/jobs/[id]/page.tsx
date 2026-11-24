@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { formatDate } from "@/lib/format";
+import { serviceLabel } from "@/lib/services";
 import { StatusBadge } from "@/components/status-badge";
 import { TurnoverChecklist } from "./turnover-checklist";
 import { WorkOrderComments } from "@/components/work-order-comments";
@@ -70,24 +71,32 @@ export default async function ArtisanJobDetailPage({
 
   return (
     <div>
-      <Link href="/artisan" className="text-sm text-charcoal underline underline-offset-2">
-        &larr; My assigned jobs
+      <Link href="/artisan" className="text-sm font-medium text-charcoal hover:underline">
+        &larr; My jobs
       </Link>
 
-      <div className="mt-3 flex items-start justify-between gap-4">
+      <div className="mt-3 flex items-start justify-between gap-4 border-b border-line pb-6">
         <div>
-          <h1 className="text-2xl font-semibold text-navy-black">{job.properties?.address}</h1>
-          <p className="mt-1 text-sm text-navy-black/60">{formatDate(job.date)}</p>
+          <p className="eyebrow">{serviceLabel(job.service_type)} &middot; {formatDate(job.date)}</p>
+          <h1 className="font-display mt-1 text-3xl text-navy-black sm:text-4xl">{job.properties?.address}</h1>
         </div>
         <StatusBadge status={job.status} />
       </div>
 
-      <p className="mt-4 text-navy-black">{job.description}</p>
-      {job.properties?.notes && (
-        <p className="mt-2 text-sm text-navy-black/60">
-          Access notes: {job.properties.notes}
-        </p>
-      )}
+      <div className="card mt-6 space-y-3 p-6">
+        <p className="eyebrow">The job</p>
+        <p className="text-navy-black">{job.description}</p>
+        {job.preferred_timing && (
+          <p className="text-sm text-navy-black/70">
+            <span className="font-semibold">Client&apos;s preferred timing:</span> {job.preferred_timing}
+          </p>
+        )}
+        {job.properties?.notes && (
+          <p className="rounded-lg bg-amber/10 px-3 py-2 text-sm text-navy-black">
+            <span className="font-semibold">Access notes:</span> {job.properties.notes}
+          </p>
+        )}
+      </div>
 
       {error && (
         <p className="mt-4 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
@@ -111,7 +120,7 @@ export default async function ArtisanJobDetailPage({
       )}
 
       <section className="mt-6 card p-6">
-        <h2 className="font-semibold text-navy-black">Price quote</h2>
+        <h2 className="font-display text-2xl text-navy-black">Price quote</h2>
         <p className="mt-1 text-sm text-navy-black/60">
           {pendingQuote.length > 0
             ? "Sent to DFM — awaiting review. You can revise and resubmit below."
@@ -125,7 +134,7 @@ export default async function ArtisanJobDetailPage({
       </section>
 
       <section className="mt-6 card p-6">
-        <h2 className="font-semibold text-navy-black">Update status</h2>
+        <h2 className="font-display text-2xl text-navy-black">Update status</h2>
 
         <form action={updateJobStatus} className="mt-3">
           <input type="hidden" name="jobId" value={job.id} />
@@ -155,7 +164,10 @@ export default async function ArtisanJobDetailPage({
       </section>
 
       <section className="mt-6 card p-6">
-        <h2 className="font-semibold text-navy-black">Completion photos</h2>
+        <h2 className="font-display text-2xl text-navy-black">Photos</h2>
+        <p className="mt-1 text-sm text-navy-black/60">
+          Take a &ldquo;before&rdquo; photo when you arrive and an &ldquo;after&rdquo; photo when you finish. The client sees these.
+        </p>
         {photo_error && (
           <p className="mt-3 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
             Photo upload failed — please try again.
@@ -163,6 +175,11 @@ export default async function ArtisanJobDetailPage({
         )}
         <form action={uploadJobPhoto} className="mt-4 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
           <input type="hidden" name="jobId" value={job.id} />
+          <select name="stage" defaultValue={photos.some((p) => p.caption === "Before") ? "after" : "before"} className="input sm:!w-36" aria-label="Photo type">
+            <option value="before">Before</option>
+            <option value="after">After</option>
+            <option value="">Other</option>
+          </select>
           <CompressedFileInput name="file" className="w-full text-sm sm:w-auto" />
           <SubmitButton className="btn-primary">
   Upload
@@ -175,13 +192,17 @@ export default async function ArtisanJobDetailPage({
               const url = signedUrlByPath.get(photo.photo_url);
               if (!url) return null;
               return (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  key={photo.id}
-                  src={url}
-                  alt={photo.caption ?? "Completion photo"}
-                  className="h-28 w-28 rounded-md object-cover"
-                />
+                <figure key={photo.id}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={url}
+                    alt={photo.caption ?? "Job photo"}
+                    className="h-32 w-32 rounded-lg border border-line object-cover"
+                  />
+                  <figcaption className="mt-1 font-mono text-[10px] text-navy-black/55">
+                    {photo.caption ?? "Photo"} &middot; {formatDate(photo.timestamp)}
+                  </figcaption>
+                </figure>
               );
             })}
           </div>

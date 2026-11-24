@@ -30,7 +30,7 @@ export default async function AdminArtisansPage({
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold text-navy-black">Artisans</h1>
+      <h1 className="font-display text-3xl text-navy-black sm:text-4xl">Artisans</h1>
       <p className="mt-1 text-sm text-navy-black/60">
         DFM&apos;s own vetted roster — not open signup. Add someone here, and
         they set their password at /signup using this email.

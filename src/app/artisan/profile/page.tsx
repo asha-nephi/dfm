@@ -48,15 +48,15 @@ export default async function ArtisanProfilePage({
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold text-navy-black">My profile</h1>
+      <h1 className="font-display text-3xl text-navy-black sm:text-4xl">My profile</h1>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2">
         <div className="card p-5">
-          <p className="text-2xl font-semibold text-navy-black">{jobCount}</p>
+          <p className="font-display text-3xl text-navy-black sm:text-4xl">{jobCount}</p>
           <p className="mt-1 text-sm text-navy-black/60">Jobs completed</p>
         </div>
         <div className="card p-5">
-          <p className="text-2xl font-semibold text-navy-black">
+          <p className="font-display text-3xl text-navy-black sm:text-4xl">
             {avgRating ? (
               <>
                 <span className="text-amber">&#9733;</span> {avgRating.toFixed(1)}

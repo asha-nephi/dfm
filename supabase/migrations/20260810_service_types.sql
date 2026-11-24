@@ -22,3 +22,8 @@ from (values
   ('Generator servicing, small home set', 'generator', 25000)
 ) as v(label, category, amount)
 where not exists (select 1 from public.cost_benchmarks b where b.label = v.label);
+
+-- Earnings page: an artisan can read (never change) their own payouts.
+create policy "Artisans read own payouts"
+  on public.payouts for select
+  using (artisan_id = public.current_artisan_id());

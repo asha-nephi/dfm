@@ -38,7 +38,7 @@ export default async function AdminClientDetailPage({
 
       <div className="mt-3 flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-semibold text-navy-black">{clientRecord.name}</h1>
+          <h1 className="font-display text-3xl text-navy-black sm:text-4xl">{clientRecord.name}</h1>
           <p className="mt-1 text-sm text-navy-black/60">{clientRecord.email}</p>
           {clientRecord.phone && (
             <p className="text-sm text-navy-black/60">{clientRecord.phone}</p>
@@ -98,7 +98,7 @@ export default async function AdminClientDetailPage({
               <Link
                 key={p.id}
                 href={`/admin/properties/${p.id}`}
-                className="card p-5 hover:border-amber/60"
+                className="card p-5 hover:border-charcoal/40"
               >
                 <span className="inline-block rounded-full bg-off-white px-2.5 py-0.5 text-xs font-medium text-navy-black/70">
                   {propertyTypeLabel(p.property_type)}

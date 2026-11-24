@@ -44,7 +44,7 @@ export default async function AdminPaymentsPage({
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold text-navy-black">Payments</h1>
+      <h1 className="font-display text-3xl text-navy-black sm:text-4xl">Payments</h1>
 
       <section className="mt-6 card p-6">
         <h2 className="font-semibold text-navy-black">Create a payment request</h2>

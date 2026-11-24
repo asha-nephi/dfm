@@ -3,6 +3,8 @@ import { createClient } from "@/lib/supabase/server";
 import { formatDate, formatNaira } from "@/lib/format";
 import { StatusBadge } from "@/components/status-badge";
 import { RealtimeRefresh } from "@/components/realtime-refresh";
+import { PageHeader } from "@/components/ui/page-header";
+import { SERVICES, getService, serviceLabel } from "@/lib/services";
 
 const FILTERS = [
   { key: "all", label: "All" },
@@ -15,9 +17,9 @@ const FILTERS = [
 export default async function AdminWorkOrdersPage({
   searchParams,
 }: {
-  searchParams: Promise<{ filter?: string; q?: string }>;
+  searchParams: Promise<{ filter?: string; q?: string; service?: string }>;
 }) {
-  const { filter = "all", q } = await searchParams;
+  const { filter = "all", q, service } = await searchParams;
   const supabase = await createClient();
 
   let query = supabase
@@ -30,6 +32,7 @@ export default async function AdminWorkOrdersPage({
   if (filter === "flagged") query = query.eq("flagged_for_review", true);
   if (filter === "quoted") query = query.not("artisan_quote", "is", null);
   if (q) query = query.ilike("description", `%${q}%`);
+  if (service && getService(service)) query = query.eq("service_type", service);
 
   const { data: workOrders } = await query;
 
@@ -37,6 +40,7 @@ export default async function AdminWorkOrdersPage({
     const params = new URLSearchParams();
     if (key !== "all") params.set("filter", key);
     if (q) params.set("q", q);
+    if (service) params.set("service", service);
     const qs = params.toString();
     return qs ? `/admin/work-orders?${qs}` : "/admin/work-orders";
   };
@@ -44,7 +48,28 @@ export default async function AdminWorkOrdersPage({
   return (
     <div>
       <RealtimeRefresh tables={["work_orders"]} />
-      <h1 className="text-2xl font-semibold text-navy-black">Work orders</h1>
+      <PageHeader eyebrow="Operations" title="Work orders" description="Every job across all clients. Filter by status or service." />
+
+      <div className="mt-6 flex flex-wrap gap-2">
+        {[{ slug: "", name: "All services" }, ...SERVICES].map((sv) => {
+          const params = new URLSearchParams();
+          if (filter !== "all") params.set("filter", filter);
+          if (q) params.set("q", q);
+          if (sv.slug) params.set("service", sv.slug);
+          const active = (service ?? "") === sv.slug;
+          return (
+            <Link
+              key={sv.slug || "all"}
+              href={`/admin/work-orders${params.toString() ? `?${params}` : ""}`}
+              className={`rounded-lg px-3 py-1.5 text-xs font-semibold ring-1 transition ${
+                active ? "bg-amber/15 text-navy-black ring-amber/40" : "bg-white text-navy-black/65 ring-line hover:text-navy-black"
+              }`}
+            >
+              {sv.name}
+            </Link>
+          );
+        })}
+      </div>
 
       <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
         <div className="flex gap-2">
@@ -93,10 +118,11 @@ export default async function AdminWorkOrdersPage({
               <li key={wo.id}>
                 <Link
                   href={`/admin/work-orders/${wo.id}`}
-                  className="flex flex-col gap-2 card p-4 hover:border-amber/60 sm:flex-row sm:items-center sm:justify-between"
+                  className="flex flex-col gap-2 card p-4 hover:border-charcoal/40 sm:flex-row sm:items-center sm:justify-between"
                 >
                   <div>
                     <p className="text-sm text-navy-black/60">
+                      <span className="font-semibold text-charcoal">{serviceLabel(wo.service_type)}</span> &middot;{" "}
                       {formatDate(wo.date)} &middot; {wo.properties?.clients?.name} &middot;{" "}
                       {wo.properties?.address}
                     </p>

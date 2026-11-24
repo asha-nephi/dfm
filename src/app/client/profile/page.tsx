@@ -36,7 +36,7 @@ export default async function ClientProfilePage({
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold text-navy-black">My profile</h1>
+      <h1 className="font-display text-3xl text-navy-black sm:text-4xl">My profile</h1>
 
       <section className="mt-6 max-w-md card p-6">
         {updated && (
