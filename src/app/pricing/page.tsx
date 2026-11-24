@@ -3,14 +3,13 @@ import Link from "next/link";
 import { SiteHeader } from "@/components/marketing/site-header";
 import { SiteFooter } from "@/components/marketing/site-footer";
 import { PricingSummary } from "@/components/marketing/pricing-summary";
-import { FeeCalculator } from "@/components/marketing/fee-calculator";
-import { SERVICES, USD_RATE, usdEstimate } from "@/lib/services";
-import { formatNaira } from "@/lib/format";
+import { Icon } from "@/components/ui/icons";
+import { SERVICES } from "@/lib/services";
 
 export const metadata: Metadata = {
-  title: "Pricing",
+  title: "How pricing works",
   description:
-    "Starting prices for cleaning, AC servicing, electrical, plumbing and generator servicing in Lagos, plus our monthly management fee and capped coordination fee.",
+    "Free, itemized quotes for cleaning, AC servicing, electrical, plumbing and generator servicing in Lagos. You approve the price before any work starts.",
 };
 
 export default function PricingPage() {
@@ -19,66 +18,67 @@ export default function PricingPage() {
       <SiteHeader />
       <main className="flex-1">
         <section className="mx-auto max-w-7xl px-4 pb-4 pt-14 sm:px-6 sm:pt-20 lg:px-8">
-          <p className="eyebrow">Pricing</p>
+          <p className="eyebrow">How pricing works</p>
           <h1 className="font-display mt-2 max-w-3xl text-5xl text-navy-black sm:text-6xl">
-            Clear prices before any work starts.
+            Clear prices, agreed before any work starts.
           </h1>
           <p className="mt-4 max-w-2xl text-navy-black/70">
-            These are starting prices. Repairs always get an itemized quote for your approval
-            first. Dollar amounts are rough guides at about ₦{USD_RATE.toLocaleString()} to $1 —
-            you pay in naira.
+            Every quote is built for your property and your job. It&apos;s free, there&apos;s no
+            obligation, and you only pay once you&apos;ve said yes.
           </p>
-        </section>
-
-        <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-          <div className="overflow-hidden rounded-2xl border border-line bg-white">
-            <table className="w-full text-left text-sm">
-              <thead className="bg-off-white font-mono text-xs uppercase tracking-wider text-navy-black/55">
-                <tr>
-                  <th className="px-6 py-4 font-medium">Service</th>
-                  <th className="hidden px-6 py-4 font-medium md:table-cell">What the price covers</th>
-                  <th className="px-6 py-4 text-right font-medium">From</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-line">
-                {SERVICES.map((s) => (
-                  <tr key={s.slug}>
-                    <td className="px-6 py-5 align-top">
-                      <Link href={`/services/${s.slug}`} className="font-semibold text-charcoal hover:underline">
-                        {s.name}
-                      </Link>
-                      <p className="mt-1 text-xs text-navy-black/60 md:hidden">{s.priceNote}</p>
-                    </td>
-                    <td className="hidden px-6 py-5 align-top text-navy-black/70 md:table-cell">
-                      {s.priceNote}
-                    </td>
-                    <td className="px-6 py-5 text-right align-top">
-                      <p className="font-mono font-semibold text-navy-black">{formatNaira(s.fromPrice)}</p>
-                      <p className="text-xs text-navy-black/50">{usdEstimate(s.fromPrice)}</p>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <Link href="/#contact" className="btn-primary mt-8 !px-6 !py-3.5">
+            Get a free quote
+          </Link>
         </section>
 
         <PricingSummary />
 
         <section className="border-t border-line">
-          <div className="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 sm:py-24 lg:grid-cols-12 lg:px-8">
-            <div className="lg:col-span-5">
-              <p className="eyebrow">Fee calculator</p>
+          <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
+            <div className="mb-10 max-w-2xl">
+              <p className="eyebrow">What affects your quote</p>
               <h2 className="font-display mt-2 text-4xl text-navy-black sm:text-5xl">
-                See how the ₦20,000 cap protects you.
+                What we look at for each service
               </h2>
-              <p className="mt-4 text-navy-black/70">
-                Move the slider to any job size. Our fee is 10% until the job reaches ₦200,000,
-                then it stops growing.
-              </p>
             </div>
-            <div className="lg:col-span-7">
-              <FeeCalculator />
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {SERVICES.map((s) => (
+                <div key={s.slug} className="card p-6">
+                  <div className="flex items-center gap-3">
+                    <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-charcoal/10 text-charcoal">
+                      <Icon name={s.icon} />
+                    </span>
+                    <h3 className="font-display text-2xl text-navy-black">{s.name}</h3>
+                  </div>
+                  <ul className="mt-4 space-y-1.5 text-sm text-navy-black/75">
+                    {s.quoteFactors.map((f) => (
+                      <li key={f} className="flex items-start gap-2">
+                        <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-amber" />
+                        {f}
+                      </li>
+                    ))}
+                  </ul>
+                  <Link
+                    href={`/?service=${s.slug}#contact`}
+                    className="mt-5 inline-block text-sm font-semibold text-charcoal hover:underline"
+                  >
+                    Get a quote &rarr;
+                  </Link>
+                </div>
+              ))}
+              <div className="flex flex-col justify-between rounded-2xl bg-charcoal p-6 text-off-white">
+                <div>
+                  <p className="eyebrow !text-gold-light">Monthly care</p>
+                  <h3 className="font-display mt-2 text-2xl">Full property management</h3>
+                  <p className="mt-2 text-sm text-off-white/75">
+                    One fixed monthly fee for regular checks, tenant requests and coordinating
+                    every job. Agreed with you based on your property.
+                  </p>
+                </div>
+                <Link href="/?service=management#contact" className="btn-gold mt-6">
+                  Ask about monthly care
+                </Link>
+              </div>
             </div>
           </div>
         </section>
@@ -92,7 +92,7 @@ export default function PricingPage() {
               </p>
             </div>
             <Link href="/#contact" className="btn-gold !px-6 !py-3.5">
-              Get a quote
+              Get a free quote
             </Link>
           </div>
         </section>

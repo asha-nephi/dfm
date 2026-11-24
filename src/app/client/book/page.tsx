@@ -4,7 +4,6 @@ import { PageHeader, EmptyState } from "@/components/ui/page-header";
 import { SubmitButton } from "@/components/submit-button";
 import { Icon } from "@/components/ui/icons";
 import { SERVICES, getService } from "@/lib/services";
-import { formatNaira } from "@/lib/format";
 import { bookService } from "./actions";
 
 export default async function BookServicePage({
@@ -71,9 +70,6 @@ export default async function BookServicePage({
                         {s.name}
                       </span>
                       <span className="mt-1 block text-xs text-navy-black/60">{s.short}</span>
-                      <span className="mt-2 block font-mono text-xs text-charcoal">
-                        From {formatNaira(s.fromPrice)}
-                      </span>
                     </span>
                   </label>
                 ))}

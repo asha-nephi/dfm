@@ -5,8 +5,7 @@ import { SiteHeader } from "@/components/marketing/site-header";
 import { SiteFooter } from "@/components/marketing/site-footer";
 import { HowItWorks } from "@/components/marketing/home-sections";
 import { Icon } from "@/components/ui/icons";
-import { SERVICES, getService, usdEstimate } from "@/lib/services";
-import { formatNaira } from "@/lib/format";
+import { SERVICES, getService } from "@/lib/services";
 
 export function generateStaticParams() {
   return SERVICES.map((s) => ({ slug: s.slug }));
@@ -22,7 +21,7 @@ export async function generateMetadata({
   if (!service) return {};
   return {
     title: `${service.name} in Lagos`,
-    description: `${service.short} ${service.tagline} From ${formatNaira(service.fromPrice)}.`,
+    description: `${service.short} ${service.tagline} Free quote within 24 hours.`,
   };
 }
 
@@ -73,19 +72,32 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
 
             <aside className="lg:col-span-5">
               <div className="card sticky top-28 p-7">
-                <p className="eyebrow">Starting price</p>
-                <p className="mt-2 font-mono text-4xl font-bold text-charcoal">
-                  {formatNaira(service.fromPrice)}
+                <p className="eyebrow">Free quote</p>
+                <p className="font-display mt-2 text-3xl text-navy-black">
+                  Get a price for your property
                 </p>
-                <p className="text-sm text-navy-black/55">{usdEstimate(service.fromPrice)}</p>
-                <p className="mt-3 text-sm text-navy-black/70">{service.priceNote}</p>
+                <p className="mt-2 text-sm text-navy-black/70">
+                  Tell us what you need and we reply with a clear quote, usually within 24 hours.
+                  No obligation.
+                </p>
+                <p className="mt-5 text-xs font-semibold uppercase tracking-wider text-navy-black/55">
+                  What affects the price
+                </p>
+                <ul className="mt-2 space-y-1.5 text-sm text-navy-black/75">
+                  {service.quoteFactors.map((f) => (
+                    <li key={f} className="flex items-start gap-2">
+                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-amber" />
+                      {f}
+                    </li>
+                  ))}
+                </ul>
                 <div className="mt-6 space-y-2 border-t border-line pt-5 text-sm text-navy-black/75">
                   <p className="flex items-center gap-2"><Icon name="camera" className="h-4 w-4 text-charcoal" /> Dated before-and-after photos</p>
                   <p className="flex items-center gap-2"><Icon name="receipt" className="h-4 w-4 text-charcoal" /> Itemized costs, you approve first</p>
                   <p className="flex items-center gap-2"><Icon name="shield" className="h-4 w-4 text-charcoal" /> We redo it if it&apos;s not right</p>
                 </div>
                 <Link href={`/?service=${service.slug}#contact`} className="btn-primary mt-7 w-full !py-3.5">
-                  Book {service.name.toLowerCase()}
+                  Get a free quote
                 </Link>
                 <Link href="/login" className="mt-3 block text-center text-sm text-navy-black/60 hover:text-charcoal">
                   Already a client? Book from your account
@@ -108,7 +120,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
                   </span>
                   <span>
                     <span className="block font-semibold text-navy-black">{s.name}</span>
-                    <span className="text-xs text-navy-black/55">From {formatNaira(s.fromPrice)}</span>
+                    <span className="text-xs text-navy-black/55">{s.short}</span>
                   </span>
                 </Link>
               ))}

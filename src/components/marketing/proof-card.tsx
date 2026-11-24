@@ -86,27 +86,24 @@ export function ProofCard() {
 
         <div className="mt-5 border-t border-line pt-4">
           <div className="mb-2.5 flex items-center justify-between font-mono text-xs text-navy-black/60">
-            <span>ITEMIZED COSTS</span>
-            <span className="font-semibold text-charcoal">NO HIDDEN MARKUP</span>
+            <span>JOB REPORT</span>
+            <span className="font-semibold text-charcoal">CLOSED</span>
           </div>
-          <dl className="space-y-2 text-sm">
-            <div className="flex justify-between gap-4">
-              <dt className="text-navy-black/75">Gas top-up &amp; capacitor (receipt attached)</dt>
-              <dd className="font-mono">₦48,000</dd>
-            </div>
-            <div className="flex justify-between gap-4">
-              <dt className="text-navy-black/75">AC technician labour</dt>
-              <dd className="font-mono">₦20,000</dd>
-            </div>
-            <div className="flex justify-between gap-4 text-charcoal">
-              <dt>DFM coordination fee (10%, max ₦20k)</dt>
-              <dd className="font-mono">₦6,800</dd>
-            </div>
-            <div className="mt-2 flex items-baseline justify-between border-t border-dashed border-line pt-2.5">
-              <dt className="font-semibold">Total you approved</dt>
-              <dd className="font-mono text-base font-bold text-charcoal">₦74,800</dd>
-            </div>
-          </dl>
+          <ul className="space-y-2 text-sm">
+            {[
+              "Problem found and photographed",
+              "Itemized quote approved by owner",
+              "Parts receipt attached",
+              "Work checked and signed off by DFM",
+            ].map((t) => (
+              <li key={t} className="flex items-center gap-2.5 text-navy-black/80">
+                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-charcoal text-[11px] text-gold-light">
+                  &#10003;
+                </span>
+                {t}
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </div>

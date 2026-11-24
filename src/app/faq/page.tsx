@@ -27,7 +27,7 @@ const FAQS = [
   },
   {
     q: "How does pricing work?",
-    a: "One-off services have starting prices on our pricing page (for example, cleaning from ₦25,000 per visit and AC servicing from ₦15,000 per unit). Monthly management is ₦40,000 per property. For repairs, artisan and materials costs are passed to you at the actual price, plus a 10% coordination fee that never goes above ₦20,000 per job.",
+    a: "Every property and job is different, so we give you a free quote first — usually within 24 hours. Repairs get an itemized quote that splits parts, labour and our fee, and nothing starts until you approve it. Monthly care is one fixed fee we agree with you based on your property.",
   },
   {
     q: "Is there a contract, and can I cancel?",
