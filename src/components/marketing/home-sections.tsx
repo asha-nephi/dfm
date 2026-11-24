@@ -1,14 +1,7 @@
 import Link from "next/link";
 import { ProofCard } from "@/components/marketing/proof-card";
 import { Icon } from "@/components/ui/icons";
-import {
-  COORDINATION_CAP,
-  MONTHLY_FEE,
-  SERVICES,
-  SERVICE_AREAS,
-  usdEstimate,
-} from "@/lib/services";
-import { formatNaira } from "@/lib/format";
+import { SERVICES, SERVICE_AREAS } from "@/lib/services";
 
 export function Hero() {
   return (
@@ -46,10 +39,8 @@ export function Hero() {
               <p className="mt-0.5 text-xs text-navy-black/60">Jobs with photo proof</p>
             </div>
             <div>
-              <p className="font-mono text-lg font-semibold text-charcoal sm:text-xl">
-                ₦{COORDINATION_CAP / 1000}k
-              </p>
-              <p className="mt-0.5 text-xs text-navy-black/60">Max fee per job</p>
+              <p className="font-mono text-lg font-semibold text-charcoal sm:text-xl">24h</p>
+              <p className="mt-0.5 text-xs text-navy-black/60">Free quote reply</p>
             </div>
           </div>
         </div>
@@ -95,13 +86,9 @@ export function ServicesGrid({ heading = true }: { heading?: boolean }) {
                 <p className="mt-2 text-sm leading-relaxed text-navy-black/70">{s.short}</p>
               </div>
               <div className="mt-6 flex items-end justify-between border-t border-line pt-4">
-                <div>
-                  <p className="text-[11px] uppercase tracking-wider text-navy-black/50">From</p>
-                  <p className="font-mono text-lg font-semibold text-charcoal">
-                    {formatNaira(s.fromPrice)}
-                  </p>
-                  <p className="text-[11px] text-navy-black/50">{usdEstimate(s.fromPrice)}</p>
-                </div>
+                <span className="text-xs font-semibold uppercase tracking-wider text-amber">
+                  Free quote
+                </span>
                 <span className="flex items-center gap-1 text-sm font-semibold text-charcoal">
                   Details
                   <Icon name="arrow" className="h-4 w-4 transition group-hover:translate-x-0.5" />
@@ -119,12 +106,9 @@ export function ServicesGrid({ heading = true }: { heading?: boolean }) {
               </p>
             </div>
             <div className="mt-6 border-t border-white/15 pt-4">
-              <p className="font-mono text-lg font-semibold">
-                {formatNaira(MONTHLY_FEE)}
-                <span className="text-sm font-normal text-off-white/60"> / month</span>
-              </p>
-              <Link href="/pricing" className="mt-1 inline-block text-sm font-semibold text-gold-light">
-                See pricing &rarr;
+              <p className="text-sm text-off-white/70">One fixed monthly fee, agreed with you.</p>
+              <Link href="/?service=management#contact" className="mt-1 inline-block text-sm font-semibold text-gold-light">
+                Ask about monthly care &rarr;
               </Link>
             </div>
           </div>

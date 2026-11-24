@@ -47,14 +47,8 @@ export default async function HomePage({
       itemListElement: SERVICES.map((s) => ({
         "@type": "Offer",
         itemOffered: { "@type": "Service", name: s.name, description: s.short },
-        priceSpecification: {
-          "@type": "PriceSpecification",
-          minPrice: s.fromPrice,
-          priceCurrency: "NGN",
-        },
       })),
     },
-    priceRange: "₦₦",
   };
 
   return (

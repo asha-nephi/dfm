@@ -24,7 +24,7 @@ export function ContactSection({
           <div className="lg:col-span-5">
             <p className="eyebrow">Get started</p>
             <h2 className="font-display mt-2 text-4xl text-navy-black sm:text-5xl">
-              Book a service or ask a question.
+              Get a free quote.
             </h2>
             <p className="mt-4 leading-relaxed text-navy-black/70">
               Tell us what you need and where. We reply within 24 hours by email or WhatsApp,
@@ -126,7 +126,7 @@ export function ContactSection({
                       className="input"
                     />
                   </div>
-                  <SubmitButton className="btn-primary w-full !py-3.5">Send request</SubmitButton>
+                  <SubmitButton className="btn-primary w-full !py-3.5">Request my free quote</SubmitButton>
                 </form>
               )}
             </div>
