@@ -3,7 +3,7 @@ import { createArtisan } from "./actions";
 import { SubmitButton } from "@/components/submit-button";
 import { TradeSelect } from "@/components/trade-select";
 
-const PRIORITY_TRADES = ["Plumber", "Electrician", "AC Technician"];
+const PRIORITY_TRADES = ["Cleaner", "AC Technician", "Electrician", "Plumber", "Generator Technician"];
 
 export default async function AdminArtisansPage({
   searchParams,
@@ -30,7 +30,7 @@ export default async function AdminArtisansPage({
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold text-navy-black">Artisans</h1>
+      <h1 className="font-display text-3xl text-navy-black sm:text-4xl">Artisans</h1>
       <p className="mt-1 text-sm text-navy-black/60">
         DFM&apos;s own vetted roster — not open signup. Add someone here, and
         they set their password at /signup using this email.
@@ -52,7 +52,7 @@ export default async function AdminArtisansPage({
         </div>
       )}
 
-      <section className="mt-6 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-6">
+      <section className="mt-6 card p-6">
         <h2 className="font-semibold text-navy-black">Add an artisan</h2>
         {added && (
           <p className="mt-3 rounded-md bg-green-50 px-3 py-2 text-sm text-green-700">
@@ -67,29 +67,29 @@ export default async function AdminArtisansPage({
             name="name"
             placeholder="Full name"
             required
-            className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+            className="input"
           />
           <input
             name="email"
             type="email"
             placeholder="Email"
             required
-            className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+            className="input"
           />
           <input
             name="phone"
             placeholder="Phone / WhatsApp"
-            className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+            className="input"
           />
           <input
             name="service_area"
             placeholder="Areas they work in (optional)"
-            className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+            className="input"
           />
           <div className="sm:col-span-2">
             <TradeSelect />
           </div>
-          <SubmitButton className="sm:col-span-2 w-fit rounded-lg bg-charcoal shadow-sm px-4 py-2 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90">
+          <SubmitButton className="sm:col-span-2 w-fit btn-primary">
   Add artisan
 </SubmitButton>
         </form>
@@ -99,7 +99,7 @@ export default async function AdminArtisansPage({
         {roster.length === 0 ? (
           <p className="text-sm text-navy-black/60">No artisans yet.</p>
         ) : (
-          <ul className="divide-y divide-charcoal/10 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5">
+          <ul className="divide-y divide-charcoal/10 card">
             {roster.map((a) => (
               <li key={a.id} className="flex flex-col gap-1 px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
                 <div>

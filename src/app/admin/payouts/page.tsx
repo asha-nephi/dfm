@@ -63,13 +63,13 @@ export default async function AdminPayoutsPage({
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold text-navy-black">Payouts</h1>
+      <h1 className="font-display text-3xl text-navy-black sm:text-4xl">Payouts</h1>
       <p className="mt-1 text-sm text-navy-black/60">
         Pay artisans by bank transfer via Paystack. Transfers draw from your Paystack account
         balance.
       </p>
 
-      <section className="mt-6 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-6">
+      <section className="mt-6 card p-6">
         <h2 className="font-semibold text-navy-black">Send a payout</h2>
         {initiated && (
           <p className="mt-3 rounded-md bg-green-50 px-3 py-2 text-sm text-green-700">
@@ -123,7 +123,7 @@ export default async function AdminPayoutsPage({
             {payouts.map((p) => (
               <li
                 key={p.id}
-                className="flex flex-col gap-2 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-4 sm:flex-row sm:items-center sm:justify-between"
+                className="flex flex-col gap-2 card p-4 sm:flex-row sm:items-center sm:justify-between"
               >
                 <div>
                   <p className="text-sm text-navy-black/60">

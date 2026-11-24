@@ -48,15 +48,15 @@ export default async function ArtisanProfilePage({
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold text-navy-black">My profile</h1>
+      <h1 className="font-display text-3xl text-navy-black sm:text-4xl">My profile</h1>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2">
-        <div className="rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-5">
-          <p className="text-2xl font-semibold text-navy-black">{jobCount}</p>
+        <div className="card p-5">
+          <p className="font-display text-3xl text-navy-black sm:text-4xl">{jobCount}</p>
           <p className="mt-1 text-sm text-navy-black/60">Jobs completed</p>
         </div>
-        <div className="rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-5">
-          <p className="text-2xl font-semibold text-navy-black">
+        <div className="card p-5">
+          <p className="font-display text-3xl text-navy-black sm:text-4xl">
             {avgRating ? (
               <>
                 <span className="text-amber">&#9733;</span> {avgRating.toFixed(1)}
@@ -69,7 +69,7 @@ export default async function ArtisanProfilePage({
         </div>
       </div>
 
-      <section className="mt-6 max-w-md rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-6">
+      <section className="mt-6 max-w-md card p-6">
         {updated && (
           <p className="mb-4 rounded-md bg-green-50 px-3 py-2 text-sm text-green-700">
             Profile updated.
@@ -83,26 +83,26 @@ export default async function ArtisanProfilePage({
 
         <form action={updateOwnArtisanProfile} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-navy-black">Name</label>
+            <label className="label">Name</label>
             <input
               name="name"
               defaultValue={artisan?.name ?? ""}
               required
-              className="mt-1 w-full rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+              className="mt-1 input"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-navy-black">
+            <label className="label">
               Phone / WhatsApp
             </label>
             <input
               name="phone"
               defaultValue={artisan?.phone ?? ""}
-              className="mt-1 w-full rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+              className="mt-1 input"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-navy-black">Email</label>
+            <label className="label">Email</label>
             <input
               value={artisan?.email ?? ""}
               disabled
@@ -118,7 +118,7 @@ export default async function ArtisanProfilePage({
         </form>
       </section>
 
-      <section className="mt-6 max-w-md rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-6">
+      <section className="mt-6 max-w-md card p-6">
         <h2 className="font-semibold text-navy-black">Payout account</h2>
         <p className="mt-1 text-sm text-navy-black/60">
           Where DFM sends your payment for completed jobs.

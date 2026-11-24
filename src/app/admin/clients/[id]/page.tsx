@@ -38,7 +38,7 @@ export default async function AdminClientDetailPage({
 
       <div className="mt-3 flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-semibold text-navy-black">{clientRecord.name}</h1>
+          <h1 className="font-display text-3xl text-navy-black sm:text-4xl">{clientRecord.name}</h1>
           <p className="mt-1 text-sm text-navy-black/60">{clientRecord.email}</p>
           {clientRecord.phone && (
             <p className="text-sm text-navy-black/60">{clientRecord.phone}</p>
@@ -49,7 +49,7 @@ export default async function AdminClientDetailPage({
         </span>
       </div>
 
-      <section className="mt-8 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-6">
+      <section className="mt-8 card p-6">
         <h2 className="font-semibold text-navy-black">Add a property</h2>
         {property_added && (
           <p className="mt-3 rounded-md bg-green-50 px-3 py-2 text-sm text-green-700">
@@ -67,12 +67,12 @@ export default async function AdminClientDetailPage({
             name="address"
             placeholder="Property address"
             required
-            className="sm:col-span-2 rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+            className="sm:col-span-2 input"
           />
           <select
             name="propertyType"
             defaultValue="long_term_let"
-            className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+            className="input"
           >
             <option value="long_term_let">Long-term let</option>
             <option value="short_term_rental">Short-term rental</option>
@@ -80,9 +80,9 @@ export default async function AdminClientDetailPage({
           <input
             name="notes"
             placeholder="Notes (gate code, access instructions, etc.)"
-            className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+            className="input"
           />
-          <SubmitButton className="sm:col-span-2 w-fit rounded-lg bg-charcoal shadow-sm px-4 py-2 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90">
+          <SubmitButton className="sm:col-span-2 w-fit btn-primary">
   Add property
 </SubmitButton>
         </form>
@@ -98,7 +98,7 @@ export default async function AdminClientDetailPage({
               <Link
                 key={p.id}
                 href={`/admin/properties/${p.id}`}
-                className="rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-5 hover:border-amber/60"
+                className="card p-5 hover:border-charcoal/40"
               >
                 <span className="inline-block rounded-full bg-off-white px-2.5 py-0.5 text-xs font-medium text-navy-black/70">
                   {propertyTypeLabel(p.property_type)}

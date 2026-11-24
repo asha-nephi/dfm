@@ -36,11 +36,11 @@ export function BankDetailsForm({
 
       <form action={action} className="mt-4 space-y-4">
         <div>
-          <label className="block text-sm font-medium text-navy-black">Bank</label>
+          <label className="label">Bank</label>
           <select
             name="bankCode"
             required
-            className="mt-1 w-full rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+            className="mt-1 input"
           >
             <option value="">Select bank...</option>
             {banks.map((b) => (
@@ -51,7 +51,7 @@ export function BankDetailsForm({
           </select>
         </div>
         <div>
-          <label className="block text-sm font-medium text-navy-black">Account number</label>
+          <label className="label">Account number</label>
           <input
             name="accountNumber"
             inputMode="numeric"
@@ -60,7 +60,7 @@ export function BankDetailsForm({
             minLength={10}
             required
             placeholder="0123456789"
-            className="mt-1 w-full rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+            className="mt-1 input"
           />
         </div>
         <SubmitButton className="rounded-lg bg-charcoal shadow-sm px-5 py-2.5 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90">

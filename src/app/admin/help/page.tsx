@@ -1,3 +1,4 @@
+import { PageHeader } from "@/components/ui/page-header";
 import type { Metadata } from "next";
 import { HelpArticles, type HelpArticle } from "@/components/help-articles";
 
@@ -62,7 +63,7 @@ const ARTICLES: HelpArticle[] = [
   {
     category: "Artisans",
     title: "See roster coverage by trade",
-    body: "Artisans page shows a count per priority trade (Plumber / Electrician / AC Technician) plus an \"Other\" bucket, right above the artisan list — a quick read on where the roster still has gaps.",
+    body: "Artisans page shows a count per priority trade (Cleaner / AC Technician / Electrician / Plumber / Generator Technician) plus an \"Other\" bucket, right above the artisan list — a quick read on where the roster still has gaps.",
   },
   {
     category: "Artisans",
@@ -145,34 +146,21 @@ const ARTICLES: HelpArticle[] = [
     body: "The second KPI row covers outstanding payments (pending, not yet paid), active work orders, flagged jobs, average cost per completed job, and lead conversion rate.",
   },
   {
-    category: "Co-host marketplace",
-    title: "Approve a co-host request",
-    body: "Co-host (beta) → open a pending request → Approve. This opens it for applications and emails the host if their contact looks like an email address.",
+    category: "Service requests",
+    title: "Handle a new booking",
+    body: "When a client books from their account, it shows up in Service requests with the service type and preferred timing. Open it, assign an artisan from the matching trade, then move it to Accepted.",
   },
   {
-    category: "Co-host marketplace",
-    title: "Share the apply link",
-    body: "Once a request is open, its detail page shows an apply link under \"Shareable links.\" Share it directly with a specific prospective co-host — it's never listed publicly.",
-  },
-  {
-    category: "Co-host marketplace",
-    title: "Reopen a matched or closed request",
-    body: "Open the request → \"Reopen for new applications.\" The previous match and application history stay on record; the request just becomes open to new applicants again.",
-  },
-  {
-    category: "Co-host marketplace",
-    title: "Mark a request as spam",
-    body: "Open the request → \"Mark as spam.\" Distinct from Close — this is for fake/scam submissions rather than legitimate requests that just finished, so your records show which is which. It stops accepting applications immediately; Reopen brings it back if you flagged one by mistake.",
+    category: "Service requests",
+    title: "Filter work orders by service",
+    body: "On Work orders, use the service and status filters at the top to see, for example, only open AC jobs.",
   },
 ];
 
 export default function AdminHelpPage() {
   return (
     <div>
-      <h1 className="text-2xl font-semibold text-navy-black">Help</h1>
-      <p className="mt-1 text-sm text-navy-black/60">
-        How to guides for everything in the admin dashboard.
-      </p>
+      <PageHeader eyebrow="Support" title="Help" description="How-to guides for everything in the admin dashboard." />
       <div className="mt-6">
         <HelpArticles articles={ARTICLES} />
       </div>

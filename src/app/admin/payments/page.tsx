@@ -44,9 +44,9 @@ export default async function AdminPaymentsPage({
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold text-navy-black">Payments</h1>
+      <h1 className="font-display text-3xl text-navy-black sm:text-4xl">Payments</h1>
 
-      <section className="mt-6 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-6">
+      <section className="mt-6 card p-6">
         <h2 className="font-semibold text-navy-black">Create a payment request</h2>
         {added && (
           <p className="mt-3 rounded-md bg-green-50 px-3 py-2 text-sm text-green-700">
@@ -66,7 +66,7 @@ export default async function AdminPaymentsPage({
         <CreatePaymentForm properties={propertyOptions} workOrders={workOrderOptions} />
       </section>
 
-      <section className="mt-6 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-6">
+      <section className="mt-6 card p-6">
         <h2 className="font-semibold text-navy-black">Record a bank transfer payment</h2>
         <p className="mt-1 text-sm text-navy-black/60">
           For diaspora/international clients who wired payment directly, since Paystack
@@ -83,7 +83,7 @@ export default async function AdminPaymentsPage({
             {payments.map((p) => (
               <li
                 key={p.id}
-                className="flex flex-col gap-2 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-4 sm:flex-row sm:items-center sm:justify-between"
+                className="flex flex-col gap-2 card p-4 sm:flex-row sm:items-center sm:justify-between"
               >
                 <div>
                   <p className="text-sm text-navy-black/60">

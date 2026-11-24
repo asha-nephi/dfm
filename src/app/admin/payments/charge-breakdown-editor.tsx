@@ -54,7 +54,7 @@ export function ChargeBreakdownEditor({
                 value={row.label}
                 onChange={(e) => updateRow(i, { label: e.target.value })}
                 placeholder="Charge label"
-                className="flex-1 rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+                className="flex-1 input"
               />
               <input
                 type="number"
@@ -63,7 +63,7 @@ export function ChargeBreakdownEditor({
                 value={row.amount}
                 onChange={(e) => updateRow(i, { amount: Number(e.target.value) })}
                 placeholder="Amount (₦)"
-                className="w-36 rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+                className="w-36 input"
               />
               <button
                 type="button"

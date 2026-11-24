@@ -68,7 +68,7 @@ export default async function AdminPropertyDetailPage({
         </p>
       )}
 
-      <section className="mt-6 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-6">
+      <section className="mt-6 card p-6">
         <h2 className="font-semibold text-navy-black">Property details</h2>
         <form action={updateProperty} className="mt-4 grid gap-3 sm:grid-cols-2">
           <input type="hidden" name="propertyId" value={property.id} />
@@ -76,12 +76,12 @@ export default async function AdminPropertyDetailPage({
             name="address"
             defaultValue={property.address}
             required
-            className="sm:col-span-2 rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+            className="sm:col-span-2 input"
           />
           <select
             name="propertyType"
             defaultValue={property.property_type}
-            className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+            className="input"
           >
             <option value="long_term_let">Long-term let</option>
             <option value="short_term_rental">Short-term rental</option>
@@ -90,7 +90,7 @@ export default async function AdminPropertyDetailPage({
             name="notes"
             defaultValue={property.notes ?? ""}
             placeholder="Notes"
-            className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+            className="input"
           />
           <div>
             <label className="block text-xs text-navy-black/50">
@@ -102,16 +102,16 @@ export default async function AdminPropertyDetailPage({
               defaultValue={property.monthly_fee}
               min={0}
               step="1"
-              className="mt-1 w-full rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+              className="mt-1 input"
             />
           </div>
-          <SubmitButton className="sm:col-span-2 w-fit rounded-lg bg-charcoal shadow-sm px-4 py-2 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90">
+          <SubmitButton className="sm:col-span-2 w-fit btn-primary">
   Save changes
 </SubmitButton>
         </form>
       </section>
 
-      <section className="mt-8 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-6">
+      <section className="mt-8 card p-6">
         <h2 className="font-semibold text-navy-black">Preventive maintenance</h2>
         <p className="mt-1 text-sm text-navy-black/60">
           Recurring reminders — a work order is auto-created (and the due
@@ -131,7 +131,7 @@ export default async function AdminPropertyDetailPage({
             name="title"
             placeholder="e.g. AC servicing"
             required
-            className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+            className="input"
           />
           <input
             type="number"
@@ -141,16 +141,16 @@ export default async function AdminPropertyDetailPage({
             max={60}
             defaultValue={3}
             required
-            className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+            className="input"
           />
           <input
             type="date"
             name="nextDueDate"
             defaultValue={today}
             required
-            className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+            className="input"
           />
-          <SubmitButton className="rounded-lg bg-charcoal shadow-sm px-4 py-2 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90">
+          <SubmitButton className="btn-primary">
   Add
 </SubmitButton>
         </form>
@@ -182,7 +182,7 @@ export default async function AdminPropertyDetailPage({
         )}
       </section>
 
-      <section className="mt-8 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-6">
+      <section className="mt-8 card p-6">
         <h2 className="font-semibold text-navy-black">Log a work order</h2>
         <form action={createWorkOrder} className="mt-4 grid gap-3 sm:grid-cols-[160px_1fr_auto]">
           <input type="hidden" name="propertyId" value={property.id} />
@@ -191,15 +191,15 @@ export default async function AdminPropertyDetailPage({
             name="date"
             defaultValue={today}
             required
-            className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+            className="input"
           />
           <input
             name="description"
             placeholder="What was done or needs doing"
             required
-            className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+            className="input"
           />
-          <SubmitButton className="rounded-lg bg-charcoal shadow-sm px-4 py-2 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90">
+          <SubmitButton className="btn-primary">
   Create
 </SubmitButton>
         </form>
@@ -218,7 +218,7 @@ export default async function AdminPropertyDetailPage({
               <li key={wo.id}>
                 <Link
                   href={`/admin/work-orders/${wo.id}`}
-                  className="flex flex-col gap-2 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-4 hover:border-amber/60 sm:flex-row sm:items-center sm:justify-between"
+                  className="flex flex-col gap-2 card p-4 hover:border-charcoal/40 sm:flex-row sm:items-center sm:justify-between"
                 >
                   <div>
                     <p className="text-sm text-navy-black/60">{formatDate(wo.date)}</p>

@@ -27,7 +27,7 @@ export async function sendEmail({
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: `Deseret Facility Management <${from}>`,
+        from: `Deseret Facility Management Ltd <${from}>`,
         to,
         subject,
         html,
@@ -50,26 +50,32 @@ function wrapper(bodyHtml: string): string {
   // for how public/email-logo.png is generated from the app's own mark.
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
   return `
-    <div style="font-family: Arial, sans-serif; color: #12151F; max-width: 480px;">
-      <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 18px;">
+    <div style="background:#F7F5F0; padding:24px 12px;">
+    <div style="font-family: Arial, sans-serif; color: #141715; max-width: 520px; margin: 0 auto; background:#ffffff; border:1px solid #DFDBD2; border-radius:14px; overflow:hidden;">
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#183A2F;">
         <tr>
-          <td style="vertical-align: middle; padding-right: 10px;">
+          <td style="padding:16px 20px; vertical-align: middle; width:42px;">
             <img
               src="${siteUrl}/email-logo.png"
               width="32"
               height="32"
-              alt="Deseret Facility Management"
+              alt="Deseret Facility Management Ltd"
               style="display: block; width: 32px; height: 32px; border-radius: 7px;"
             />
           </td>
-          <td style="vertical-align: middle;">
-            <span style="font-size: 13px; letter-spacing: 0.05em; text-transform: uppercase; color: #D9A441; font-weight: 600;">
-              Deseret Facility Management
-            </span>
+          <td style="padding:16px 20px 16px 0; vertical-align: middle;">
+            <span style="font-family: Georgia, serif; font-size: 17px; letter-spacing: 0.16em; color: #F7F5F0;">DESERET</span><br />
+            <span style="font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: #E6CFA5; font-weight: 600;">Facility Management Ltd</span>
           </td>
         </tr>
       </table>
-      ${bodyHtml}
+      <div style="padding: 8px 24px 20px; font-size: 14px; line-height: 1.55;">
+        ${bodyHtml}
+      </div>
+      <div style="padding: 14px 24px; border-top:1px solid #DFDBD2; font-size: 11px; color:#6b6f6c;">
+        Deseret Facility Management Ltd &middot; RC 9461286 &middot; Ikeja, Lagos, Nigeria
+      </div>
+    </div>
     </div>
   `;
 }
@@ -85,7 +91,7 @@ export async function notifyAdminNewMaintenanceRequest(params: {
     html: wrapper(`
       <h2>New maintenance request</h2>
       <p><strong>${params.clientName}</strong> submitted a request for <strong>${params.propertyAddress}</strong>:</p>
-      <p style="background:#FAF7F1; padding:12px; border-radius:8px;">${params.description}</p>
+      <p style="background:#F7F5F0; padding:12px; border-radius:8px;">${params.description}</p>
     `),
   });
 }
@@ -103,7 +109,7 @@ export async function notifyClientWorkOrderComplete(params: {
       <h2>Your maintenance job is complete</h2>
       <p><strong>${params.propertyAddress}</strong></p>
       <p>${params.description}</p>
-      <p><a href="${params.siteUrl}/client" style="color:#1C2233;">View photos and details on your dashboard &rarr;</a></p>
+      <p><a href="${params.siteUrl}/client/jobs?status=complete" style="color:#183A2F;">View photos and details on your dashboard &rarr;</a></p>
     `),
   });
 }
@@ -121,7 +127,7 @@ export async function notifyClientPaymentDue(params: {
       <h2>Payment due</h2>
       <p><strong>${params.description}</strong></p>
       <p style="font-size: 20px; font-weight: 600;">${params.amount}</p>
-      <p><a href="${params.siteUrl}/client/payments" style="color:#1C2233;">Pay now &rarr;</a></p>
+      <p><a href="${params.siteUrl}/client/payments" style="color:#183A2F;">Pay now &rarr;</a></p>
     `),
   });
 }
@@ -141,7 +147,7 @@ export async function notifyClientPaymentOverdue(params: {
       <p><strong>${params.description}</strong></p>
       <p style="font-size: 20px; font-weight: 600;">${params.amount}</p>
       <p>This has been pending for ${params.daysOverdue} day${params.daysOverdue === 1 ? "" : "s"}. If you've already paid, let us know and we'll confirm it on our side.</p>
-      <p><a href="${params.siteUrl}/client/payments" style="color:#1C2233;">Pay now &rarr;</a></p>
+      <p><a href="${params.siteUrl}/client/payments" style="color:#183A2F;">Pay now &rarr;</a></p>
     `),
   });
 }
@@ -172,7 +178,7 @@ export async function notifyClientInvited(params: {
     html: wrapper(`
       <h2>Welcome, ${params.clientName}</h2>
       <p>DFM has added you as a client. Set your password to access your dashboard — property details, maintenance history, and payments, all in one place.</p>
-      <p><a href="${params.siteUrl}/signup" style="color:#1C2233;">Set your password &rarr;</a></p>
+      <p><a href="${params.siteUrl}/signup" style="color:#183A2F;">Set your password &rarr;</a></p>
       <p style="font-size:13px; color:#666;">Use this same email address (${params.clientEmail}) when setting your password.</p>
     `),
   });
@@ -189,7 +195,7 @@ export async function notifyArtisanInvited(params: {
     html: wrapper(`
       <h2>Welcome, ${params.artisanName}</h2>
       <p>DFM has added you to the artisan roster. Set your password to access your dashboard — you'll see jobs assigned to you, and can update status and upload completion photos from there.</p>
-      <p><a href="${params.siteUrl}/signup" style="color:#1C2233;">Set your password &rarr;</a></p>
+      <p><a href="${params.siteUrl}/signup" style="color:#183A2F;">Set your password &rarr;</a></p>
       <p style="font-size:13px; color:#666;">Use this same email address (${params.artisanEmail}) when setting your password.</p>
     `),
   });
@@ -208,7 +214,7 @@ export async function notifyArtisanJobAssigned(params: {
       <h2>You've been assigned a job</h2>
       <p><strong>${params.propertyAddress}</strong></p>
       <p>${params.description}</p>
-      <p><a href="${params.siteUrl}/artisan" style="color:#1C2233;">View job details &rarr;</a></p>
+      <p><a href="${params.siteUrl}/artisan" style="color:#183A2F;">View job details &rarr;</a></p>
     `),
   });
 }
@@ -241,7 +247,7 @@ export async function notifyAdminArtisanQuoteSubmitted(params: {
     html: wrapper(`
       <h2>Artisan submitted a quote</h2>
       <p><strong>${params.artisanName}</strong> proposed <strong>${params.amount}</strong> for ${params.propertyAddress}.</p>
-      <p><a href="${params.siteUrl}/admin/work-orders/${params.workOrderId}" style="color:#1C2233;">Review the quote &rarr;</a></p>
+      <p><a href="${params.siteUrl}/admin/work-orders/${params.workOrderId}" style="color:#183A2F;">Review the quote &rarr;</a></p>
     `),
   });
 }
@@ -331,7 +337,7 @@ export async function notifyAdminNewCohostRequest(params: {
     html: wrapper(`
       <h2>New co-host request</h2>
       <p><strong>${params.hostName}</strong> submitted a co-host request:</p>
-      <p style="background:#FAF7F1; padding:12px; border-radius:8px;">${params.propertyDescription}</p>
+      <p style="background:#F7F5F0; padding:12px; border-radius:8px;">${params.propertyDescription}</p>
       <p>Review it in the admin co-host marketplace.</p>
     `),
   });
@@ -348,7 +354,7 @@ export async function notifyHostCohostApproved(params: {
     html: wrapper(`
       <h2>You're open for applications</h2>
       <p>Hi ${params.hostName}, DFM has reviewed and approved your co-host request — it's now open for prospective co-hosts to apply.</p>
-      <p><a href="${params.hostLink}" style="color:#1C2233;">Check your request &rarr;</a></p>
+      <p><a href="${params.hostLink}" style="color:#183A2F;">Check your request &rarr;</a></p>
       <p style="font-size:13px; color:#666;">Bookmark this link — it's the only way to review applicants and select a co-host.</p>
     `),
   });
@@ -366,7 +372,7 @@ export async function notifyHostNewCohostApplication(params: {
     html: wrapper(`
       <h2>New applicant</h2>
       <p>Hi ${params.hostName}, <strong>${params.applicantName}</strong> just applied to co-host your property.</p>
-      <p><a href="${params.hostLink}" style="color:#1C2233;">Review and select &rarr;</a></p>
+      <p><a href="${params.hostLink}" style="color:#183A2F;">Review and select &rarr;</a></p>
     `),
   });
 }

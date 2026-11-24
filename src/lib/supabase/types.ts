@@ -305,6 +305,7 @@ export type Database = {
           message: string | null
           name: string
           property_location: string | null
+          service_interest: string | null
           status: string
         }
         Insert: {
@@ -314,6 +315,7 @@ export type Database = {
           message?: string | null
           name: string
           property_location?: string | null
+          service_interest?: string | null
           status?: string
         }
         Update: {
@@ -323,6 +325,7 @@ export type Database = {
           message?: string | null
           name?: string
           property_location?: string | null
+          service_interest?: string | null
           status?: string
         }
         Relationships: []
@@ -743,7 +746,9 @@ export type Database = {
           flag_reason: string | null
           flagged_for_review: boolean
           id: string
+          preferred_timing: string | null
           property_id: string
+          service_type: string | null
           status: string
           turnover_checklist: Json | null
           updated_at: string
@@ -763,7 +768,9 @@ export type Database = {
           flag_reason?: string | null
           flagged_for_review?: boolean
           id?: string
+          preferred_timing?: string | null
           property_id: string
+          service_type?: string | null
           status?: string
           turnover_checklist?: Json | null
           updated_at?: string
@@ -783,7 +790,9 @@ export type Database = {
           flag_reason?: string | null
           flagged_for_review?: boolean
           id?: string
+          preferred_timing?: string | null
           property_id?: string
+          service_type?: string | null
           status?: string
           turnover_checklist?: Json | null
           updated_at?: string

@@ -44,12 +44,12 @@ export default async function AdminArtisanApplicationsPage({
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold text-navy-black">Artisan applications</h1>
+      <h1 className="font-display text-3xl text-navy-black sm:text-4xl">Artisan applications</h1>
       <p className="mt-1 text-sm text-navy-black/60">
         People applying to join DFM&apos;s vetted artisan roster.
       </p>
 
-      <section className="mt-6 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-6">
+      <section className="mt-6 card p-6">
         <h2 className="font-semibold text-navy-black">Recruit artisans</h2>
         <p className="mt-1 text-sm text-navy-black/60">
           Share this link anywhere you&apos;d find tradespeople — WhatsApp
@@ -89,7 +89,7 @@ export default async function AdminArtisanApplicationsPage({
               return (
                 <li
                   key={application.id}
-                  className="rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-5"
+                  className="card p-5"
                 >
                   <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
                     <p className="font-medium text-navy-black">
@@ -180,7 +180,7 @@ export default async function AdminArtisanApplicationsPage({
                         {vettingComplete ? (
                           <form action={approveArtisanApplication}>
                             <input type="hidden" name="applicationId" value={application.id} />
-                            <SubmitButton className="rounded-lg bg-charcoal shadow-sm px-4 py-2 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90">
+                            <SubmitButton className="btn-primary">
   Approve — add to roster
 </SubmitButton>
                           </form>

@@ -27,7 +27,7 @@ export function WorkOrderComments({
   extraFields?: Record<string, string>;
 }) {
   return (
-    <section className="mt-6 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-6">
+    <section className="mt-6 card p-6">
       <h2 className="font-semibold text-navy-black">Comments</h2>
 
       {comments.length === 0 ? (
@@ -60,9 +60,9 @@ export function WorkOrderComments({
           required
           rows={2}
           placeholder="Add a comment..."
-          className="flex-1 rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+          className="flex-1 input"
         />
-        <SubmitButton className="rounded-lg bg-charcoal shadow-sm px-4 py-2.5 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90">
+        <SubmitButton className="btn-primary">
   Post
 </SubmitButton>
       </form>

@@ -7,6 +7,7 @@ import { WorkOrderComments } from "@/components/work-order-comments";
 import { submitMaintenanceRequest, addComment } from "./actions";
 import { RatingForm } from "./rating-form";
 import { SubmitButton } from "@/components/submit-button";
+import { SERVICES, serviceLabel } from "@/lib/services";
 
 type CostLineItem = { label?: string; amount?: number };
 type ChecklistItem = { item?: string; done?: boolean };
@@ -79,7 +80,7 @@ export default async function ClientPropertyPage({
 
   return (
     <div>
-      <Link href="/client" className="text-sm text-charcoal underline underline-offset-2">
+      <Link href="/client/properties" className="text-sm font-medium text-charcoal hover:underline">
         &larr; All properties
       </Link>
 
@@ -88,23 +89,26 @@ export default async function ClientPropertyPage({
           <span className="inline-block rounded-full bg-white px-2.5 py-0.5 text-xs font-medium text-navy-black/70">
             {propertyTypeLabel(property.property_type)}
           </span>
-          <h1 className="mt-2 text-2xl font-semibold text-navy-black">
+          <h1 className="font-display mt-2 text-4xl text-navy-black">
             {property.address}
           </h1>
           {property.notes && (
             <p className="mt-1 text-sm text-navy-black/60">{property.notes}</p>
           )}
         </div>
-        <Link
-          href={`/client/properties/${property.id}/statement`}
-          className="shrink-0 rounded-lg border border-charcoal/20 px-3 py-1.5 text-sm font-medium text-navy-black hover:border-charcoal/40"
-        >
-          Statement
-        </Link>
+        <div className="flex shrink-0 gap-2">
+          <Link href={`/client/properties/${property.id}/statement`} className="btn-secondary !py-2">
+            Statement
+          </Link>
+          <Link href={`/client/book?property=${property.id}`} className="btn-primary !py-2">
+            Book a service
+          </Link>
+        </div>
       </div>
 
-      <section className="mt-10 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-6">
-        <h2 className="font-semibold text-navy-black">Submit a maintenance request</h2>
+      <section className="mt-10 card p-6">
+        <h2 className="font-display text-2xl text-navy-black">Quick request</h2>
+        <p className="mt-1 text-sm text-navy-black/60">Something needs attention here? Tell us and we&apos;ll follow up.</p>
         {request_sent && (
           <p className="mt-3 rounded-md bg-green-50 px-3 py-2 text-sm text-green-700">
             Request submitted — DFM will review and follow up.
@@ -117,14 +121,23 @@ export default async function ClientPropertyPage({
         )}
         <form action={submitMaintenanceRequest} className="mt-4 space-y-3">
           <input type="hidden" name="propertyId" value={property.id} />
+          <div className="grid gap-3 sm:grid-cols-2">
+            <select name="serviceType" defaultValue="" className="input" aria-label="Service">
+              <option value="">Service (not sure)</option>
+              {SERVICES.map((sv) => (
+                <option key={sv.slug} value={sv.slug}>{sv.name}</option>
+              ))}
+            </select>
+            <input name="preferredTiming" type="text" placeholder="Preferred timing (optional)" className="input" aria-label="Preferred timing" />
+          </div>
           <textarea
             name="description"
             required
             rows={3}
             placeholder="Describe what needs attention..."
-            className="w-full rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+            className="input"
           />
-          <SubmitButton className="rounded-lg bg-charcoal shadow-sm px-4 py-2 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90">
+          <SubmitButton className="btn-primary">
   Submit request
 </SubmitButton>
         </form>
@@ -132,7 +145,7 @@ export default async function ClientPropertyPage({
 
       {schedules && schedules.length > 0 && (
         <section className="mt-10">
-          <h2 className="font-semibold text-navy-black">Upcoming preventive maintenance</h2>
+          <h2 className="font-display text-2xl text-navy-black">Upcoming maintenance</h2>
           <ul className="mt-3 space-y-2">
             {schedules.map((s) => (
               <li
@@ -148,7 +161,7 @@ export default async function ClientPropertyPage({
       )}
 
       <section className="mt-10">
-        <h2 className="font-semibold text-navy-black">Maintenance history</h2>
+        <h2 className="font-display text-2xl text-navy-black">Job history</h2>
 
         {!workOrders || workOrders.length === 0 ? (
           <p className="mt-3 text-sm text-navy-black/60">
@@ -164,9 +177,11 @@ export default async function ClientPropertyPage({
                 ? (wo.turnover_checklist as ChecklistItem[])
                 : [];
               return (
-                <li key={wo.id} className="rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-5">
+                <li key={wo.id} id={`wo-${wo.id}`} className="card scroll-mt-24 p-5 target:ring-2 target:ring-amber">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <span className="text-sm font-medium text-navy-black/60">
+                      <span className="font-semibold text-charcoal">{serviceLabel(wo.service_type)}</span>
+                      {" · "}
                       {formatDate(wo.date)}
                     </span>
                     <StatusBadge status={wo.status} />
@@ -219,18 +234,23 @@ export default async function ClientPropertyPage({
                   )}
 
                   {wo.work_order_photos && wo.work_order_photos.length > 0 && (
-                    <div className="mt-4 flex flex-wrap gap-2">
+                    <div className="mt-4 flex flex-wrap gap-3">
                       {wo.work_order_photos.map((photo) => {
                         const url = signedUrlByPath.get(photo.photo_url);
                         if (!url) return null;
                         return (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img
-                            key={photo.id}
-                            src={url}
-                            alt={photo.caption ?? "Maintenance photo"}
-                            className="h-24 w-24 rounded-md object-cover"
-                          />
+                          <a key={photo.id} href={url} target="_blank" rel="noopener noreferrer" className="group block">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={url}
+                              alt={photo.caption ?? "Job photo"}
+                              className="h-32 w-32 rounded-lg border border-line object-cover transition group-hover:opacity-90 sm:h-40 sm:w-40"
+                            />
+                            <span className="mt-1 block max-w-40 truncate font-mono text-[10px] text-navy-black/50">
+                              {photo.caption ? `${photo.caption} · ` : ""}
+                              {formatDate(photo.timestamp)}
+                            </span>
+                          </a>
                         );
                       })}
                     </div>

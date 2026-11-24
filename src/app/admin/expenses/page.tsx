@@ -32,13 +32,13 @@ export default async function AdminExpensesPage({
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold text-navy-black">Expenses</h1>
+      <h1 className="font-display text-3xl text-navy-black sm:text-4xl">Expenses</h1>
       <p className="mt-1 text-sm text-navy-black/60">
         Operating costs — salaries, transport, tools, and anything else that leaves the business
         outside of artisan payouts. Feeds into net profit on the analytics page.
       </p>
 
-      <section className="mt-6 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-6">
+      <section className="mt-6 card p-6">
         <h2 className="font-semibold text-navy-black">Log an expense</h2>
         {added && (
           <p className="mt-3 rounded-md bg-green-50 px-3 py-2 text-sm text-green-700">
@@ -57,7 +57,7 @@ export default async function AdminExpensesPage({
               list="expense-categories"
               placeholder="Category"
               required
-              className="w-full rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+              className="input"
             />
             <datalist id="expense-categories">
               {CATEGORIES.map((c) => (
@@ -70,12 +70,12 @@ export default async function AdminExpensesPage({
             name="date"
             defaultValue={today}
             required
-            className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+            className="input"
           />
           <input
             name="description"
             placeholder="Note (optional)"
-            className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+            className="input"
           />
           <input
             type="number"
@@ -84,7 +84,7 @@ export default async function AdminExpensesPage({
             min={1}
             step="1"
             required
-            className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+            className="input"
           />
           <SubmitButton className="w-fit rounded-lg bg-charcoal shadow-sm px-5 py-2.5 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90 sm:col-span-2">
             Log expense
@@ -100,7 +100,7 @@ export default async function AdminExpensesPage({
         {!expenses || expenses.length === 0 ? (
           <p className="text-sm text-navy-black/60">No expenses logged yet.</p>
         ) : (
-          <ul className="divide-y divide-charcoal/10 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5">
+          <ul className="divide-y divide-charcoal/10 card">
             {expenses.map((e) => (
               <li
                 key={e.id}

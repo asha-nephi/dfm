@@ -13,7 +13,7 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { role, userId } = await getCurrentRole();
+  const { role, userId, email } = await getCurrentRole();
 
   if (!userId) redirect("/login");
   if (role !== "admin") redirect("/dashboard");
@@ -23,21 +23,45 @@ export default async function AdminLayout({
       roleLabel="Admin"
       homeHref="/admin"
       nav={[
-        { href: "/admin", label: "Overview" },
-        { href: "/admin/clients", label: "Clients" },
-        { href: "/admin/work-orders", label: "Work orders" },
-        { href: "/admin/artisans", label: "Artisans" },
-        { href: "/admin/artisan-applications", label: "Artisan applications" },
-        { href: "/admin/leads", label: "Leads" },
-        { href: "/admin/payments", label: "Payments" },
-        { href: "/admin/payouts", label: "Payouts" },
-        { href: "/admin/expenses", label: "Expenses" },
-        { href: "/admin/benchmarks", label: "Benchmarks" },
-        { href: "/admin/analytics", label: "Analytics" },
-        { href: "/admin/cohost", label: "Co-host (beta)" },
-        { href: "/admin/messages", label: "Messages" },
-        { href: "/admin/help", label: "Help" },
+        {
+          label: "Operations",
+          items: [
+            { href: "/admin", label: "Overview", icon: "home" },
+            { href: "/admin/requests", label: "Service requests", icon: "inbox" },
+            { href: "/admin/work-orders", label: "Work orders", icon: "clipboard" },
+            { href: "/admin/clients", label: "Clients", icon: "users" },
+          ],
+        },
+        {
+          label: "Artisans",
+          items: [
+            { href: "/admin/artisans", label: "Roster", icon: "briefcase" },
+            { href: "/admin/artisan-applications", label: "Applications", icon: "user" },
+          ],
+        },
+        {
+          label: "Sales",
+          items: [{ href: "/admin/leads", label: "Leads", icon: "tag" }],
+        },
+        {
+          label: "Money",
+          items: [
+            { href: "/admin/payments", label: "Payments", icon: "wallet" },
+            { href: "/admin/payouts", label: "Payouts", icon: "receipt" },
+            { href: "/admin/expenses", label: "Expenses", icon: "receipt" },
+            { href: "/admin/benchmarks", label: "Price benchmarks", icon: "chart" },
+          ],
+        },
+        {
+          label: "Insights & support",
+          items: [
+            { href: "/admin/analytics", label: "Analytics", icon: "chart" },
+            { href: "/admin/messages", label: "Messages", icon: "chat" },
+            { href: "/admin/help", label: "Help", icon: "help" },
+          ],
+        },
       ]}
+      userName={email ?? undefined}
     >
       {children}
     </DashboardShell>

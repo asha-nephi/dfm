@@ -169,6 +169,8 @@ export async function submitQuote(formData: FormData) {
 export async function uploadJobPhoto(formData: FormData) {
   const jobId = String(formData.get("jobId") ?? "");
   const files = formData.getAll("file").filter((f): f is File => f instanceof File && f.size > 0);
+  const stageRaw = String(formData.get("stage") ?? "");
+  const caption = stageRaw === "before" ? "Before" : stageRaw === "after" ? "After" : null;
 
   if (!jobId || files.length === 0) {
     redirect(`/artisan/jobs/${jobId}?photo_error=1`);
@@ -195,6 +197,7 @@ export async function uploadJobPhoto(formData: FormData) {
       work_order_id: jobId,
       uploaded_by: "artisan",
       photo_url: path,
+      caption,
     });
 
     if (insertError) hadError = true;

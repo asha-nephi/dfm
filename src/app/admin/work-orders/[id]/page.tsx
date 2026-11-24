@@ -18,6 +18,9 @@ import { formatNaira } from "@/lib/format";
 import { SubmitButton } from "@/components/submit-button";
 import { ConfirmSubmitButton } from "@/components/confirm-submit-button";
 import { RealtimeRefresh } from "@/components/realtime-refresh";
+import { StatusBadge } from "@/components/status-badge";
+import { Icon } from "@/components/ui/icons";
+import { SERVICES, getService, serviceLabel } from "@/lib/services";
 
 type CostLineItem = { label: string; amount: number };
 type ChecklistItem = { item: string; done: boolean };
@@ -79,20 +82,43 @@ export default async function AdminWorkOrderDetailPage({
   const checklist = Array.isArray(workOrder.turnover_checklist)
     ? (workOrder.turnover_checklist as ChecklistItem[])
     : [];
+  const matchTrade = getService(workOrder.service_type)?.trade;
+  const sortedArtisans = [...(artisans ?? [])].sort(
+    (a, b) => Number(b.trade === matchTrade) - Number(a.trade === matchTrade),
+  );
   const isShortTermRental = workOrder.properties?.property_type === "short_term_rental";
 
   return (
     <div>
       <RealtimeRefresh tables={["work_orders", "work_order_comments"]} />
-      <Link
-        href={`/admin/properties/${workOrder.properties?.id}`}
-        className="text-sm text-charcoal underline underline-offset-2"
-      >
-        &larr; {workOrder.properties?.address}
+      <Link href="/admin/work-orders" className="text-sm font-medium text-charcoal hover:underline">
+        &larr; Work orders
       </Link>
-      <p className="mt-1 text-sm text-navy-black/50">
-        {workOrder.properties?.clients?.name}
-      </p>
+      <div className="mt-3 flex flex-col gap-3 border-b border-line pb-6 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p className="eyebrow">{serviceLabel(workOrder.service_type)} &middot; {formatDate(workOrder.date)}</p>
+          <h1 className="font-display mt-1 text-3xl text-navy-black sm:text-4xl">
+            {workOrder.properties?.address}
+          </h1>
+          <p className="mt-1 text-sm text-navy-black/60">
+            Client:{" "}
+            <Link href={`/admin/clients/${workOrder.properties?.clients?.id}`} className="font-medium text-charcoal hover:underline">
+              {workOrder.properties?.clients?.name}
+            </Link>
+            {" · "}
+            <Link href={`/admin/properties/${workOrder.properties?.id}`} className="font-medium text-charcoal hover:underline">
+              Property page
+            </Link>
+          </p>
+          {workOrder.preferred_timing && (
+            <p className="mt-2 inline-flex items-center gap-2 rounded-lg bg-amber/10 px-3 py-1.5 text-sm text-navy-black">
+              <Icon name="calendar" className="h-4 w-4 text-amber" />
+              Client&apos;s preferred timing: {workOrder.preferred_timing}
+            </p>
+          )}
+        </div>
+        <StatusBadge status={workOrder.status} />
+      </div>
 
       {error && (
         <p className="mt-3 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
@@ -127,7 +153,7 @@ export default async function AdminWorkOrderDetailPage({
           <div className="mt-4 flex gap-3">
             <form action={acceptArtisanQuote}>
               <input type="hidden" name="workOrderId" value={workOrder.id} />
-              <SubmitButton className="rounded-lg bg-charcoal shadow-sm px-4 py-2 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90">
+              <SubmitButton className="btn-primary">
   Accept — apply to itemized costs
 </SubmitButton>
             </form>
@@ -144,27 +170,27 @@ export default async function AdminWorkOrderDetailPage({
         </section>
       )}
 
-      <section className="mt-6 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-6">
+      <section className="mt-6 card p-6">
         <form action={updateWorkOrder} className="space-y-5">
           <input type="hidden" name="workOrderId" value={workOrder.id} />
 
           <div className="grid gap-3 sm:grid-cols-2">
             <div>
-              <label className="block text-sm font-medium text-navy-black">Date</label>
+              <label className="label">Date</label>
               <input
                 type="date"
                 name="date"
                 defaultValue={workOrder.date}
                 required
-                className="mt-1 w-full rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+                className="mt-1 input"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-navy-black">Status</label>
+              <label className="label">Status</label>
               <select
                 name="status"
                 defaultValue={workOrder.status}
-                className="mt-1 w-full rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+                className="mt-1 input"
               >
                 <option value="requested">Requested</option>
                 <option value="accepted">Accepted</option>
@@ -176,36 +202,51 @@ export default async function AdminWorkOrderDetailPage({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-navy-black">Description</label>
+            <label className="label">Description</label>
             <textarea
               name="description"
               defaultValue={workOrder.description}
               required
               rows={3}
-              className="mt-1 w-full rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+              className="mt-1 input"
             />
           </div>
 
+          <div className="grid gap-3 sm:grid-cols-2">
           <div>
-            <label className="block text-sm font-medium text-navy-black">Assigned artisan</label>
+            <label className="label">Service</label>
+            <select name="serviceType" defaultValue={workOrder.service_type ?? ""} className="mt-1 input">
+              <option value="">General / not set</option>
+              {SERVICES.map((sv) => (
+                <option key={sv.slug} value={sv.slug}>{sv.name}</option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label className="label">Assigned artisan</label>
             <select
               name="assignedArtisanId"
               defaultValue={workOrder.assigned_artisan_id ?? ""}
-              className="mt-1 w-full rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+              className="mt-1 input"
             >
               <option value="">Unassigned</option>
-              {artisans?.map((a) => (
+              {sortedArtisans.map((a) => (
                 <option key={a.id} value={a.id}>
                   {a.name}
                   {a.trade ? ` — ${a.trade}` : ""}
                   {a.service_area ? ` (${a.service_area})` : ""}
+                  {matchTrade && a.trade === matchTrade ? " ✓" : ""}
                 </option>
               ))}
             </select>
+            {matchTrade && (
+              <p className="mt-1 text-xs text-navy-black/55">{matchTrade}s are listed first and marked ✓.</p>
+            )}
+          </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-navy-black">Itemized costs</label>
+            <label className="label">Itemized costs</label>
             <div className="mt-1">
               <CostBreakdownEditor initial={breakdown} benchmarks={benchmarks ?? []} />
             </div>
@@ -213,7 +254,7 @@ export default async function AdminWorkOrderDetailPage({
 
           {isShortTermRental && (
             <div>
-              <label className="block text-sm font-medium text-navy-black">
+              <label className="label">
                 Turnover checklist
               </label>
               <p className="mt-1 text-xs text-navy-black/50">
@@ -227,7 +268,7 @@ export default async function AdminWorkOrderDetailPage({
           )}
 
           <div>
-            <label className="block text-sm font-medium text-navy-black">
+            <label className="label">
               Artisan rating {workOrder.status !== "complete" && (
                 <span className="font-normal text-navy-black/40">(job not yet complete)</span>
               )}
@@ -236,7 +277,7 @@ export default async function AdminWorkOrderDetailPage({
               <select
                 name="artisanRating"
                 defaultValue={workOrder.artisan_rating ?? ""}
-                className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+                className="input"
               >
                 <option value="">No rating</option>
                 <option value="1">1 star</option>
@@ -249,7 +290,7 @@ export default async function AdminWorkOrderDetailPage({
                 name="artisanRatingNote"
                 defaultValue={workOrder.artisan_rating_note ?? ""}
                 placeholder="Note (optional)"
-                className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+                className="input"
               />
             </div>
           </div>
@@ -268,7 +309,7 @@ export default async function AdminWorkOrderDetailPage({
               defaultValue={workOrder.flag_reason ?? ""}
               placeholder="Reason (e.g. quote looks high for the scope of work)"
               rows={2}
-              className="mt-2 w-full rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+              className="mt-2 input"
             />
           </div>
 
@@ -278,7 +319,7 @@ export default async function AdminWorkOrderDetailPage({
         </form>
       </section>
 
-      <section className="mt-8 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-6">
+      <section className="mt-8 card p-6">
         <h2 className="font-semibold text-navy-black">Photos</h2>
         {photo_error && (
           <p className="mt-3 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
@@ -288,7 +329,7 @@ export default async function AdminWorkOrderDetailPage({
         <form action={uploadWorkOrderPhoto} className="mt-4 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
           <input type="hidden" name="workOrderId" value={workOrder.id} />
           <CompressedFileInput name="file" className="w-full text-sm sm:w-auto" />
-          <SubmitButton className="rounded-lg bg-charcoal shadow-sm px-4 py-2 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90">
+          <SubmitButton className="btn-primary">
   Upload
 </SubmitButton>
         </form>

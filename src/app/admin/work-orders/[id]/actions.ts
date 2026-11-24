@@ -11,6 +11,7 @@ import {
   notifyArtisanQuoteDeclined,
 } from "@/lib/email";
 import { formatNaira } from "@/lib/format";
+import { SERVICE_SLUGS } from "@/lib/services";
 
 const lineItemSchema = z.object({
   label: z.string().trim().min(1),
@@ -33,6 +34,7 @@ const updateSchema = z.object({
   turnoverChecklist: z.string().optional().or(z.literal("")),
   artisanRating: z.string().optional().or(z.literal("")),
   artisanRatingNote: z.string().trim().max(500).optional().or(z.literal("")),
+  serviceType: z.enum(SERVICE_SLUGS).optional().or(z.literal("")),
 });
 
 export async function updateWorkOrder(formData: FormData) {
@@ -57,6 +59,7 @@ export async function updateWorkOrder(formData: FormData) {
     turnoverChecklist: formData.get("turnoverChecklist") ?? "",
     artisanRating: formData.get("artisanRating"),
     artisanRatingNote: formData.get("artisanRatingNote"),
+    serviceType: formData.get("serviceType") ?? "",
   });
 
   if (!parsed.success) {
@@ -113,6 +116,12 @@ export async function updateWorkOrder(formData: FormData) {
   if (error) {
     redirect(`/admin/work-orders/${parsed.data.workOrderId}?error=1`);
   }
+
+  // Saved separately so the main update still works before the service migration runs.
+  await supabase
+    .from("work_orders")
+    .update({ service_type: parsed.data.serviceType || null })
+    .eq("id", parsed.data.workOrderId);
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 

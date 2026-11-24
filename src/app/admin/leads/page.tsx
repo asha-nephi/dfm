@@ -1,3 +1,4 @@
+import { serviceLabel } from "@/lib/services";
 import { createClient } from "@/lib/supabase/server";
 import { formatDate } from "@/lib/format";
 import { convertLeadToClient, archiveLead } from "./actions";
@@ -26,7 +27,7 @@ export default async function AdminLeadsPage({
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold text-navy-black">Leads</h1>
+      <h1 className="font-display text-3xl text-navy-black sm:text-4xl">Leads</h1>
       <p className="mt-1 text-sm text-navy-black/60">
         Submissions from the landing page contact form.
       </p>
@@ -45,7 +46,7 @@ export default async function AdminLeadsPage({
               return (
                 <li
                   key={lead.id}
-                  className="rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-5"
+                  className="card p-5"
                 >
                   <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
                     <p className="font-medium text-navy-black">{lead.name}</p>
@@ -59,6 +60,11 @@ export default async function AdminLeadsPage({
                     </div>
                   </div>
                   <p className="mt-1 text-sm text-navy-black/70">{lead.contact}</p>
+                  {lead.service_interest && (
+                    <p className="mt-2 inline-block rounded-full bg-charcoal/10 px-2.5 py-0.5 text-xs font-semibold text-charcoal">
+                      {lead.service_interest === "management" ? "Monthly management" : serviceLabel(lead.service_interest)}
+                    </p>
+                  )}
                   {lead.property_location && (
                     <p className="mt-1 text-sm text-navy-black/60">
                       Property: {lead.property_location}

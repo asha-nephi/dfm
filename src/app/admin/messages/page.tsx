@@ -13,13 +13,13 @@ export default async function AdminMessagesPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold text-navy-black">Messages</h1>
+      <h1 className="font-display text-3xl text-navy-black sm:text-4xl">Messages</h1>
       <p className="mt-1 text-sm text-navy-black/60">
         Message a client or artisan directly — reaches them even if all you have on file is a WhatsApp number.
       </p>
 
       <div className="mt-6 grid gap-6 sm:grid-cols-2">
-        <section className="rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-6">
+        <section className="card p-6">
           <h2 className="font-semibold text-navy-black">Clients</h2>
           {!clients || clients.length === 0 ? (
             <p className="mt-2 text-sm text-navy-black/60">No clients yet.</p>
@@ -39,7 +39,7 @@ export default async function AdminMessagesPage() {
           )}
         </section>
 
-        <section className="rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-6">
+        <section className="card p-6">
           <h2 className="font-semibold text-navy-black">Artisans</h2>
           {!artisans || artisans.length === 0 ? (
             <p className="mt-2 text-sm text-navy-black/60">No artisans yet.</p>

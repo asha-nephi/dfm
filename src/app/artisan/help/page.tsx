@@ -26,8 +26,8 @@ const ARTICLES: HelpArticle[] = [
   },
   {
     category: "My jobs",
-    title: "Upload completion photos",
-    body: "Open the job → Completion photos → choose a file (or several) → Upload. Photos are compressed automatically before upload so it works fine on mobile data.",
+    title: "Upload before and after photos",
+    body: "Open the job → Photos → choose Before (when you arrive) or After (when you finish) → pick the photo → Upload. The client sees these with the date.",
   },
   {
     category: "My jobs",
@@ -54,12 +54,17 @@ const ARTICLES: HelpArticle[] = [
     title: "Add your bank details to get paid",
     body: "My profile → Payout account section → pick your bank, enter your account number → Verify & save. We confirm the account name with your bank before saving. Until this is set, DFM can't send you a payout.",
   },
+  {
+    category: "Money",
+    title: "See what you've been paid",
+    body: "Earnings shows every payment DFM has sent you, what's still being processed, and your total for the month.",
+  },
 ];
 
 export default function ArtisanHelpPage() {
   return (
     <div>
-      <h1 className="text-2xl font-semibold text-navy-black">Help</h1>
+      <h1 className="font-display text-3xl text-navy-black sm:text-4xl">Help</h1>
       <p className="mt-1 text-sm text-navy-black/60">
         How to guides for your dashboard.
       </p>

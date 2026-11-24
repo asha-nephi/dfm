@@ -51,9 +51,9 @@ export default function PrivacyPage() {
           </div>
 
           <div>
-            <h2 className="text-lg font-semibold text-navy-black">Co-host marketplace</h2>
+            <h2 className="text-lg font-semibold text-navy-black">Co-host marketplace (closed)</h2>
             <p className="mt-2">
-              If you submit or respond to a co-host request, the contact
+              We no longer run the co-host marketplace. If you used it before it closed, the contact
               details you provide are shared only with the specific host or
               applicant involved in that request, to make the introduction.
               DFM facilitates the introduction but is not a party to any

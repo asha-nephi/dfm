@@ -13,7 +13,7 @@ export default async function ArtisanLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { role, userId } = await getCurrentRole();
+  const { role, userId, email } = await getCurrentRole();
 
   if (!userId) redirect("/login");
   if (role !== "artisan") redirect("/dashboard");
@@ -23,11 +23,22 @@ export default async function ArtisanLayout({
       roleLabel="Artisan"
       homeHref="/artisan"
       nav={[
-        { href: "/artisan", label: "My jobs" },
-        { href: "/artisan/messages", label: "Messages" },
-        { href: "/artisan/profile", label: "My profile" },
-        { href: "/artisan/help", label: "Help" },
+        {
+          items: [
+            { href: "/artisan", label: "My jobs", icon: "clipboard" },
+            { href: "/artisan/earnings", label: "Earnings", icon: "wallet" },
+            { href: "/artisan/messages", label: "Messages", icon: "chat" },
+          ],
+        },
+        {
+          label: "Account",
+          items: [
+            { href: "/artisan/profile", label: "Profile", icon: "user" },
+            { href: "/artisan/help", label: "Help", icon: "help" },
+          ],
+        },
       ]}
+      userName={email ?? undefined}
     >
       {children}
     </DashboardShell>

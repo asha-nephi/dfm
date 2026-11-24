@@ -56,7 +56,7 @@ export function CreatePayoutForm({
           required
           value={artisanId}
           onChange={(e) => handleArtisanChange(e.target.value)}
-          className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+          className="input"
         >
           <option value="">Select artisan...</option>
           {artisans.map((a) => (
@@ -71,7 +71,7 @@ export function CreatePayoutForm({
           value={workOrderId}
           onChange={(e) => handleWorkOrderChange(e.target.value)}
           disabled={!artisanId}
-          className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30 disabled:bg-off-white disabled:text-navy-black/40"
+          className="input disabled:bg-off-white disabled:text-navy-black/40"
         >
           <option value="">
             {artisanId ? "No work order (general payout)" : "Select an artisan first"}
@@ -94,7 +94,7 @@ export function CreatePayoutForm({
           required
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
-          className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+          className="input"
         />
         <input
           name="reason"
@@ -102,9 +102,9 @@ export function CreatePayoutForm({
           required
           value={reason}
           onChange={(e) => setReason(e.target.value)}
-          className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+          className="input"
         />
-        <SubmitButton className="rounded-lg bg-charcoal shadow-sm px-4 py-2 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90">
+        <SubmitButton className="btn-primary">
   Send payout
 </SubmitButton>
       </div>
