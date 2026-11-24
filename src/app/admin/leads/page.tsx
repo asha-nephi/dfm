@@ -45,7 +45,7 @@ export default async function AdminLeadsPage({
               return (
                 <li
                   key={lead.id}
-                  className="rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-5"
+                  className="card p-5"
                 >
                   <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
                     <p className="font-medium text-navy-black">{lead.name}</p>

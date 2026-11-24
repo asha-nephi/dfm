@@ -46,7 +46,7 @@ export function QuoteEditor({
               value={row.label}
               onChange={(e) => updateRow(i, { label: e.target.value })}
               placeholder="e.g. Labor + materials"
-              className="flex-1 rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+              className="flex-1 input"
             />
             <input
               type="number"
@@ -55,7 +55,7 @@ export function QuoteEditor({
               value={row.amount}
               onChange={(e) => updateRow(i, { amount: Number(e.target.value) })}
               placeholder="Amount (₦)"
-              className="w-36 rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+              className="w-36 input"
             />
             <button
               type="button"
@@ -80,13 +80,13 @@ export function QuoteEditor({
         defaultValue={initialNote}
         rows={2}
         placeholder="Note for DFM (optional) — e.g. what's included, materials needed"
-        className="w-full rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+        className="input"
       />
       <div className="flex items-center justify-between">
         <p className="text-sm font-medium text-navy-black">
           Total: ₦{total.toLocaleString("en-NG")}
         </p>
-        <SubmitButton className="rounded-lg bg-charcoal shadow-sm px-4 py-2 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90">
+        <SubmitButton className="btn-primary">
   Submit quote
 </SubmitButton>
       </div>

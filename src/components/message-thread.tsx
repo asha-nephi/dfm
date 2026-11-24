@@ -17,7 +17,7 @@ export function MessageThread({
   otherPartyName: string;
 }) {
   return (
-    <section className="rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-6">
+    <section className="card p-6">
       {messages.length === 0 ? (
         <p className="text-sm text-navy-black/60">
           No messages yet — say hello to {otherPartyName}.
@@ -54,9 +54,9 @@ export function MessageThread({
           required
           rows={2}
           placeholder={`Message ${otherPartyName}...`}
-          className="flex-1 rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+          className="flex-1 input"
         />
-        <SubmitButton className="rounded-lg bg-charcoal shadow-sm px-4 py-2.5 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90">
+        <SubmitButton className="btn-primary">
   Send
 </SubmitButton>
       </form>

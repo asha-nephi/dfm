@@ -71,7 +71,7 @@ export function CreatePaymentForm({
           required
           value={propertyId}
           onChange={(e) => handlePropertyChange(e.target.value)}
-          className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+          className="input"
         >
           <option value="">Select property...</option>
           {properties.map((p) => (
@@ -86,7 +86,7 @@ export function CreatePaymentForm({
           value={workOrderId}
           onChange={(e) => handleWorkOrderChange(e.target.value)}
           disabled={!propertyId}
-          className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30 disabled:bg-off-white disabled:text-navy-black/40"
+          className="input disabled:bg-off-white disabled:text-navy-black/40"
         >
           <option value="">
             {propertyId ? "No work order (general payment)" : "Select a property first"}
@@ -101,18 +101,18 @@ export function CreatePaymentForm({
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-navy-black">Charges</label>
+        <label className="label">Charges</label>
         <div className="mt-1">
           <ChargeBreakdownEditor rows={chargeRows} onChange={setChargeRows} />
         </div>
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-navy-black">Payment method</label>
+        <label className="label">Payment method</label>
         <select
           name="provider"
           defaultValue="paystack"
-          className="mt-1 w-full rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+          className="mt-1 input"
         >
           <option value="paystack">Paystack (Nigerian bank cards only)</option>
           <option value="manual_bank_transfer">Bank transfer (diaspora / international clients)</option>
@@ -129,9 +129,9 @@ export function CreatePaymentForm({
           placeholder="Note (optional, e.g. July 2026 management fee)"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+          className="input"
         />
-        <SubmitButton className="rounded-lg bg-charcoal shadow-sm px-4 py-2 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90">
+        <SubmitButton className="btn-primary">
   Create
 </SubmitButton>
       </div>

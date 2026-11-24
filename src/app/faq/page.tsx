@@ -2,16 +2,24 @@ import Link from "next/link";
 import { SiteHeader } from "@/components/marketing/site-header";
 import { SiteFooter } from "@/components/marketing/site-footer";
 
-export const metadata = { title: "FAQ — Deseret Facility Management" };
+export const metadata = { title: "FAQ" };
 
 const FAQS = [
   {
     q: "Who is DFM for?",
-    a: "Property owners who can't be there in person to check on their property — most often diaspora or absentee owners, wherever they live. That covers both long-term-let (tenanted residential) properties and short-term-rental (Airbnb-style) properties.",
+    a: "Anyone with a property in Lagos who wants it looked after properly — especially owners who live abroad or can't be there in person. That includes tenanted homes, short-let apartments and owner-occupied homes.",
   },
   {
-    q: "What does DFM actually do?",
-    a: "We handle maintenance and repairs on your property, document every job with dated before-and-after photos, give you an itemized breakdown of what each repair cost, and keep a running record you can check from your dashboard at any time — no need to call and ask if something got done.",
+    q: "What services do you offer?",
+    a: "Five core services: cleaning, AC servicing, electrical work, plumbing and generator servicing. You can book any of them one-off, or put your property on our monthly management plan and we coordinate everything.",
+  },
+  {
+    q: "Who actually does the work?",
+    a: "Vetted artisans from our own roster. We check their skills, ID and references before they join, and we check their work on every job with photos. You deal with DFM — one company — instead of finding and chasing different people yourself.",
+  },
+  {
+    q: "What if I'm not happy with a job?",
+    a: "Tell us within 7 days. If the work doesn't meet our standard, we send someone back to put it right at no extra labour cost.",
   },
   {
     q: "How do I know the work was actually done?",
@@ -19,7 +27,7 @@ const FAQS = [
   },
   {
     q: "How does pricing work?",
-    a: "₦40,000/month flat management fee per property (may vary slightly by size or complexity). Repair and vendor costs are passed through at the actual invoiced cost — no markup. A disclosed 10% coordination fee applies to vendor costs, capped at ₦20,000 per job, shown as its own line next to the vendor's invoice.",
+    a: "One-off services have starting prices on our pricing page (for example, cleaning from ₦25,000 per visit and AC servicing from ₦15,000 per unit). Monthly management is ₦40,000 per property. For repairs, artisan and materials costs are passed to you at the actual price, plus a 10% coordination fee that never goes above ₦20,000 per job.",
   },
   {
     q: "Is there a contract, and can I cancel?",
@@ -38,12 +46,6 @@ const FAQS = [
     a: "STR properties get a turnover checklist that the assigned artisan works through and checks off between guest stays, so you have a record of exactly what was checked before the next guest arrives.",
   },
   {
-    q: "What's the co-host marketplace?",
-    a: "A beta feature for STR hosts who want a local co-host to help with day-to-day guest logistics. DFM facilitates the introduction between host and co-host — we're not a party to any agreement that results from it. Full terms are on the ",
-    link: { href: "/cohost/terms", label: "co-host Terms of Service" },
-    aSuffix: " page.",
-  },
-  {
     q: "Is my data safe?",
     a: "Your data is only visible to DFM admin and, scoped to their assigned jobs, the artisan working on your property. We don't sell or share it with third parties beyond the services that make the platform run. Full details in our ",
     link: { href: "/privacy", label: "privacy notice" },
@@ -57,23 +59,27 @@ const FAQS = [
 
 export default function FaqPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-off-white">
+    <div className="flex min-h-screen flex-col">
       <SiteHeader />
-      <main className="mx-auto max-w-3xl flex-1 px-4 py-16 sm:px-6">
-        <h1 className="text-3xl font-semibold text-navy-black">Frequently asked questions</h1>
-        <p className="mt-3 text-navy-black/70">
-          Don&apos;t see your question here? Reach out through the{" "}
-          <Link href="/#contact" className="text-charcoal underline underline-offset-2">
+      <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-14 sm:px-6 sm:py-20">
+        <p className="eyebrow">FAQ</p>
+        <h1 className="font-display mt-2 text-5xl text-navy-black">Questions owners ask us</h1>
+        <p className="mt-4 text-navy-black/70">
+          Don&apos;t see yours? Ask us through the{" "}
+          <Link href="/#contact" className="font-medium text-charcoal underline underline-offset-2">
             contact form
           </Link>{" "}
           and we&apos;ll answer directly.
         </p>
 
-        <div className="mt-10 space-y-8">
-          {FAQS.map((item) => (
-            <div key={item.q} className="border-b border-charcoal/10 pb-8">
-              <h2 className="text-lg font-semibold text-navy-black">{item.q}</h2>
-              <p className="mt-2 text-navy-black/70">
+        <div className="mt-10 divide-y divide-line overflow-hidden rounded-2xl border border-line bg-white">
+          {FAQS.map((item, i) => (
+            <details key={item.q} className="group" open={i === 0}>
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-6 py-5 font-semibold text-navy-black hover:bg-off-white/60">
+                {item.q}
+                <span className="text-xl text-charcoal transition group-open:rotate-45">+</span>
+              </summary>
+              <p className="px-6 pb-6 leading-relaxed text-navy-black/70">
                 {item.a}
                 {item.link && (
                   <Link href={item.link.href} className="text-charcoal underline underline-offset-2">
@@ -82,7 +88,7 @@ export default function FaqPage() {
                 )}
                 {item.aSuffix}
               </p>
-            </div>
+            </details>
           ))}
         </div>
       </main>

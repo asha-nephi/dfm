@@ -19,7 +19,7 @@ export default async function AdminMessagesPage() {
       </p>
 
       <div className="mt-6 grid gap-6 sm:grid-cols-2">
-        <section className="rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-6">
+        <section className="card p-6">
           <h2 className="font-semibold text-navy-black">Clients</h2>
           {!clients || clients.length === 0 ? (
             <p className="mt-2 text-sm text-navy-black/60">No clients yet.</p>
@@ -39,7 +39,7 @@ export default async function AdminMessagesPage() {
           )}
         </section>
 
-        <section className="rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-6">
+        <section className="card p-6">
           <h2 className="font-semibold text-navy-black">Artisans</h2>
           {!artisans || artisans.length === 0 ? (
             <p className="mt-2 text-sm text-navy-black/60">No artisans yet.</p>

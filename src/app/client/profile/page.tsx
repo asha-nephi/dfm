@@ -38,7 +38,7 @@ export default async function ClientProfilePage({
     <div>
       <h1 className="text-2xl font-semibold text-navy-black">My profile</h1>
 
-      <section className="mt-6 max-w-md rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-6">
+      <section className="mt-6 max-w-md card p-6">
         {updated && (
           <p className="mb-4 rounded-md bg-green-50 px-3 py-2 text-sm text-green-700">
             Profile updated.
@@ -52,26 +52,26 @@ export default async function ClientProfilePage({
 
         <form action={updateOwnProfile} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-navy-black">Name</label>
+            <label className="label">Name</label>
             <input
               name="name"
               defaultValue={client?.name ?? ""}
               required
-              className="mt-1 w-full rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+              className="mt-1 input"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-navy-black">
+            <label className="label">
               Phone / WhatsApp
             </label>
             <input
               name="phone"
               defaultValue={client?.phone ?? ""}
-              className="mt-1 w-full rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+              className="mt-1 input"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-navy-black">Email</label>
+            <label className="label">Email</label>
             <input
               value={client?.email ?? ""}
               disabled
@@ -87,7 +87,7 @@ export default async function ClientProfilePage({
         </form>
       </section>
 
-      <section className="mt-6 max-w-md rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-6">
+      <section className="mt-6 max-w-md card p-6">
         <h2 className="font-semibold text-navy-black">Bank details</h2>
         <p className="mt-1 text-sm text-navy-black/60">
           On file for any future refund — not used for your regular payments to DFM.

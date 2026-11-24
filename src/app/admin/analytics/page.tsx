@@ -188,25 +188,25 @@ export default async function AdminAnalyticsPage() {
       <h1 className="text-2xl font-semibold text-navy-black">Analytics</h1>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-5">
+        <div className="card p-5">
           <p className="text-xl font-semibold text-navy-black">{formatNaira(totalRevenue)}</p>
           <p className="mt-1 text-sm text-navy-black/60">Revenue (all time)</p>
         </div>
         <Link
           href="/admin/payouts"
-          className="rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-5 hover:border-amber/60"
+          className="card p-5 hover:border-amber/60"
         >
           <p className="text-xl font-semibold text-navy-black">{formatNaira(totalPaidToArtisans)}</p>
           <p className="mt-1 text-sm text-navy-black/60">Paid to artisans</p>
         </Link>
         <Link
           href="/admin/expenses"
-          className="rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-5 hover:border-amber/60"
+          className="card p-5 hover:border-amber/60"
         >
           <p className="text-xl font-semibold text-navy-black">{formatNaira(totalExpenses)}</p>
           <p className="mt-1 text-sm text-navy-black/60">Operating expenses</p>
         </Link>
-        <div className="rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-5">
+        <div className="card p-5">
           <p className={`text-xl font-semibold ${netProfit >= 0 ? "text-navy-black" : "text-red-700"}`}>
             {formatNaira(netProfit)}
           </p>
@@ -220,7 +220,7 @@ export default async function AdminAnalyticsPage() {
           <Link
             key={k.label}
             href={k.href}
-            className="rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-5 hover:border-amber/60"
+            className="card p-5 hover:border-amber/60"
           >
             <p className="text-xl font-semibold text-navy-black">{k.value}</p>
             <p className="mt-1 text-sm text-navy-black/60">{k.label}</p>
@@ -229,7 +229,7 @@ export default async function AdminAnalyticsPage() {
         ))}
       </div>
 
-      <section className="mt-8 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-6">
+      <section className="mt-8 card p-6">
         <div className="flex items-center justify-between">
           <h2 className="font-semibold text-navy-black">Revenue vs. money out — last 6 months</h2>
           <div className="flex items-center gap-4 text-xs text-navy-black/60">
@@ -275,7 +275,7 @@ export default async function AdminAnalyticsPage() {
       <div className="mt-8 grid gap-8 lg:grid-cols-2">
         <section>
           <h2 className="font-semibold text-navy-black">Work orders by status</h2>
-          <ul className="mt-3 space-y-2 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-4">
+          <ul className="mt-3 space-y-2 card p-4">
             {WORK_ORDER_STATUSES.map((status) => {
               const count = statusCounts.get(status) ?? 0;
               const pct = totalWorkOrders > 0 ? (count / totalWorkOrders) * 100 : 0;
@@ -302,7 +302,7 @@ export default async function AdminAnalyticsPage() {
           {topClientRows.length === 0 ? (
             <p className="mt-2 text-sm text-navy-black/60">No successful payments yet.</p>
           ) : (
-            <ul className="mt-3 divide-y divide-charcoal/10 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5">
+            <ul className="mt-3 divide-y divide-charcoal/10 card">
               {topClientRows.map(([name, total]) => (
                 <li key={name} className="flex items-center justify-between px-4 py-3 text-sm">
                   <span className="text-navy-black">{name}</span>
@@ -323,7 +323,7 @@ export default async function AdminAnalyticsPage() {
           {costRows.length === 0 ? (
             <p className="mt-2 text-sm text-navy-black/60">No work order costs recorded yet.</p>
           ) : (
-            <ul className="mt-3 divide-y divide-charcoal/10 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5">
+            <ul className="mt-3 divide-y divide-charcoal/10 card">
               {costRows.map(([address, total]) => (
                 <li key={address} className="flex items-center justify-between px-4 py-3 text-sm">
                   <span className="text-navy-black">{address}</span>
@@ -339,7 +339,7 @@ export default async function AdminAnalyticsPage() {
           {artisanRows.length === 0 ? (
             <p className="mt-2 text-sm text-navy-black/60">No completed jobs yet.</p>
           ) : (
-            <ul className="mt-3 divide-y divide-charcoal/10 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5">
+            <ul className="mt-3 divide-y divide-charcoal/10 card">
               {artisanRows.map(([name, stats]) => (
                 <li key={name} className="flex items-center justify-between px-4 py-3 text-sm">
                   <div>
@@ -373,7 +373,7 @@ export default async function AdminAnalyticsPage() {
               .
             </p>
           ) : (
-            <ul className="mt-3 divide-y divide-charcoal/10 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5">
+            <ul className="mt-3 divide-y divide-charcoal/10 card">
               {expenseRows.map(([category, total]) => (
                 <li key={category} className="flex items-center justify-between px-4 py-3 text-sm">
                   <span className="text-navy-black">{category}</span>

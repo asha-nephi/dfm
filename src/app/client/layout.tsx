@@ -13,7 +13,7 @@ export default async function ClientLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { role, userId } = await getCurrentRole();
+  const { role, userId, email } = await getCurrentRole();
 
   if (!userId) redirect("/login");
   if (role !== "client") redirect("/dashboard");
@@ -23,12 +23,25 @@ export default async function ClientLayout({
       roleLabel="Client"
       homeHref="/client"
       nav={[
-        { href: "/client", label: "My properties" },
-        { href: "/client/payments", label: "Payments" },
-        { href: "/client/messages", label: "Messages" },
-        { href: "/client/profile", label: "My profile" },
-        { href: "/client/help", label: "Help" },
+        {
+          items: [
+            { href: "/client", label: "Overview", icon: "home" },
+            { href: "/client/properties", label: "Properties", icon: "pin" },
+            { href: "/client/jobs", label: "Jobs", icon: "clipboard" },
+            { href: "/client/payments", label: "Payments", icon: "wallet" },
+            { href: "/client/messages", label: "Messages", icon: "chat" },
+          ],
+        },
+        {
+          label: "Account",
+          items: [
+            { href: "/client/profile", label: "Profile", icon: "user" },
+            { href: "/client/help", label: "Help", icon: "help" },
+          ],
+        },
       ]}
+      userName={email ?? undefined}
+      cta={{ href: "/client/book", label: "Book a service" }}
     >
       {children}
     </DashboardShell>

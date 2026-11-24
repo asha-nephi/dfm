@@ -110,7 +110,7 @@ export default async function ArtisanJobDetailPage({
         </p>
       )}
 
-      <section className="mt-6 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-6">
+      <section className="mt-6 card p-6">
         <h2 className="font-semibold text-navy-black">Price quote</h2>
         <p className="mt-1 text-sm text-navy-black/60">
           {pendingQuote.length > 0
@@ -124,7 +124,7 @@ export default async function ArtisanJobDetailPage({
         />
       </section>
 
-      <section className="mt-6 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-6">
+      <section className="mt-6 card p-6">
         <h2 className="font-semibold text-navy-black">Update status</h2>
 
         <form action={updateJobStatus} className="mt-3">
@@ -141,20 +141,20 @@ export default async function ArtisanJobDetailPage({
             <select
               name="status"
               defaultValue={defaultStatus}
-              className="rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+              className="input"
             >
               <option value="accepted">Accepted</option>
               <option value="in_progress">In progress</option>
               <option value="complete">Complete</option>
             </select>
-            <SubmitButton className="rounded-lg bg-charcoal shadow-sm px-4 py-2 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90">
+            <SubmitButton className="btn-primary">
   Save status
 </SubmitButton>
           </div>
         </form>
       </section>
 
-      <section className="mt-6 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-6">
+      <section className="mt-6 card p-6">
         <h2 className="font-semibold text-navy-black">Completion photos</h2>
         {photo_error && (
           <p className="mt-3 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
@@ -164,7 +164,7 @@ export default async function ArtisanJobDetailPage({
         <form action={uploadJobPhoto} className="mt-4 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
           <input type="hidden" name="jobId" value={job.id} />
           <CompressedFileInput name="file" className="w-full text-sm sm:w-auto" />
-          <SubmitButton className="rounded-lg bg-charcoal shadow-sm px-4 py-2 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90">
+          <SubmitButton className="btn-primary">
   Upload
 </SubmitButton>
         </form>

@@ -2,11 +2,9 @@
 
 import { useState } from "react";
 
-const TRADES = ["Plumber", "Electrician", "AC Technician", "Other"];
+const TRADES = ["Cleaner", "AC Technician", "Electrician", "Plumber", "Generator Technician", "Other"];
 
-// DFM is prioritizing these three trades specifically — "Other" stays
-// available so a genuinely useful carpenter/painter isn't turned away
-// outright, it just isn't the primary recruiting focus right now.
+// The five trades DFM sells. "Other" stays so a good carpenter or painter isn't turned away.
 export function TradeSelect({
   defaultTrade,
   defaultOther,
@@ -23,7 +21,7 @@ export function TradeSelect({
         name="trade"
         value={trade}
         onChange={(e) => setTrade(e.target.value)}
-        className="mt-1 w-full rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+        className="mt-1 input"
       >
         {TRADES.map((t) => (
           <option key={t} value={t}>
@@ -38,7 +36,7 @@ export function TradeSelect({
           required
           defaultValue={initialIsKnown ? "" : defaultOther ?? defaultTrade ?? ""}
           placeholder="What's your trade?"
-          className="w-full rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+          className="input"
         />
       )}
     </div>

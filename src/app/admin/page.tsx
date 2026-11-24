@@ -69,7 +69,7 @@ export default async function AdminOverviewPage() {
           <Link
             key={s.label}
             href={s.href}
-            className="rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-5 hover:border-amber/60"
+            className="card p-5 hover:border-amber/60"
           >
             <p className="text-2xl font-semibold text-navy-black">{s.value}</p>
             <p className="mt-1 text-sm text-navy-black/60">{s.label}</p>
@@ -82,7 +82,7 @@ export default async function AdminOverviewPage() {
           <Link
             key={s.label}
             href={s.href}
-            className="rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-5 hover:border-amber/60"
+            className="card p-5 hover:border-amber/60"
           >
             <p className="text-2xl font-semibold text-navy-black">{s.value}</p>
             <p className="mt-1 text-sm text-navy-black/60">{s.label}</p>

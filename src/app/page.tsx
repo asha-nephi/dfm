@@ -1,23 +1,23 @@
 import { SiteHeader } from "@/components/marketing/site-header";
 import { SiteFooter } from "@/components/marketing/site-footer";
-import { Hero } from "@/components/marketing/hero";
-import { WhoItsFor } from "@/components/marketing/who-its-for";
-import { ProblemSolution } from "@/components/marketing/problem-solution";
-import { ServiceArea } from "@/components/marketing/service-area";
-import { Pricing } from "@/components/marketing/pricing";
-import { CohostSection } from "@/components/marketing/cohost-section";
+import {
+  Abroad,
+  Comparison,
+  Coverage,
+  Hero,
+  HowItWorks,
+  ServicesGrid,
+} from "@/components/marketing/home-sections";
+import { PricingSummary } from "@/components/marketing/pricing-summary";
 import { ContactSection } from "@/components/marketing/contact-section";
+import { SERVICES } from "@/lib/services";
 
 export default async function HomePage({
   searchParams,
 }: {
-  searchParams: Promise<{
-    contact_sent?: string;
-    contact_error?: string;
-    cohost_error?: string;
-  }>;
+  searchParams: Promise<{ contact_sent?: string; contact_error?: string; service?: string }>;
 }) {
-  const { contact_sent, contact_error, cohost_error } = await searchParams;
+  const { contact_sent, contact_error, service } = await searchParams;
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://deseretfacilities.com";
   const whatsapp = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;
@@ -31,7 +31,7 @@ export default async function HomePage({
     logo: `${siteUrl}/icon.svg`,
     image: `${siteUrl}/opengraph-image`,
     description:
-      "Verified, transparent property management for absentee and diaspora property owners, wherever you are — dated photos of every job, itemized costs, one flat monthly fee.",
+      "Cleaning, AC servicing, electrical, plumbing and generator servicing for Lagos properties, with dated before-and-after photos and itemized costs.",
     email: "nephi.asha@deseretfacilities.com",
     ...(whatsapp ? { telephone: whatsapp.startsWith("+") ? whatsapp : `+${whatsapp}` } : {}),
     address: {
@@ -39,6 +39,20 @@ export default async function HomePage({
       addressLocality: "Ikeja",
       addressRegion: "Lagos",
       addressCountry: "NG",
+    },
+    areaServed: "Lagos, Nigeria",
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: "Property services",
+      itemListElement: SERVICES.map((s) => ({
+        "@type": "Offer",
+        itemOffered: { "@type": "Service", name: s.name, description: s.short },
+        priceSpecification: {
+          "@type": "PriceSpecification",
+          minPrice: s.fromPrice,
+          priceCurrency: "NGN",
+        },
+      })),
     },
     priceRange: "₦₦",
   };
@@ -52,12 +66,17 @@ export default async function HomePage({
       <SiteHeader />
       <main className="flex-1">
         <Hero />
-        <WhoItsFor />
-        <ProblemSolution />
-        <ServiceArea />
-        <Pricing />
-        <CohostSection error={cohost_error === "1"} />
-        <ContactSection sent={contact_sent === "1"} error={contact_error === "1"} />
+        <ServicesGrid />
+        <HowItWorks />
+        <Abroad />
+        <Comparison />
+        <PricingSummary />
+        <Coverage />
+        <ContactSection
+          sent={contact_sent === "1"}
+          error={contact_error === "1"}
+          defaultService={service}
+        />
       </main>
       <SiteFooter />
     </div>

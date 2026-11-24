@@ -48,7 +48,7 @@ export default async function ClientPaymentsPage({
           {payments.map((p) => (
             <li
               key={p.id}
-              className="flex flex-col gap-2 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-4"
+              className="flex flex-col gap-2 card p-4"
             >
               <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <div>

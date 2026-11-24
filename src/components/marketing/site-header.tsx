@@ -2,47 +2,45 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { LogoMark } from "@/components/logo";
+import { Wordmark } from "@/components/logo";
 
 const NAV = [
-  { href: "/#problem", label: "The problem" },
+  { href: "/services", label: "Services" },
   { href: "/#how-it-works", label: "How it works" },
-  { href: "/#pricing", label: "Pricing" },
-  { href: "/#cohost", label: "Co-host (beta)" },
+  { href: "/#abroad", label: "Owners abroad" },
+  { href: "/pricing", label: "Pricing" },
   { href: "/faq", label: "FAQ" },
-  { href: "/#contact", label: "Contact" },
 ];
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-20 border-b border-charcoal/10 bg-off-white/90 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
-        <Link href="/" className="flex shrink-0 items-center gap-2">
-          <LogoMark className="h-8 w-8 shrink-0" />
-          <span className="hidden text-sm font-semibold whitespace-nowrap text-charcoal sm:inline sm:text-base">
-            Deseret Facility Management
-          </span>
-          <span className="text-sm font-semibold text-charcoal sm:hidden">DFM</span>
+    <header className="sticky top-0 z-30 border-b border-line bg-off-white/90 backdrop-blur-md">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:h-20 sm:px-6 lg:px-8">
+        <Link href="/" aria-label="Deseret Facility Management Ltd, home">
+          <Wordmark />
         </Link>
-        <nav className="hidden items-center gap-6 md:flex">
+        <nav className="hidden items-center gap-8 md:flex">
           {NAV.map((item) => (
-            <a
+            <Link
               key={item.href}
               href={item.href}
-              className="text-sm text-navy-black/70 hover:text-navy-black"
+              className="text-sm font-medium text-navy-black/75 transition hover:text-charcoal"
             >
               {item.label}
-            </a>
+            </Link>
           ))}
         </nav>
         <div className="flex items-center gap-2">
           <Link
             href="/login"
-            className="rounded-md border border-charcoal/20 px-4 py-1.5 text-sm font-medium text-charcoal hover:border-charcoal/40"
+            className="hidden rounded-lg px-3 py-2 text-sm font-medium text-navy-black/80 hover:text-charcoal sm:inline-block"
           >
             Log in
+          </Link>
+          <Link href="/#contact" className="btn-primary hidden !py-2.5 sm:inline-flex">
+            Book a service
           </Link>
           <button
             type="button"
@@ -51,32 +49,38 @@ export function SiteHeader() {
             aria-expanded={open}
             className="flex h-10 w-10 items-center justify-center rounded-md text-navy-black md:hidden"
           >
-            {open ? (
-              <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2">
+              {open ? (
                 <path strokeLinecap="round" d="M6 6l12 12M18 6L6 18" />
-              </svg>
-            ) : (
-              <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2">
+              ) : (
                 <path strokeLinecap="round" d="M4 7h16M4 12h16M4 17h16" />
-              </svg>
-            )}
+              )}
+            </svg>
           </button>
         </div>
       </div>
 
       {open && (
-        <nav className="border-t border-charcoal/10 bg-off-white md:hidden">
-          <div className="mx-auto flex max-w-6xl flex-col px-4 py-2">
+        <nav className="border-t border-line bg-off-white md:hidden">
+          <div className="mx-auto flex max-w-7xl flex-col px-4 py-3">
             {NAV.map((item) => (
-              <a
+              <Link
                 key={item.href}
                 href={item.href}
                 onClick={() => setOpen(false)}
-                className="rounded-md px-2 py-2.5 text-sm font-medium text-navy-black/80"
+                className="rounded-md px-2 py-3 text-base font-medium text-navy-black/85"
               >
                 {item.label}
-              </a>
+              </Link>
             ))}
+            <div className="mt-2 grid grid-cols-2 gap-2 border-t border-line pt-3">
+              <Link href="/login" onClick={() => setOpen(false)} className="btn-secondary">
+                Log in
+              </Link>
+              <Link href="/#contact" onClick={() => setOpen(false)} className="btn-primary">
+                Book a service
+              </Link>
+            </div>
           </div>
         </nav>
       )}

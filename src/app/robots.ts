@@ -11,8 +11,6 @@ export default function robots(): MetadataRoute.Robots {
           "/client",
           "/artisan",
           "/dashboard",
-          "/cohost/host",
-          "/cohost/apply",
           "/reset-password",
         ],
       },

@@ -69,7 +69,7 @@ function JobRow({
     <li>
       <Link
         href={`/artisan/jobs/${job.id}`}
-        className="flex flex-col gap-2 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-4 hover:border-amber/60 sm:flex-row sm:items-center sm:justify-between"
+        className="flex flex-col gap-2 card p-4 hover:border-amber/60 sm:flex-row sm:items-center sm:justify-between"
       >
         <div>
           <p className="text-sm text-navy-black/60">

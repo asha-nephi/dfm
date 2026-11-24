@@ -5,9 +5,9 @@ const LABELS: Record<string, string> = {
 };
 
 const STYLES: Record<string, string> = {
-  pending: "bg-blue-50 text-blue-700",
-  success: "bg-green-50 text-green-700",
-  failed: "bg-red-50 text-red-700",
+  pending: "bg-amber/15 text-[#7a5a26] ring-1 ring-amber/30",
+  success: "bg-charcoal/10 text-charcoal ring-1 ring-charcoal/20",
+  failed: "bg-red-50 text-red-700 ring-1 ring-red-200",
 };
 
 export function PaymentStatusBadge({ status }: { status: string }) {

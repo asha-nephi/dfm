@@ -16,20 +16,34 @@ export default async function JoinArtisanPage({
   const { submitted, error, duplicate } = await searchParams;
 
   return (
-    <div className="flex min-h-screen flex-col bg-off-white">
+    <div className="flex min-h-screen flex-col">
       <SiteHeader />
-      <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-16 sm:px-6">
-        <h1 className="text-3xl font-semibold text-navy-black">Join our artisan network</h1>
-        <p className="mt-3 text-navy-black/70">
-          DFM works with a vetted roster of tradespeople across Lagos — right
-          now we&apos;re especially looking for plumbers, electricians, and
-          AC technicians. Tell us about your trade and where you work, and
-          we&apos;ll reach out when there&apos;s a job that fits. This isn&apos;t
-          open signup: every applicant is vetted (ID, a call, and a
-          reference) before being added to the roster.
+      <main className="mx-auto grid w-full max-w-6xl flex-1 gap-12 px-4 py-14 sm:px-6 sm:py-20 lg:grid-cols-12">
+        <div className="lg:col-span-5">
+        <p className="eyebrow">Work with us</p>
+        <h1 className="font-display mt-2 text-5xl text-navy-black">Join our artisan network</h1>
+        <p className="mt-4 leading-relaxed text-navy-black/70">
+          We send steady, paid jobs to skilled cleaners, AC technicians, electricians, plumbers
+          and generator technicians across Lagos. Clients pay DFM, and we pay you promptly
+          after each job is checked.
         </p>
+        <ul className="mt-8 space-y-3 text-sm text-navy-black/75">
+          {[
+            "Jobs near where you already work",
+            "Clear job details and agreed prices before you go",
+            "Payment straight to your bank account",
+            "Every applicant is checked: ID, a call and a reference",
+          ].map((t) => (
+            <li key={t} className="flex items-start gap-2.5">
+              <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-charcoal/10 text-xs font-bold text-charcoal">&#10003;</span>
+              {t}
+            </li>
+          ))}
+        </ul>
+        </div>
 
-        <div className="mt-8 rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-6 sm:p-8">
+        <div className="lg:col-span-7">
+        <div className="card p-6 sm:p-8">
           {submitted ? (
             <div className="flex flex-col items-center justify-center py-10 text-center">
               <p className="text-lg font-semibold text-navy-black">
@@ -57,7 +71,7 @@ export default async function JoinArtisanPage({
                 </p>
               )}
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-navy-black">
+                <label htmlFor="name" className="label">
                   Full name
                 </label>
                 <input
@@ -65,11 +79,11 @@ export default async function JoinArtisanPage({
                   name="name"
                   type="text"
                   required
-                  className="mt-1 w-full rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+                  className="mt-1 input"
                 />
               </div>
               <div>
-                <label htmlFor="contact" className="block text-sm font-medium text-navy-black">
+                <label htmlFor="contact" className="label">
                   Email or WhatsApp number
                 </label>
                 <input
@@ -77,17 +91,17 @@ export default async function JoinArtisanPage({
                   name="contact"
                   type="text"
                   required
-                  className="mt-1 w-full rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+                  className="mt-1 input"
                 />
               </div>
               <div>
-                <label htmlFor="trade" className="block text-sm font-medium text-navy-black">
+                <label htmlFor="trade" className="label">
                   Trade / skill
                 </label>
                 <TradeSelect />
               </div>
               <div>
-                <label htmlFor="service_area" className="block text-sm font-medium text-navy-black">
+                <label htmlFor="service_area" className="label">
                   Areas you work in
                 </label>
                 <input
@@ -95,11 +109,11 @@ export default async function JoinArtisanPage({
                   name="service_area"
                   type="text"
                   placeholder="e.g. Ikeja, Ogba, Maryland"
-                  className="mt-1 w-full rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+                  className="mt-1 input"
                 />
               </div>
               <div>
-                <label htmlFor="experience" className="block text-sm font-medium text-navy-black">
+                <label htmlFor="experience" className="label">
                   Experience (optional)
                 </label>
                 <textarea
@@ -107,7 +121,7 @@ export default async function JoinArtisanPage({
                   name="experience"
                   rows={4}
                   placeholder="How long you've worked in the trade, past jobs, anything worth knowing"
-                  className="mt-1 w-full rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+                  className="mt-1 input"
                 />
               </div>
 
@@ -120,7 +134,7 @@ export default async function JoinArtisanPage({
                 </p>
               </div>
               <div>
-                <label htmlFor="id_document" className="block text-sm font-medium text-navy-black">
+                <label htmlFor="id_document" className="label">
                   Photo of a valid ID
                 </label>
                 <input
@@ -137,7 +151,7 @@ export default async function JoinArtisanPage({
               </div>
               <div className="grid gap-3 sm:grid-cols-2">
                 <div>
-                  <label htmlFor="reference_name" className="block text-sm font-medium text-navy-black">
+                  <label htmlFor="reference_name" className="label">
                     Reference name
                   </label>
                   <input
@@ -146,11 +160,11 @@ export default async function JoinArtisanPage({
                     type="text"
                     required
                     placeholder="A past client or employer"
-                    className="mt-1 w-full rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+                    className="mt-1 input"
                   />
                 </div>
                 <div>
-                  <label htmlFor="reference_contact" className="block text-sm font-medium text-navy-black">
+                  <label htmlFor="reference_contact" className="label">
                     Reference phone / WhatsApp
                   </label>
                   <input
@@ -158,16 +172,17 @@ export default async function JoinArtisanPage({
                     name="reference_contact"
                     type="text"
                     required
-                    className="mt-1 w-full rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+                    className="mt-1 input"
                   />
                 </div>
               </div>
 
-              <SubmitButton className="w-full rounded-lg bg-charcoal shadow-sm px-4 py-2.5 text-sm font-semibold text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90">
+              <SubmitButton className="w-full btn-primary">
   Submit application
 </SubmitButton>
             </form>
           )}
+        </div>
         </div>
       </main>
       <SiteFooter />

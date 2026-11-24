@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "Deseret Facility Management — verified, transparent property management";
+export const alt = "Deseret Facility Management Ltd — verified property care in Lagos";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -14,17 +14,17 @@ export default function Image() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
-          background: "#1C2233",
+          background: "#183A2F",
           padding: "80px",
         }}
       >
         <svg width="72" height="72" viewBox="0 0 40 40" style={{ marginBottom: 40 }}>
-          <path d="M20 2 L35.3 11 V29 L20 38 L4.6 29 V11 Z" fill="#D9A441" />
+          <path d="M20 2 L35.3 11 V29 L20 38 L4.6 29 V11 Z" fill="#B68D4C" />
           <path
             d="M14 12 H19.5C24.5 12 28 15.5 28 20C28 24.5 24.5 28 19.5 28H14V12Z"
-            fill="#FAF7F1"
+            fill="#F7F5F0"
           />
-          <path d="M14 12 H19C22.5 12 25 15.2 25 20C25 24.8 22.5 28 19 28H14V12Z" fill="#1C2233" />
+          <path d="M14 12 H19C22.5 12 25 15.2 25 20C25 24.8 22.5 28 19 28H14V12Z" fill="#183A2F" />
         </svg>
         <div
           style={{
@@ -32,32 +32,32 @@ export default function Image() {
             fontWeight: 600,
             letterSpacing: 2,
             textTransform: "uppercase",
-            color: "#D9A441",
+            color: "#B68D4C",
             marginBottom: 20,
           }}
         >
-          Deseret Facility Management
+          Deseret Facility Management Ltd
         </div>
         <div
           style={{
             fontSize: 56,
             fontWeight: 700,
-            color: "#FAF7F1",
+            color: "#F7F5F0",
             lineHeight: 1.15,
             maxWidth: 980,
           }}
         >
-          Verified, transparent property management for property owners who can&apos;t be there.
+          Cleaning, AC, electrical, plumbing &amp; generator care for your Lagos property.
         </div>
         <div
           style={{
             fontSize: 28,
-            color: "rgba(250,247,241,0.7)",
+            color: "rgba(247,245,240,0.7)",
             marginTop: 32,
             maxWidth: 900,
           }}
         >
-          Dated photos of every job, itemized costs, one flat fee.
+          Book from anywhere. Vetted artisans, dated photos, itemized costs.
         </div>
       </div>
     ),

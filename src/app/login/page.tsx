@@ -1,3 +1,4 @@
+import { AuthShell } from "@/components/auth-shell";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { login } from "./actions";
@@ -27,16 +28,10 @@ export default async function LoginPage({
   const errorMessage = error ? (ERROR_MESSAGES[error] ?? error) : null;
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-off-white px-4">
-      <div className="w-full max-w-sm">
-        <Link
-          href="/"
-          className="mb-8 flex items-center justify-center gap-1.5 text-center text-lg font-semibold text-charcoal hover:text-navy-black"
-        >
-          <span aria-hidden="true">&larr;</span> Deseret Facility Management
-        </Link>
-        <div className="rounded-xl border border-charcoal/10 bg-white shadow-sm shadow-charcoal/5 p-8">
-          <h1 className="text-xl font-semibold text-navy-black">Log in</h1>
+    <AuthShell>
+      <div>
+        <div className="card p-8 shadow-[0_20px_60px_-30px_rgba(24,58,47,0.25)]">
+          <h1 className="font-display text-3xl text-navy-black">Log in</h1>
           <p className="mt-1 text-sm text-navy-black/60">
             For clients, artisans, and DFM admin.
           </p>
@@ -49,7 +44,7 @@ export default async function LoginPage({
 
           <form action={login} className="mt-6 space-y-4">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-navy-black">
+              <label htmlFor="email" className="label">
                 Email
               </label>
               <input
@@ -58,12 +53,12 @@ export default async function LoginPage({
                 type="email"
                 required
                 autoComplete="email"
-                className="mt-1 w-full rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+                className="mt-1 input"
               />
             </div>
             <div>
               <div className="flex items-center justify-between">
-                <label htmlFor="password" className="block text-sm font-medium text-navy-black">
+                <label htmlFor="password" className="label">
                   Password
                 </label>
                 <Link
@@ -78,10 +73,10 @@ export default async function LoginPage({
                 name="password"
                 required
                 autoComplete="current-password"
-                className="mt-1 w-full rounded-lg border border-charcoal/15 bg-white px-3.5 py-2.5 text-sm text-navy-black placeholder:text-navy-black/40 transition-colors focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/30"
+                className="mt-1 input"
               />
             </div>
-            <SubmitButton className="w-full rounded-lg bg-charcoal shadow-sm px-4 py-2 text-sm font-medium text-off-white transition-colors hover:bg-navy-black active:bg-navy-black/90">
+            <SubmitButton className="w-full btn-primary">
   Log in
 </SubmitButton>
           </form>
@@ -94,6 +89,6 @@ export default async function LoginPage({
           </p>
         </div>
       </div>
-    </div>
+    </AuthShell>
   );
 }
